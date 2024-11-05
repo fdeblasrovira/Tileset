@@ -1,0 +1,52 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Compiled output
+dist/
+build/
+
+# Dependency directories
+node_modules/
+
+# Optional npm cache directory
+.npm
+
+# Testing
+coverage/
+.jest/
+
+# Production environment
+.env
+.env.local
+.env.*.local
+
+# Editor and IDE settings
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+.DS_Store
+
+# OS-specific files
+Thumbs.db
+
+# Optional eslint cache
+.eslintcache
+
+# Optional Babel cache
+.babelrc
+
+# Optional cache directories
+.cache/
