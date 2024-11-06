@@ -9,6 +9,7 @@ import { useCreateTabulation } from "@/stores/createTabulation";
 
 const tabData = useCreateTabulation();
 
+// const  = getformdata
 const formData = reactive({
   generalInfo: {},
   attributes: [],

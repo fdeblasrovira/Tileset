@@ -16,6 +16,10 @@ const formData = reactive({
   results: [],
 });
 
+function updateGeneralInfo(newGeneralInfo) {
+  formData.generalInfo = newGeneralInfo;
+}
+
 function updateAttributes(newAttributes) {
   formData.attributes = newAttributes;
 }
@@ -36,53 +40,22 @@ function saveContents() {
 
 <template>
   <div class="flex grow flex-col justify-between">
-    <div
-      class="sm:overflow-hidden sm:rounded-md bg-tileset-full-white flex flex-start flex-col grow"
-    >
+    <div class="sm:overflow-hidden sm:rounded-md bg-tileset-full-white flex flex-start flex-col grow">
       <!-- General info tab contents -->
-      <GeneralInfo v-if="tabData.currentTab == 1" />
+      <GeneralInfo v-if="tabData.currentTab == 1" @on-attribute-change="updateGeneralInfo" :generalInfo="formData.generalInfo"/>
       <!-- Attribute edit tab contents -->
-      <Attributes
-        :attributes="formData.attributes"
-        :questions="formData.questions"
-        :results="formData.results"
-        v-if="tabData.currentTab == 2"
-        @on-attribute-change="updateAttributes"
-        @on-question-change="updateQuestions"
-        @on-result-change="updateResults"
-      />
+      <Attributes :attributes="formData.attributes" :questions="formData.questions" :results="formData.results"
+        v-if="tabData.currentTab == 2" @on-attribute-change="updateAttributes" @on-question-change="updateQuestions"
+        @on-result-change="updateResults" />
       <!-- Question edit tab contents -->
-      <Questions
-        :questions="formData.questions"
-        :attributes="formData.attributes"
-        v-if="tabData.currentTab == 3"
-        @on-question-change="updateQuestions"
-      />
-      <Results
-        :results="formData.results"
-        :attributes="formData.attributes"
-        v-if="tabData.currentTab == 4"
-        @on-result-change="updateResults"
-      />
-      <FullButton
-        @click="saveContents"
-        text="Save"
-        color="bg-tileset-green"
-        hover="hover:bg-tileset-green-1"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="3.5"
-          stroke="currentColor"
-          class="w-6 h-6 stroke-tileset-white"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M4.5 12.75l6 6 9-13.5"
-          />
+      <Questions :questions="formData.questions" :attributes="formData.attributes" v-if="tabData.currentTab == 3"
+        @on-question-change="updateQuestions" />
+      <Results :results="formData.results" :attributes="formData.attributes" v-if="tabData.currentTab == 4"
+        @on-result-change="updateResults" />
+      <FullButton @click="saveContents" text="Save" color="bg-tileset-green" hover="hover:bg-tileset-green-1">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3.5" stroke="currentColor"
+          class="w-6 h-6 stroke-tileset-white">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
         </svg>
       </FullButton>
     </div>
