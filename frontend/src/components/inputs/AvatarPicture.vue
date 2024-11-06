@@ -27,7 +27,7 @@ function previewFiles(event) {
         class="flex bg-cover h-24 min-w-[3rem] w-24 overflow-hidden rounded-full bg-tileset-grey-2 bg-contain bg-no-repeat bg-center"
       >
         <svg
-          v-if="image.length <= 0"
+          v-if="!image"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
