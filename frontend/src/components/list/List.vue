@@ -76,63 +76,32 @@ async function routeToCreate() {
   await router.push("/create");
   loadingData.loading = false;
 }
+
 const totalItems = 114;
 </script>
 
 <template>
   <div class="flex flex-row justify-between mb-3 items-center">
     <h2 class="text-lg mb-2 text-tileset-black">Forms: {{ totalItems }}</h2>
-    <BaseButton
-      @click="routeToCreate"
-      text="Create"
-      color="bg-tileset-green"
-      hover="hover:bg-tileset-green-1"
-      :class="{ glowingAnimation: forms.length <= 0 }"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        class="w-6 h-6 stroke-tileset-white m-auto"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-        />
+    <BaseButton @click="routeToCreate" text="Create" color="bg-tileset-green" hover="hover:bg-tileset-green-1"
+      :class="{ glowingAnimation: forms.length <= 0 }">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+        class="w-6 h-6 stroke-tileset-white m-auto">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
     </BaseButton>
   </div>
   <ListSearch />
 
-  <div
-    class="flex flex-col container min-w-full mx-auto items-center justify-center"
-  >
-    <ul
-      class="flex flex-col divide-y w-full bg-tileset-grey-1 rounded-lg shadow"
-    >
-      <div
-        v-if="forms.length <= 0"
-        class="h-20 flex items-center m-auto font-light italic"
-      >
+  <div class="flex flex-col container min-w-full mx-auto items-center justify-center">
+    <ul class="flex flex-col divide-y w-full bg-tileset-grey-1 rounded-lg shadow">
+      <div v-if="forms.length <= 0" class="h-20 flex items-center m-auto font-light italic">
         There are no forms yet
       </div>
-      <ListItem
-        v-for="(form, index) in forms"
-        @list-item-clicked="onListItemClicked"
-        :data="form"
-        :key="form.formId"
-        :position="start"
-        :open="openedItem == form.formId"
-        :close="lastOpenedItem == form.formId"
-      />
+      <ListItem v-for="form in forms" @list-item-clicked="onListItemClicked" :data="form" :key="form.formId"
+        :position="start" :open="openedItem == form.formId" :close="lastOpenedItem == form.formId" />
     </ul>
-    <ListPagination
-      :maxItemsPage="10"
-      :totalItems="totalItems"
-      :maxPaginationItems="5"
-    />
+    <ListPagination :maxItemsPage="10" :totalItems="totalItems" :maxPaginationItems="5" />
   </div>
 </template>
 
@@ -141,9 +110,11 @@ const totalItems = 114;
   0% {
     box-shadow: 0 0 5px #32b70a;
   }
+
   50% {
     box-shadow: 0 0 20px #3fbf18;
   }
+
   100% {
     box-shadow: 0 0 5px #32b70a;
   }

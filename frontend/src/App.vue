@@ -1,5 +1,4 @@
 <script setup>
-import { ref } from "vue";
 import NavBar from "./components/header/NavBar.vue";
 import Spinner from "./components/overlays/Spinner.vue";
 import { useLoadingStore } from "@/stores/loading";

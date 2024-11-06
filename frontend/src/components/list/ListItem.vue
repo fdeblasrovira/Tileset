@@ -2,11 +2,15 @@
 import { ref } from "vue";
 import BaseButton from "../buttons/BaseButtonWithIcon.vue";
 import Modal from "../overlays/Modal.vue";
+import { useLoadingStore } from "@/stores/loading";
+import router from "../../router/index";
+
+const loadingData = useLoadingStore();
 
 const props = defineProps(["data", "position", "open", "close"]);
 const emit = defineEmits(["listItemClicked"]);
 
-function openListItem(e) {
+function openListItem() {
   console.log("itemclicked");
   emit("listItemClicked", props.data.formId);
 }
@@ -16,6 +20,13 @@ const showModal = ref(false);
 function changeModalDisplay(display) {
   console.log("Modal display");
   showModal.value = display;
+}
+
+async function routeToEdit() {
+  // Change global loading state to true
+  loadingData.loading = true;
+  await router.push({ name: 'Edit_form'})
+  loadingData.loading = false;
 }
 
 function deleteForm() {
@@ -109,6 +120,7 @@ function deleteForm() {
         </svg>
       </BaseButton>
       <BaseButton
+        @click="routeToEdit"
         text="Edit"
         color="bg-tileset-green"
         hover="hover:bg-tileset-green-1"

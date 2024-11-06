@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import CreateView from "../views/CreateView.vue";
+import EditView from "../views/EditView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,8 +13,13 @@ const router = createRouter({
     },
     {
       path: "/create",
-      name: "Create form",
+      name: "Create_form",
       component: CreateView,
+    },
+    {
+      path: "/edit",
+      name: "Edit_form",
+      component: EditView,
     },
   ],
 });
