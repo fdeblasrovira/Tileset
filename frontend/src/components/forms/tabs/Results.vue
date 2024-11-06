@@ -2,7 +2,7 @@
 import { watch, ref } from "vue";
 import Input from "../../inputs/Input.vue";
 import Textarea from "../../inputs/Textarea.vue";
-import AvatarPicture from "../../inputs/AvatarPicture.vue";
+import ResultPicture from "../../inputs/ResultPicture.vue";
 import Range from "../../inputs/Range.vue";
 import Radio from "../../inputs/Radio.vue";
 import Checkbox from "../../inputs/Checkbox.vue";
@@ -250,10 +250,11 @@ function editResult() {
           label="Description"
           :name="editingResult.id"
         />
-        <AvatarPicture
+        <ResultPicture
           v-model="editingResult.picture"
           :image="editingResult.picture"
           label="Picture"
+          v-bind:input="true"
         />
         <template v-for="(attribute) in attributes">
           <div
