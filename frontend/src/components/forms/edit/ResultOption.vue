@@ -1,5 +1,7 @@
 <script setup>
 import Input from "../../inputs/Input.vue";
+import ResultPicture from "../../inputs/ResultPicture.vue";
+
 const props = defineProps(["data", "index", "open", "close"]);
 const emit = defineEmits(["editResult", "deleteResult"]);
 
@@ -13,7 +15,13 @@ function deleteResult() {
 </script>
 
 <template>
-  <div
+  <ResultPicture
+          v-model="props.data.picture"
+          :image="props.data.picture"
+          label="Picture"
+          v-bind:input="false"
+        />
+  <!-- <div
     class="flex flex-col container min-w-full mx-auto items-center justify-center bg-tileset-grey-1 shadow list-item-container"
   >
     <ul class="flex flex-col w-full">
@@ -83,7 +91,8 @@ function deleteResult() {
         </div>
       </li>
     </ul>
-  </div>
+    
+  </div> -->
 
 </template>
 
