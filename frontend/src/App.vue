@@ -2,14 +2,17 @@
 import NavBar from "./components/header/NavBar.vue";
 import Spinner from "./components/overlays/Spinner.vue";
 import { useLoadingStore } from "@/stores/loading";
+import { useAuthStore } from "@/stores/auth";
 
 const loadingData = useLoadingStore();
+const authData = useAuthStore();
+
 </script>
 
 <template>
   <div class="flex min-w-full min-h-screen flex-col">
     <header class="flex min-h-min sticky top-0 z-50">
-      <NavBar />
+      <NavBar v-if="authData.authenticated"/>
     </header>
     <main class="flex justify-center grow overflow-y-scroll flex-col">
       <Spinner :open="loadingData.loading" />

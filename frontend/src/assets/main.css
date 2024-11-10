@@ -1179,6 +1179,10 @@ select{
   margin-top: auto;
 }
 
+.ml-auto{
+  margin-left: auto;
+}
+
 .block{
   display: block;
 }
@@ -1405,6 +1409,10 @@ select{
 
 .w-full{
   width: 100%;
+}
+
+.w-64{
+  width: 16rem;
 }
 
 .min-w-\[3rem\]{
@@ -2302,6 +2310,11 @@ select{
 .text-tileset-white{
   --tw-text-opacity: 1;
   color: rgb(244 243 238 / var(--tw-text-opacity));
+}
+
+.text-tileset-blue-1{
+  --tw-text-opacity: 1;
+  color: rgb(50 88 113 / var(--tw-text-opacity));
 }
 
 .underline{
