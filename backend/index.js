@@ -9,8 +9,30 @@ var responses = require('./responses/responses');
 var hash = require('pbkdf2-password')()
 var session = require('express-session');
 var cors = require('cors')
+const { Sequelize } = require('sequelize');
 
 var app = module.exports = express();
+
+// db
+
+const sequelize = new Sequelize('mysql://tileset:tileset@localhost:3308/tileset')
+
+async function testConnection() {
+  try {
+    await sequelize.authenticate();
+    console.log('Connection has been established successfully.');
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+  }
+};
+
+testConnection();
+
+async function syncDatabase() {
+
+};
+
+syncDatabase();
 
 // middleware
 
@@ -135,6 +157,7 @@ if (!module.parent) {
 
 process.on('SIGTERM', () => {
   debug('SIGTERM signal received: closing HTTP server')
+  sequelize.close()
   server.close(() => {
     debug('HTTP server closed')
   })
