@@ -16,6 +16,10 @@ exports.model = {
     },
     visibility: {
       type: DataTypes.BOOLEAN,
+    },
+    version: {
+      type: DataTypes.INTEGER,
+      defaultValue: 1,
     }
   }
 }
