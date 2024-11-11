@@ -168,3 +168,7 @@ process.on('SIGTERM', () => {
     debug('HTTP server closed')
   })
 })
+
+process.stdin.on('end', function() {
+  process.exit(0);
+});
