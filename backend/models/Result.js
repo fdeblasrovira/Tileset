@@ -15,6 +15,10 @@ exports.model = {
     imageUrl: {
       type: DataTypes.STRING(512),
       allowNull: false
-    }
+    },
+    order: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false,
+    },
   }
 }
