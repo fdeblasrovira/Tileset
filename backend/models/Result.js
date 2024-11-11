@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 
 exports.model = {
-  name: "Form",
+  name: "Result",
   model: {
     // Model attributes are defined here
     name: {
@@ -10,17 +10,11 @@ exports.model = {
     },
     description: {
       type: DataTypes.TEXT('tiny'),
+      allowNull: false
     },
     imageUrl: {
       type: DataTypes.STRING(512),
-      defaultValue: "urltoTILESETlogo",
-    },
-    visibility: {
-      type: DataTypes.BOOLEAN,
-    },
-    version: {
-      type: DataTypes.INTEGER,
-      defaultValue: 1,
+      allowNull: false
     }
   }
 }
