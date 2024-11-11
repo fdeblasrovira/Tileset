@@ -1095,6 +1095,10 @@ select{
   margin-left: 1.25rem;
 }
 
+.ml-auto{
+  margin-left: auto;
+}
+
 .mr-0{
   margin-right: 0px;
 }
@@ -1177,10 +1181,6 @@ select{
 
 .mt-auto{
   margin-top: auto;
-}
-
-.ml-auto{
-  margin-left: auto;
 }
 
 .block{
@@ -1399,6 +1399,10 @@ select{
   width: 1.5rem;
 }
 
+.w-64{
+  width: 16rem;
+}
+
 .w-8{
   width: 2rem;
 }
@@ -1409,10 +1413,6 @@ select{
 
 .w-full{
   width: 100%;
-}
-
-.w-64{
-  width: 16rem;
 }
 
 .min-w-\[3rem\]{
@@ -2287,6 +2287,11 @@ select{
   color: rgb(69 123 157 / var(--tw-text-opacity));
 }
 
+.text-tileset-blue-1{
+  --tw-text-opacity: 1;
+  color: rgb(50 88 113 / var(--tw-text-opacity));
+}
+
 .text-tileset-full-white{
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
@@ -2310,11 +2315,6 @@ select{
 .text-tileset-white{
   --tw-text-opacity: 1;
   color: rgb(244 243 238 / var(--tw-text-opacity));
-}
-
-.text-tileset-blue-1{
-  --tw-text-opacity: 1;
-  color: rgb(50 88 113 / var(--tw-text-opacity));
 }
 
 .underline{

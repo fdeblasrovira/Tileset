@@ -22,3 +22,7 @@ curl -X POST http://localhost:3000/login \
   
 curl http://localhost:3000/logout
 curl http://localhost:3000/restricted
+
+# process
+lsof -i tcp:3000
+kill -9 1605

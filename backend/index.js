@@ -69,6 +69,7 @@ app.use(session({
 }));
 
 function restrict(req, res, next) {
+  console.log(req.session)
   if (req.session.user) {
     next();
   } else {
@@ -132,6 +133,10 @@ app.get('/logout', function (req, res) {
   // will be re-created next request
   req.session.destroy();
   res.status(200).send()
+});
+
+app.get('/logincheck', restrict, function (req, res) {
+  res.status(200).json({"code": 200, "message": "You are good to go" })
 });
 
 app.post('/login', function (req, res, next) {

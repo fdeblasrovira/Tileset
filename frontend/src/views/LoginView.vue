@@ -4,36 +4,24 @@ import Input from "../components/inputs/Input.vue";
 import FullButton from "../components/buttons/FullButton.vue";
 import urlList from "../config/urlList"
 import router from "../router/index";
+import utils from "@/utils/fetch";
+import { useAuthStore } from '@/stores/auth'
 
 const authFormData = ref({
   username: "",
   password: ""
 })
 
-async function login() {
-  try {
-    const response = await fetch(urlList.BACKEND_LOGIN, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': "*"
-      },
-      body: JSON.stringify(authFormData.value)
-    });
-    if (!response.ok) {
-      // throw new Error(`Response status: ${response.status}`);
-      console.log("error: "+response.status)
-    }
-    else{
-      await router.push({ name: 'Home'})
-    }
-    const json = await response.json();
-    console.log(json);
-  } catch (error) {
-    console.error(error.message);
-  }
+const authData = useAuthStore();
 
+async function login() {
+  const response = await utils.postData(urlList.BACKEND_LOGIN,authFormData.value)
+  console.log(response);
+
+  if (response.code == 200){
+    authData.authenticated = true;
+    await router.push({ name: 'Home' })
+  }
 }
 </script>
 
