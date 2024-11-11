@@ -1,9 +1,11 @@
 const User = require('./User');
 const Attribute = require('./Attribute');
 const Form = require('./Form');
+const Result = require('./Result');
+const ResultAttributeValue = require('./ResultAttributeValue');
 
 // Models to be loaded
-const activeModels = [User, Attribute, Form];
+const activeModels = [User, Attribute, Form, Result, ResultAttributeValue];
 
 exports.defineModels = async function (sequelize) {
   activeModels.forEach((activeModel) => {
