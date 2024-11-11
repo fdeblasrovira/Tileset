@@ -1,21 +1,34 @@
 const { DataTypes } = require('sequelize');
 
-exports.User = function define(sequelize) {
-  sequelize.define(
-    'User',
-    {
-      // Model attributes are defined here
-      firstName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      lastName: {
-        type: DataTypes.STRING,
-        // allowNull defaults to true
-      },
+exports.model = {
+  name: "User",
+  model: {
+    // Model attributes are defined here
+    fullName: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
-    {
-      // Other model options go here
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      validate: {
+        isEmail: {msg: "Must be a valid email address"}
+      }
     },
-  )
+    passwordHash: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    passwordSalt: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    lastConnectionAt: {
+      type: DataTypes.DATE,
+      validate: {
+        isDate: true
+      }
+    }
+  }
 }

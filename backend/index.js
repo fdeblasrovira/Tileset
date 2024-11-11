@@ -10,6 +10,7 @@ var hash = require('pbkdf2-password')()
 var session = require('express-session');
 var cors = require('cors')
 const { Sequelize } = require('sequelize');
+var models = require('./models/Models');
 
 var app = module.exports = express();
 
@@ -28,11 +29,16 @@ async function testConnection() {
 
 testConnection();
 
-async function syncDatabase() {
-
+async function syncDatabase(sequelize) {
+  await models.defineModels(sequelize);
+  await models.syncModels(sequelize);
+  await models.saveTestData(sequelize);
+  await models.getAllUsers(sequelize);
+  await models.updateUsers(sequelize);
+  await models.getAllUsers(sequelize);
 };
 
-syncDatabase();
+syncDatabase(sequelize);
 
 // middleware
 
