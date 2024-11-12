@@ -128,7 +128,7 @@ function authenticate(name, pass, fn) {
   });
 }
 
-app.get('/restricted', restrict, function (req, res) {
+app.get('/restricted', authenticate, function (req, res) {
   res.status(200).json({ "message": "You are good to go" })
 });
 
@@ -137,10 +137,6 @@ app.get('/logout', function (req, res) {
   // will be re-created next request
   req.session.destroy();
   res.status(200).send()
-});
-
-app.get('/logincheck', restrict, function (req, res) {
-  res.status(200).json({ "code": 200, "message": "You are good to go" })
 });
 
 // app.post('/login', function (req, res, next) {
@@ -232,7 +228,7 @@ function generateRefreshToken(userId) {
   return jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: '30d' });
 }
 
-function verifyToken(req, res, next) {
+function authenticate(req, res, next) {
   const token = req.header('Authorization');
   if (!token) return res.status(401).json({ error: 'Access denied' });
   try {
