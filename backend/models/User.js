@@ -24,6 +24,9 @@ exports.model = {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    refreshToken: {
+      type: DataTypes.STRING(512),
+    },
     lastConnectionAt: {
       type: DataTypes.DATE,
       validate: {

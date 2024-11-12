@@ -11,8 +11,12 @@ var session = require('express-session');
 var cors = require('cors')
 const { Sequelize } = require('sequelize');
 var models = require('./models/Models');
+const jwt = require('jsonwebtoken');
 
 var app = module.exports = express();
+
+// Secret key for signing tokens; keep it secure and do not expose in code.
+const REFRESH_TOKEN_SECRET = 'your-secure-refresh-token-secret-key';
 
 // db
 
@@ -136,29 +140,29 @@ app.get('/logout', function (req, res) {
 });
 
 app.get('/logincheck', restrict, function (req, res) {
-  res.status(200).json({"code": 200, "message": "You are good to go" })
+  res.status(200).json({ "code": 200, "message": "You are good to go" })
 });
 
-app.post('/login', function (req, res, next) {
-  if (!req.body) return res.status(400)
-  console.log(req.body)
-  authenticate(req.body.username, req.body.password, function (err, user) {
-    if (err) return next(err)
-    if (user) {
-      // Regenerate session when signing in
-      // to prevent fixation
-      req.session.regenerate(function () {
-        // Store the user's primary key
-        // in the session store to be retrieved,
-        // or in this case the entire user object
-        req.session.user = user;
-        res.status(responses.OK.code).json(responses.OK)
-      });
-    } else {
-      res.status(responses.UNAUTHORIZED.code).json(responses.UNAUTHORIZED)
-    }
-  });
-});
+// app.post('/login', function (req, res, next) {
+//   if (!req.body) return res.status(400)
+//   console.log(req.body)
+//   authenticate(req.body.username, req.body.password, function (err, user) {
+//     if (err) return next(err)
+//     if (user) {
+//       // Regenerate session when signing in
+//       // to prevent fixation
+//       req.session.regenerate(function () {
+//         // Store the user's primary key
+//         // in the session store to be retrieved,
+//         // or in this case the entire user object
+//         req.session.user = user;
+//         res.status(responses.OK.code).json(responses.OK)
+//       });
+//     } else {
+//       res.status(responses.UNAUTHORIZED.code).json(responses.UNAUTHORIZED)
+//     }
+//   });
+// });
 
 /* istanbul ignore next */
 if (!module.parent) {
@@ -174,6 +178,44 @@ process.on('SIGTERM', () => {
   })
 })
 
-process.stdin.on('end', function() {
+process.stdin.on('end', function () {
   process.exit(0);
 });
+
+
+// User login
+app.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    // const user = await User.findOne({ email });
+
+    const user = users[email]
+
+    if (!user) {
+      return res.status(401).json({ code: 401, message: 'Authentication failed: user not found' });
+    }
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      return res.status(401).json({ error: 'Authentication failed: wrong password' });
+    }
+    const accessToken = jwt.sign({ userId: email }, 'your-secret-key', {
+      expiresIn: '1h',
+    });
+    const refreshToken = generateRefreshToken(email)
+
+    // Store Refresh token in DB
+    //code in here TODO
+    
+    res.status(200).json({ accessToken, refreshToken });
+  } catch (error) {
+    res.status(500).json({ error: 'Login failed' });
+  }
+});
+
+// Function to generate refresh token
+function generateRefreshToken(userEmail) {
+  const payload = { userEmail };
+
+  // Create the token
+  return jwt.sign(payload, REFRESH_TOKEN_SECRET, {expiresIn: '30d'});
+}
