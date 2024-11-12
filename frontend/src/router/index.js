@@ -34,24 +34,24 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from) => {
-  if(to.name == 'Login'){
-    return;
-  }
+  // if(to.name == 'Login'){
+  //   return;
+  // }
   
-  const authData = useAuthStore();
+  // const authData = useAuthStore();
 
-  if (!authData.authenticated){
-    const response = await utils.getData(urlList.BACKEND_LOGIN_CHECK)
+  // if (!authData.authenticated){
+  //   const response = await utils.getData(urlList.BACKEND_LOGIN_CHECK)
 
-    // It is authenticated. We just need to update local store
-    if (response.code == 200){
-      authData.authenticated = true;
-      return { name: to.name }
-    }
-    else if(to.name !== 'Login'){
-      return { name: 'Login' }
-    }
-  }
+  //   // It is authenticated. We just need to update local store
+  //   if (response.code == 200){
+  //     authData.authenticated = true;
+  //     return { name: to.name }
+  //   }
+  //   else if(to.name !== 'Login'){
+  //     return { name: 'Login' }
+  //   }
+  // }
 })
 
 
