@@ -19,7 +19,7 @@ exports.syncModels = async function (sequelize) {
 }
 
 exports.saveTestData = async function (sequelize) {
-  await sequelize.models.User.create({fullName: "ferran de Blas", email: "test@gmail.com", passwordHash: "testHash123456890", passwordSalt: "testHashSalt123456890"})
+  await sequelize.models.User.create({fullName: "ferran de Blas", email: "test@gmail.com", passwordHash: "testHash123456890"})
 }
 
 exports.getAllUsers = async function (sequelize) {

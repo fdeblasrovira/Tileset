@@ -20,10 +20,6 @@ exports.model = {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    passwordSalt: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     refreshToken: {
       type: DataTypes.STRING(512),
     },

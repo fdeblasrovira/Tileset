@@ -17,10 +17,10 @@ var app = module.exports = express();
 // Secret key for signing tokens; keep it secure and do not expose in code.
 const JWT_SECRET_KEY = 'your-secure-jw-token-secret-key';
 
-const saltRounds = 10; 
+// Password hash salt rounds
+const saltRounds = 10;
 
 // db
-
 const sequelize = new Sequelize('mysql://tileset:tileset@localhost:3308/tileset')
 
 async function testConnection() {
@@ -45,8 +45,6 @@ async function syncDatabase(sequelize) {
 
 syncDatabase(sequelize);
 
-// middleware
-
 // required to read JSON data in the request
 app.use(express.json());
 app.use(express.text());
@@ -61,50 +59,28 @@ app.use(function (req, res, next) {
   next();
 });
 
-function hashPassword(password) {
-  const hashedPassword = ""
-  bcrypt.genSalt(saltRounds, (err, salt) => {
-    if (err) {
-      // Handle error
-      return;
-    }
+// function hashPassword(password) {
+//   let hashedPassword = "";
+//   bcrypt.genSalt(saltRounds, (err, salt) => {
+//     if (err) {
+//       // Handle error
+//       throw new Error("Can't generate salt for password");
+//     }
 
-    // Salt generation successful, proceed to hash the password
-    bcrypt.hash(password, salt, (err, hash) => {
-      if (err) {
-        // Handle error
-        return;
-      }
+//     // Salt generation successful, proceed to hash the password
+//     bcrypt.hash(password, salt, (err, hash) => {
+//       if (err) {
+//         // Handle error
+//         throw new Error("Can't hash the password");
+//       }
 
-      // Hashing successful, 'hash' contains the hashed password
-      hashedPassword = hash; 
-    });
-  });
+//       // Hashing successful, 'hash' contains the hashed password
+//       hashedPassword = hash; 
+//     });
+//   });
 
-  return hashedPassword;
-}
-
-app.get('/restricted', authenticate, function (req, res) {
-  res.status(200).json({ "message": "You are good to go" })
-});
-
-if (!module.parent) {
-  app.listen(3000);
-  console.log('Express started on port 3000');
-}
-
-process.on('SIGTERM', () => {
-  debug('SIGTERM signal received: closing HTTP server')
-  sequelize.close()
-  server.close(() => {
-    debug('HTTP server closed')
-  })
-})
-
-process.stdin.on('end', function () {
-  process.exit(0);
-});
-
+//   return hashedPassword;
+// }
 
 // User login
 app.post('/login', async (req, res) => {
@@ -138,9 +114,41 @@ app.post('/login', async (req, res) => {
     // Store Refresh token in DB
     //code in here TODO
 
-    res.status(200).json({ accessToken, refreshToken });
+    res.status(200).json({ accessToken: accessToken, refreshToken: refreshToken });
   } catch (error) {
     res.status(500).json({ code: 500, message: 'Login failed' });
+  }
+});
+
+// User register
+app.post('/register', async (req, res) => {
+  try {
+    const { email, password, fullName } = req.body;
+
+    const hashedPassword = bcrypt.hashSync(password, saltRounds);
+
+    // register the user
+    const insertedUser = await sequelize.models.User.create({ fullName: fullName, email: email, passwordHash: hashedPassword })
+    const userId = insertedUser.dataValues.id;
+
+    // attempt to login the user by issuing the access and refresh tokens
+    const accessToken = jwt.sign({ userId: userId }, JWT_SECRET_KEY, {
+      expiresIn: '1h',
+    });
+
+    const refreshToken = generateRefreshToken(userId)
+    console.log("accessToken", accessToken)
+    console.log("refreshToken", refreshToken)
+
+    // update the user with the refresh token
+    insertedUser.refreshToken = refreshToken;
+    insertedUser.save()
+
+    res.status(200).json({ accessToken: accessToken, refreshToken: refreshToken });
+  } catch (error) {
+    if (error.name = "SequelizeUniqueConstraintError") res.status(500).json({ code: 500, message: "UniqueError" });
+
+    res.status(500).json({ code: 500, message: error.message });
   }
 });
 
@@ -152,7 +160,7 @@ function generateRefreshToken(userId) {
   return jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: '30d' });
 }
 
-function authenticate(req, res, next) {
+function authenticated(req, res, next) {
   const token = req.header('Authorization');
   if (!token) return res.status(401).json({ code: 401, message: 'Access denied: no access token' });
   try {
@@ -163,3 +171,26 @@ function authenticate(req, res, next) {
     res.status(401).json({ error: 'Access denied: invalid token' });
   }
 };
+
+app.get('/restricted', authenticated, function (req, res) {
+  res.status(200).json({ "message": "You are good to go" })
+});
+
+if (!module.parent) {
+  app.listen(3000);
+  console.log('Express started on port 3000');
+}
+
+process.on('SIGTERM', () => {
+  debug('SIGTERM signal received: closing HTTP server')
+  sequelize.close()
+  server.close(() => {
+    debug('HTTP server closed')
+  })
+})
+
+process.stdin.on('end', function () {
+  process.exit(0);
+});
+
+
