@@ -154,12 +154,12 @@ function generateRefreshToken(userId) {
 
 function authenticate(req, res, next) {
   const token = req.header('Authorization');
-  if (!token) return res.status(401).json({ error: 'Access denied' });
+  if (!token) return res.status(401).json({ code: 401, message: 'Access denied: no access token' });
   try {
     const decoded = jwt.verify(token, JWT_SECRET_KEY);
     req.userId = decoded.userId;
     next();
   } catch (error) {
-    res.status(401).json({ error: 'Invalid token' });
+    res.status(401).json({ error: 'Access denied: invalid token' });
   }
 };
