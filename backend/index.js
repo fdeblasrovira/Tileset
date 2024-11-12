@@ -16,7 +16,7 @@ const jwt = require('jsonwebtoken');
 var app = module.exports = express();
 
 // Secret key for signing tokens; keep it secure and do not expose in code.
-const REFRESH_TOKEN_SECRET = 'your-secure-refresh-token-secret-key';
+const JWT_SECRET_KEY = 'your-secure-refresh-token-secret-key';
 
 // db
 
@@ -187,25 +187,37 @@ process.stdin.on('end', function () {
 app.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
-    // const user = await User.findOne({ email });
+    // const user = await User.findOne({ userId });
 
-    const user = users[email]
+    // TODO Check DB and get pass and id
+    const user = users.tj;
 
     if (!user) {
       return res.status(401).json({ code: 401, message: 'Authentication failed: user not found' });
     }
+    // TODO
+    // TODO
+    // TODO
+    // Change the password thingy with the implementation with salt.
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
       return res.status(401).json({ error: 'Authentication failed: wrong password' });
     }
-    const accessToken = jwt.sign({ userId: email }, 'your-secret-key', {
+    // TODO GET USER ID FROM THE REQUEST YOU USED TO GET THE PASSWORD instead of email
+    // TODO GET USER ID FROM THE REQUEST YOU USED TO GET THE PASSWORD instead of email
+    // TODO GET USER ID FROM THE REQUEST YOU USED TO GET THE PASSWORD instead of email
+    const accessToken = jwt.sign({ userId: email }, JWT_SECRET_KEY, {
       expiresIn: '1h',
     });
+
+    // TODO GET USER ID FROM THE REQUEST YOU USED TO GET THE PASSWORD instead of email
+    // TODO GET USER ID FROM THE REQUEST YOU USED TO GET THE PASSWORD instead of email
+    // TODO GET USER ID FROM THE REQUEST YOU USED TO GET THE PASSWORD instead of email
     const refreshToken = generateRefreshToken(email)
 
     // Store Refresh token in DB
     //code in here TODO
-    
+
     res.status(200).json({ accessToken, refreshToken });
   } catch (error) {
     res.status(500).json({ error: 'Login failed' });
@@ -213,9 +225,21 @@ app.post('/login', async (req, res) => {
 });
 
 // Function to generate refresh token
-function generateRefreshToken(userEmail) {
-  const payload = { userEmail };
+function generateRefreshToken(userId) {
+  const payload = { userId: userId };
 
   // Create the token
-  return jwt.sign(payload, REFRESH_TOKEN_SECRET, {expiresIn: '30d'});
+  return jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: '30d' });
 }
+
+function verifyToken(req, res, next) {
+  const token = req.header('Authorization');
+  if (!token) return res.status(401).json({ error: 'Access denied' });
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET_KEY);
+    req.userId = decoded.userId;
+    next();
+  } catch (error) {
+    res.status(401).json({ error: 'Invalid token' });
+  }
+};
