@@ -8,7 +8,7 @@ import utils from "@/utils/fetch";
 import { useAuthStore } from '@/stores/auth'
 
 const authFormData = ref({
-  username: "",
+  email: "",
   password: ""
 })
 
@@ -33,7 +33,7 @@ async function login() {
         <img src="logo.webp" class="w-64" alt="Tileset Logo" />
         <br>
         <br>
-        <Input @keyup.enter="login" v-model="authFormData.username" label="Username" name="username" type="text" placeholder="" />
+        <Input @keyup.enter="login" v-model="authFormData.email" label="Email" name="email" type="text" placeholder="" />
         <br>
         <Input @keyup.enter="login" v-model="authFormData.password" label="Password" name="password" type="password" placeholder="" />
         <br>
