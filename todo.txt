@@ -1,0 +1,4 @@
+Verify that authenticated middleware works. (create a test in login?)
+Create refresh accesstoken flow on backend
+Change data on the user menu at the top right of navibar
+Create logout
