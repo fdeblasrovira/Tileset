@@ -1,1 +1,6 @@
-{}
+{"prettier/prettier": [
+  "error",
+  {
+    "clrf": "auto"
+  }
+]}

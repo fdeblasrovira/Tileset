@@ -4,9 +4,7 @@ import CreateView from "../views/CreateView.vue";
 import EditView from "../views/EditView.vue";
 import LoginView from "../views/LoginView.vue";
 import RegisterView from "../views/RegisterView.vue";
-import { useAuthStore } from '@/stores/auth'
-import urlList from "@/config/urlList"
-import utils from "@/utils/fetch";
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -39,12 +37,22 @@ const router = createRouter({
   ],
 });
 
+// Handle user authentication
 router.beforeEach(async (to, from) => {
-  // if(to.name == 'Login'){
+  
+
+  // if (!authData.authenticated){
+  //   // request for new access token using refresh
+  //   // if good response update authData and go to requested url
+  // }
+  // // avoid going to home and register pages if authenticated
+  // if(to.path == '/login' || to.path == '/register' ){
+  //   // Check if authenticated. If authenticated redirect to Home
+  //   if (authData.authenticated) return { name: 'Home' }
   //   return;
   // }
   
-  // const authData = useAuthStore();
+  
 
   // if (!authData.authenticated){
   //   const response = await utils.getData(urlList.BACKEND_LOGIN_CHECK)

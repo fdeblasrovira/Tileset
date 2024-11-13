@@ -48,10 +48,12 @@ async function register() {
     errorMessage.value = "Email already in use"
     return;
   }
-  
+
   if (response.code == 200) {
     authData.authenticated = true;
-    await router.push({ name: 'Login' })
+    authData.accessToken = response.accessToken;
+    
+    await router.push({ name: 'Home' })
   }
 }
 </script>
@@ -76,8 +78,7 @@ async function register() {
         <Input @keyup.enter="register" v-model="passwordCheck" label="Confirm password" name="passwordCheck"
           type="password" placeholder="" />
         <br>
-        <p v-if="errorMessage.length > 0"
-          class="text-tileset-red text-right text-sm px-4 sm:px-6">
+        <p v-if="errorMessage.length > 0" class="text-tileset-red text-right text-sm px-4 sm:px-6">
           {{ errorMessage }}
         </p>
         <FullButton @click="register" text="Register" color="bg-tileset-green" hover="hover:bg-tileset-green-1">

@@ -15,11 +15,13 @@ const authFormData = ref({
 const authData = useAuthStore();
 
 async function login() {
-  const response = await utils.postData(urlList.BACKEND_LOGIN,authFormData.value)
+  const response = await utils.postData(urlList.BACKEND_LOGIN, authFormData.value)
   console.log(response);
 
   if (response.code == 200){
     authData.authenticated = true;
+    authData.accessToken = response.accessToken;
+    
     await router.push({ name: 'Home' })
   }
 }

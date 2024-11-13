@@ -1,12 +1,12 @@
 # docker db
 docker volume create tileset-data
 
-docker run --name tileset -e MYSQL_ROOT_PASSWORD=tileset -v tileset-data:/var/lib/mysql -d -p 3308:3306 mysql:latest
+docker run --name tileset -e MYSQL_ROOT_PASSWORD=tileset -e TZ=Asia/Tokyo -v tileset-data:/var/lib/mysql -d -p 3308:3306 mysql:latest
 
 # mysql
 docker exec -it tileset bash
 
-mysql -localhost -u root -p
+mysql -hlocalhost -u root -p
 
 CREATE USER 'tileset'@'172.17.0.1' IDENTIFIED BY 'tileset';
 GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES, RELOAD on *.* TO 'tileset'@'172.17.0.1' WITH GRANT OPTION;

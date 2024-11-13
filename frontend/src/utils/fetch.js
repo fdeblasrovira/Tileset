@@ -5,6 +5,7 @@ export const postData = async function postData(url, data) {
 	try {
 		const response = await fetch(url, {
 			method: "POST",
+			credentials: "include",
 			headers: {
 				'Accept': 'application/json',
 				'Content-Type': 'application/json',
@@ -21,6 +22,7 @@ export const postData = async function postData(url, data) {
 export const getData = async function getData(url) {
 	try {
 		const response = await fetch(url, {
+			credentials: 'include',
 			headers: {
 				'Accept': 'application/json',
 				'Content-Type': 'application/json',

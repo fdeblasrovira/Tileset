@@ -3,7 +3,6 @@
 /**
  * Module dependencies.
  */
-
 var express = require('express');
 var responses = require('./responses/responses');
 var cors = require('cors')
@@ -11,8 +10,11 @@ const { Sequelize } = require('sequelize');
 var models = require('./models/Models');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+var cookieParser = require('cookie-parser');
+const e = require('express');
 
 var app = module.exports = express();
+
 
 // Secret key for signing tokens; keep it secure and do not expose in code.
 const JWT_SECRET_KEY = 'your-secure-jw-token-secret-key';
@@ -21,7 +23,7 @@ const JWT_SECRET_KEY = 'your-secure-jw-token-secret-key';
 const saltRounds = 10;
 
 // db
-const sequelize = new Sequelize('mysql://tileset:tileset@localhost:3308/tileset')
+const sequelize = new Sequelize('mysql://tileset:tileset@localhost:3308/tileset',{timezone:"+09:00"})
 
 async function testConnection() {
   try {
@@ -41,6 +43,7 @@ async function syncDatabase(sequelize) {
   await models.getAllUsers(sequelize);
   await models.updateUsers(sequelize);
   await models.getAllUsers(sequelize);
+  console.log(Date.now())
 };
 
 syncDatabase(sequelize);
@@ -48,13 +51,17 @@ syncDatabase(sequelize);
 // required to read JSON data in the request
 app.use(express.json());
 app.use(express.text());
+app.use(cookieParser())
+
 
 //  allow only frontend
 app.use(cors({
-  origin: 'http://localhost:5173'
+  origin: 'http://localhost:5173',
+  credentials: true
 }))
 
 app.use(function (req, res, next) {
+  res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Content-Type', 'application/json');
   next();
 });
@@ -86,35 +93,43 @@ app.use(function (req, res, next) {
 app.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
-    // const user = await User.findOne({ userId });
-
-    // TODO Check DB and get pass and id
-    const user = {}
+    const user = await sequelize.models.User.findOne({ where: { email: email } });
 
     if (!user) {
-      return res.status(401).json({ code: 401, message: 'Authentication failed: user not found' });
+      return res.status(401).json({ code: 401, message: 'Authentication failed: email not found' });
     }
 
-    const passwordMatch = await bcrypt.compare(password, user.password);
+    const passwordMatch = await bcrypt.compare(password, user.dataValues.passwordHash);
     if (!passwordMatch) {
       return res.status(401).json({ code: 401, message: 'Authentication failed: wrong password' });
     }
-    // TODO GET USER ID FROM THE REQUEST YOU USED TO GET THE PASSWORD instead of email
-    // TODO GET USER ID FROM THE REQUEST YOU USED TO GET THE PASSWORD instead of email
-    // TODO GET USER ID FROM THE REQUEST YOU USED TO GET THE PASSWORD instead of email
-    const accessToken = jwt.sign({ userId: email }, JWT_SECRET_KEY, {
+
+    // Create access token
+    const accessToken = jwt.sign({ userId: user.dataValues.id }, JWT_SECRET_KEY, {
       expiresIn: '1h',
     });
 
-    // TODO GET USER ID FROM THE REQUEST YOU USED TO GET THE PASSWORD instead of email
-    // TODO GET USER ID FROM THE REQUEST YOU USED TO GET THE PASSWORD instead of email
-    // TODO GET USER ID FROM THE REQUEST YOU USED TO GET THE PASSWORD instead of email
-    const refreshToken = generateRefreshToken(email)
+    // generate refresh token
+    const refreshToken = generateRefreshToken(user.dataValues.id)
 
     // Store Refresh token in DB
-    //code in here TODO
+    user.refreshToken = refreshToken;
 
-    res.status(200).json({ accessToken: accessToken, refreshToken: refreshToken });
+    // Update last user connection
+    user.lastConnectionAt = Date.now()
+    user.save()
+
+    // sets the refresh token as a httponly cookie
+    res.cookie('refreshToken', refreshToken, {
+      secure: process.env.NODE_ENV == "production",
+      httpOnly: true,
+      path: "/",
+      domain: "localhost",
+      sameSite: "lax",
+      maxAge: 1814400000
+    }); // Cookie lasts 21 days
+
+    res.status(200).json({ code: 200, accessToken: accessToken });
   } catch (error) {
     res.status(500).json({ code: 500, message: 'Login failed' });
   }
@@ -122,6 +137,8 @@ app.post('/login', async (req, res) => {
 
 // User register
 app.post('/register', async (req, res) => {
+  // console.log("req.cookies.refreshToken")
+  // console.log(req.cookies.refreshToken)
   try {
     const { email, password, fullName } = req.body;
 
@@ -144,11 +161,21 @@ app.post('/register', async (req, res) => {
     insertedUser.refreshToken = refreshToken;
     insertedUser.save()
 
-    res.status(200).json({ accessToken: accessToken, refreshToken: refreshToken });
+    // sets the refresh token as a httponly cookie
+    res.cookie('refreshToken', refreshToken, {
+      secure: process.env.NODE_ENV == "production",
+      httpOnly: true,
+      path: "/",
+      domain: "localhost",
+      sameSite: "lax",
+      maxAge: 1814400000
+    }); // Cookie lasts 21 days
+
+    // sends back the access token
+    res.status(200).json({ code: 200, accessToken: accessToken });
   } catch (error) {
     if (error.name = "SequelizeUniqueConstraintError") res.status(500).json({ code: 500, message: "UniqueError" });
-
-    res.status(500).json({ code: 500, message: error.message });
+    else res.status(500).json({ code: 500, message: error.message });
   }
 });
 
