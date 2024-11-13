@@ -66,28 +66,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-// function hashPassword(password) {
-//   let hashedPassword = "";
-//   bcrypt.genSalt(saltRounds, (err, salt) => {
-//     if (err) {
-//       // Handle error
-//       throw new Error("Can't generate salt for password");
-//     }
 
-//     // Salt generation successful, proceed to hash the password
-//     bcrypt.hash(password, salt, (err, hash) => {
-//       if (err) {
-//         // Handle error
-//         throw new Error("Can't hash the password");
-//       }
-
-//       // Hashing successful, 'hash' contains the hashed password
-//       hashedPassword = hash; 
-//     });
-//   });
-
-//   return hashedPassword;
-// }
 
 // User login
 app.post('/login', async (req, res) => {
@@ -198,6 +177,14 @@ function authenticated(req, res, next) {
     res.status(401).json({ error: 'Access denied: invalid token' });
   }
 };
+
+// Issue a new access token if a valid refresh token is provided
+app.get('/refresh_auth', authenticated, function (req, res) {
+  // First check if the route /restricted works.
+  // If it does work well then proceed
+
+  // No need to Store refresh token in DB. Also, when registering the user make sure to add the lastConnectedAt without doubling the requests.
+});
 
 app.get('/restricted', authenticated, function (req, res) {
   res.status(200).json({ "message": "You are good to go" })

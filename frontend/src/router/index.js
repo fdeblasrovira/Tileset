@@ -4,6 +4,7 @@ import CreateView from "../views/CreateView.vue";
 import EditView from "../views/EditView.vue";
 import LoginView from "../views/LoginView.vue";
 import RegisterView from "../views/RegisterView.vue";
+import auth from "@/auth/auth";
 
 
 const router = createRouter({
@@ -39,34 +40,17 @@ const router = createRouter({
 
 // Handle user authentication
 router.beforeEach(async (to, from) => {
-  
-
-  // if (!authData.authenticated){
-  //   // request for new access token using refresh
-  //   // if good response update authData and go to requested url
-  // }
-  // // avoid going to home and register pages if authenticated
-  // if(to.path == '/login' || to.path == '/register' ){
-  //   // Check if authenticated. If authenticated redirect to Home
-  //   if (authData.authenticated) return { name: 'Home' }
-  //   return;
-  // }
-  
-  
-
-  // if (!authData.authenticated){
-  //   const response = await utils.getData(urlList.BACKEND_LOGIN_CHECK)
-
-  //   // It is authenticated. We just need to update local store
-  //   if (response.code == 200){
-  //     authData.authenticated = true;
-  //     return { name: to.name }
-  //   }
-  //   else if(to.name !== 'Login'){
-  //     return { name: 'Login' }
-  //   }
-  // }
+  // login and register screens are only for not authenticated users
+  if(to.path == '/login' || to.path == '/register' ){
+    // Check if authenticated. If authenticated redirect to Home
+    if (await auth.isValidAuth()) return { name: 'Home' }
+    return;
+  }
+  else{
+    // For other screens check if the user authentication is valid
+    if (await auth.isValidAuth()) return;
+    else return { name: 'Login' }
+  }
 })
-
 
 export default router;
