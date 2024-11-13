@@ -91,9 +91,6 @@ app.post('/login', async (req, res) => {
     // generate refresh token
     const refreshToken = generateRefreshToken(user.dataValues.id)
 
-    // Store Refresh token in DB
-    user.refreshToken = refreshToken;
-
     // Update last user connection
     user.lastConnectionAt = Date.now()
     user.save()
@@ -124,7 +121,7 @@ app.post('/register', async (req, res) => {
     const hashedPassword = bcrypt.hashSync(password, saltRounds);
 
     // register the user
-    const insertedUser = await sequelize.models.User.create({ fullName: fullName, email: email, passwordHash: hashedPassword })
+    const insertedUser = await sequelize.models.User.create({ fullName: fullName, email: email, passwordHash: hashedPassword, lastConnectionAt: Date.now() })
     const userId = insertedUser.dataValues.id;
 
     // attempt to login the user by issuing the access and refresh tokens
@@ -133,12 +130,6 @@ app.post('/register', async (req, res) => {
     });
 
     const refreshToken = generateRefreshToken(userId)
-    console.log("accessToken", accessToken)
-    console.log("refreshToken", refreshToken)
-
-    // update the user with the refresh token
-    insertedUser.refreshToken = refreshToken;
-    insertedUser.save()
 
     // sets the refresh token as a httponly cookie
     res.cookie('refreshToken', refreshToken, {
