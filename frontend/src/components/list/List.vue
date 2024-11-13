@@ -77,12 +77,24 @@ async function routeToCreate() {
   loadingData.loading = false;
 }
 
+import urlList from "@/config/urlList"
+import utils from "@/utils/fetch";
+
+async function testAuthenticated() {
+  const response = await utils.getData(urlList.BACKEND_TEST)
+
+  console.log("response")
+  console.log(response)
+}
+
 const totalItems = 114;
 </script>
 
 <template>
   <div class="flex flex-row justify-between mb-3 items-center">
     <h2 class="text-lg mb-2 text-tileset-black">Forms: {{ totalItems }}</h2>
+    <BaseButton @click="testAuthenticated" text="Test" color="bg-tileset-green" hover="hover:bg-tileset-green-1"
+      :class="{ glowingAnimation: forms.length <= 0 }"></BaseButton>
     <BaseButton @click="routeToCreate" text="Create" color="bg-tileset-green" hover="hover:bg-tileset-green-1"
       :class="{ glowingAnimation: forms.length <= 0 }">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"

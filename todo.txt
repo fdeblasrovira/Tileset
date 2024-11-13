@@ -1,4 +1,12 @@
-Verify that authenticated middleware works. (create a test in login?)
-Create refresh accesstoken flow on backend
-Change data on the user menu at the top right of navibar
 Create logout
+  - send request of log out from frontend with access token and refresh token as data
+  - The backend gets the request and:
+    - Unsets the refresh token from the cookie
+    - Invalidates the access token by storing it into tokenBlacklist Cache
+    ※ To do this you need to change the flow of validating access tokens and refresh tokens by looking up first if they are blacklisted
+      - You will need to change
+        - Research cache option for node or express.
+        - Create a new cache tokenBlacklist
+        - authenticated middleware needs to be updated to check if token is in blacklisted
+        - /refresh_auth route needs to be updated to check if token is in blacklisted
+Change data on the user menu at the top right of navibar

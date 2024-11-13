@@ -6,6 +6,7 @@ import urlList from "../config/urlList"
 import router from "../router/index";
 import utils from "@/utils/fetch";
 import { useAuthStore } from "@/stores/auth"
+import toastConfig from "@/config/toast"
 import Toastify from "toastify-js"
 
 const authFormData = ref({
@@ -53,17 +54,7 @@ async function register() {
     authData.authenticated = true;
     authData.accessToken = response.accessToken;
 
-    Toastify({
-      text: "Registration successful",
-      duration: 3000,
-      close: true,
-      gravity: "bottom", // `top` or `bottom`
-      position: "right", // `left`, `center` or `right`
-      stopOnFocus: false, // Prevents dismissing of toast on hover
-      style: {
-        background: "linear-gradient(to right, #7dd975, #49a078)",
-      }
-    }).showToast();
+    Toastify(toastConfig).showToast();
     await router.push({ name: 'Home' })
   }
 }

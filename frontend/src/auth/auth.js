@@ -8,6 +8,7 @@ export async function isValidAuth() {
     const authData = useAuthStore();
     try {
         if (!authData.authenticated) {
+            console.log("not authenticated")
             // request for new access token using refresh
             const response = await utils.getData(urlList.BACKEND_REFRESH_AUTH)
 

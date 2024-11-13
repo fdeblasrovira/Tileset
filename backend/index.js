@@ -23,7 +23,7 @@ const JWT_SECRET_KEY = 'your-secure-jw-token-secret-key';
 const saltRounds = 10;
 
 // db
-const sequelize = new Sequelize('mysql://tileset:tileset@localhost:3308/tileset',{timezone:"+09:00"})
+const sequelize = new Sequelize('mysql://tileset:tileset@localhost:3308/tileset', { timezone: "+09:00" })
 
 async function testConnection() {
   try {
@@ -158,23 +158,49 @@ function generateRefreshToken(userId) {
 }
 
 function authenticated(req, res, next) {
-  const token = req.header('Authorization');
+  const token = req.header('Authorization').replace("Bearer ", "");;
+  console.log("token")
+  console.log(token)
   if (!token) return res.status(401).json({ code: 401, message: 'Access denied: no access token' });
   try {
     const decoded = jwt.verify(token, JWT_SECRET_KEY);
     req.userId = decoded.userId;
     next();
   } catch (error) {
-    res.status(401).json({ error: 'Access denied: invalid token' });
+    res.status(401).json({ code: 401, message: 'Access denied: invalid access token' });
   }
 };
 
 // Issue a new access token if a valid refresh token is provided
-app.get('/refresh_auth', authenticated, function (req, res) {
-  // First check if the route /restricted works.
-  // If it does work well then proceed
+app.get('/refresh_auth', function (req, res) {
+  // get the refresh token from the HttpOnly cookie
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) return res.status(401).json({ code: 401, message: 'Access denied: no refresh token' });
 
-  // No need to Store refresh token in DB. Also, when registering the user make sure to add the lastConnectedAt without doubling the requests.
+  try {
+    const decoded = jwt.verify(refreshToken, JWT_SECRET_KEY);
+    console.log("decoded")
+    console.log(decoded)
+
+    // There is token, but we need to check if it is expired 
+    const expiration = decoded.exp;
+    const currentTimestamp = new Date().getTime() / 1000;
+
+    if (currentTimestamp >= expiration){
+      // token is expired, need to login again
+      res.status(401).json({ code: 401, message: 'Access denied: expired token' });
+    }
+    else{
+      // It's a valid refresh token so issue new access token
+      const accessToken = jwt.sign({ userId: decoded.userId }, JWT_SECRET_KEY, {
+        expiresIn: '1h',
+      });
+
+      res.status(200).json({ code: 200, accessToken: accessToken });
+    }
+  } catch (error) {
+    res.status(401).json({ code: 401, message: 'Access denied: invalid refresh token' });
+  }
 });
 
 app.get('/restricted', authenticated, function (req, res) {

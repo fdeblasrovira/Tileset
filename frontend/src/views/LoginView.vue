@@ -25,6 +25,14 @@ async function login() {
     await router.push({ name: 'Home' })
   }
 }
+
+async function testAuthenticated() {
+  const response = await utils.getData(urlList.BACKEND_TEST)
+
+  console.log("response")
+  console.log(response)
+}
+
 </script>
 
 <template>
@@ -40,6 +48,8 @@ async function login() {
         <Input @keyup.enter="login" v-model="authFormData.password" label="Password" name="password" type="password" placeholder="" />
         <br>
         <FullButton @click="login" text="Login" color="bg-tileset-green" hover="hover:bg-tileset-green-1">
+        </FullButton>
+        <FullButton @click="testAuthenticated" text="Test" color="bg-tileset-green" hover="hover:bg-tileset-green-1">
         </FullButton>
         <a href="/register" class="text-tileset-blue mt-2 ml-auto mr-0">Don't have an account? Register here!</a>
       </div>
