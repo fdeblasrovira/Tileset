@@ -52,7 +52,18 @@ async function register() {
   if (response.code == 200) {
     authData.authenticated = true;
     authData.accessToken = response.accessToken;
-    
+
+    Toastify({
+      text: "Registration successful",
+      duration: 3000,
+      close: true,
+      gravity: "bottom", // `top` or `bottom`
+      position: "right", // `left`, `center` or `right`
+      stopOnFocus: false, // Prevents dismissing of toast on hover
+      style: {
+        background: "linear-gradient(to right, #7dd975, #49a078)",
+      }
+    }).showToast();
     await router.push({ name: 'Home' })
   }
 }

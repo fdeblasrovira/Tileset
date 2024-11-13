@@ -10,6 +10,9 @@ const authData = useAuthStore();
 </script>
 
 <template>
+  <!-- toast stylesheet -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
   <div class="flex min-w-full min-h-screen flex-col">
     <header class="flex min-h-min sticky top-0 z-50">
       <NavBar v-if="authData.authenticated"/>
