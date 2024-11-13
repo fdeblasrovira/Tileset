@@ -216,25 +216,25 @@ const selectQuestionList = [
 const resultList = [
   {
     name: "Cat",
-    description: "When were you born?",
+    description: "I'm a cute cat!",
     picture: pictureFolder + "cat.jpg",
     attributeValues: {}
   },
   {
     name: "Dog",
-    description: "When were you born?",
+    description: "Woof woof! I'm your best friend",
     picture: pictureFolder + "dog.jpg",
     attributeValues: {}
   },
   {
     name: "Doctor",
-    description: "When were you born?",
+    description: "Highly specialized and ready to rock",
     picture: pictureFolder + "doctor.jpg",
     attributeValues: {}
   },
   {
     name: "Tennis Player",
-    description: "When were you born?",
+    description: "Let's play one on one",
     picture: pictureFolder + "tennisPlayer.jpg",
     attributeValues: {}
   },
