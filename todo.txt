@@ -1,11 +1,20 @@
-Separating concerns in a backend application can greatly improve readability, maintainability, and scalability. Here's a common approach for structuring your code to keep your routes clean:
+In env, make usre that it has NODE_ENV and FRONTEND_URL
 
-Controllers: Move all the logic in your routes into controller functions. Controllers handle the incoming HTTP requests, call the necessary services or business logic, and send responses back to the client. Each route then simply calls the corresponding controller function, making your routes cleaner.
+Example of env
 
-Services: Separate your business logic into service modules. These handle complex operations and computations. Services should be reusable and handle higher-level operations that aren’t specific to a single route.
+NODE_ENV=development
+TIMEZONE=+09:00
 
-Repositories: Use repository or data access layer classes or modules to encapsulate all database operations. This keeps your database access code separate from business logic, making it easier to update or replace your data source in the future.
+JWT_SECRET_KEY=QgFLqIBeDwlsVWr3DBvE0zR63iE7rXB4
+AUTH_SALT_ROUNDS=10
 
-Models: If you're using an ORM, models represent your database structure and can be kept in their own directory, such as a models folder. Models manage the data schema and enforce data consistency.
+DB_DRIVER=mysql
+DB_USER=tileset
+DB_PASSWORD=tileset
+DB_HOST=localhost
+DB_PORT=3308
+DB_DATABASE=tileset
 
-Middlewares: Any logic that applies to multiple routes (such as authentication, logging, or validation) should go into middleware functions. Middlewares let you apply logic globally or to specific route groups.
+
+
+FRONTEND_URL=http://localhost:5173
