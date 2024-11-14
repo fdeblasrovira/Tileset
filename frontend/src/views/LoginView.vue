@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { watch, ref } from "vue";
 import Input from "../components/inputs/Input.vue";
 import FullButton from "../components/buttons/FullButton.vue";
 import urlList from "../config/urlList"
@@ -12,17 +12,32 @@ const authFormData = ref({
   password: ""
 })
 
+const errorMessage = ref("");
+
+// Reset error message in case of new user input
+watch(authFormData.value, () => {
+  errorMessage.value = "";
+});
+
 const authData = useAuthStore();
 
 async function login() {
+  if (authFormData.value.email.trim().length <= 0 ||
+    authFormData.value.password.trim().length <= 0) {
+    errorMessage.value = "There are blank fields"
+    return;
+  }
+
   const response = await utils.postData(urlList.BACKEND_LOGIN, authFormData.value)
-  console.log(response);
 
   if (response.code == 200){
     authData.authenticated = true;
     authData.accessToken = response.accessToken;
     
     await router.push({ name: 'Home' })
+  }
+  else{
+    errorMessage.value = "Invalid credentials";
   }
 }
 
@@ -40,6 +55,9 @@ async function login() {
         <br>
         <Input @keyup.enter="login" v-model="authFormData.password" label="Password" name="password" type="password" placeholder="" />
         <br>
+        <p v-if="errorMessage.length > 0" class="text-tileset-red text-right text-sm px-4 sm:px-6">
+          {{ errorMessage }}
+        </p>
         <FullButton @click="login" text="Login" color="bg-tileset-green" hover="hover:bg-tileset-green-1">
         </FullButton>
         <a href="/register" class="text-tileset-blue mt-2 ml-auto mr-0">Don't have an account? Register here!</a>
