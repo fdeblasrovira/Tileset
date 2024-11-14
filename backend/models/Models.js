@@ -3,13 +3,14 @@ const Attribute = require('./Attribute');
 const Form = require('./Form');
 const Result = require('./Result');
 const ResultAttributeValue = require('./ResultAttributeValue');
+const BlacklistToken = require('./BlacklistToken');
 
 // Models to be loaded
-const activeModels = [User, Attribute, Form, Result, ResultAttributeValue];
+const activeModels = [User, Attribute, Form, Result, ResultAttributeValue, BlacklistToken];
 
 exports.defineModels = async function (sequelize) {
   activeModels.forEach((activeModel) => {
-    sequelize.define(activeModel.model.name, activeModel.model.model, {paranoid: true})
+    sequelize.define(activeModel.model.name, activeModel.model.model, {paranoid: activeModel.model.paranoid})
   })
 }
 

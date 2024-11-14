@@ -2,6 +2,7 @@ const { DataTypes } = require('sequelize');
 
 exports.model = {
   name: "Attribute",
+  paranoid: true,
   model: {
     // Model attributes are defined here
     leftLabel: {

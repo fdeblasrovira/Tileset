@@ -85,7 +85,7 @@ app.post('/login', async (req, res) => {
 
     // Create access token
     const accessToken = jwt.sign({ userId: user.dataValues.id }, JWT_SECRET_KEY, {
-      expiresIn: '1h',
+      expiresIn: '5m',
     });
 
     // generate refresh token
@@ -126,7 +126,7 @@ app.post('/register', async (req, res) => {
 
     // attempt to login the user by issuing the access and refresh tokens
     const accessToken = jwt.sign({ userId: userId }, JWT_SECRET_KEY, {
-      expiresIn: '1h',
+      expiresIn: '5m',
     });
 
     const refreshToken = generateRefreshToken(userId)
@@ -172,7 +172,7 @@ function authenticated(req, res, next) {
 };
 
 // Issue a new access token if a valid refresh token is provided
-app.get('/refresh_auth', function (req, res) {
+app.get('/refresh_auth', async function (req, res) {
   // get the refresh token from the HttpOnly cookie
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.status(401).json({ code: 401, message: 'Access denied: no refresh token' });
@@ -186,20 +186,53 @@ app.get('/refresh_auth', function (req, res) {
     const expiration = decoded.exp;
     const currentTimestamp = new Date().getTime() / 1000;
 
-    if (currentTimestamp >= expiration){
+    if (currentTimestamp >= expiration) {
       // token is expired, need to login again
       res.status(401).json({ code: 401, message: 'Access denied: expired token' });
     }
-    else{
-      // It's a valid refresh token so issue new access token
-      const accessToken = jwt.sign({ userId: decoded.userId }, JWT_SECRET_KEY, {
-        expiresIn: '1h',
-      });
+    else {
+      // It's a valid refresh token 
+      // Check if it's blacklisted (for example the user logged out)
+      const blacklistedToken = await sequelize.models.BlacklistToken.findOne({ where: { token: refreshToken } });
 
-      res.status(200).json({ code: 200, accessToken: accessToken });
+      if (blacklistedToken) {
+        // Token is blacklisted, so no it's no longer valid
+        res.status(401).json({ code: 401, message: 'Access denied: blacklisted refresh token' });
+      }
+      else {
+        // Token is usable, so create new access token
+        const accessToken = jwt.sign({ userId: decoded.userId }, JWT_SECRET_KEY, {
+          expiresIn: '5m',
+        });
+        res.status(200).json({ code: 200, accessToken: accessToken });
+      }
     }
   } catch (error) {
     res.status(401).json({ code: 401, message: 'Access denied: invalid refresh token' });
+  }
+});
+
+app.get('/logout', async function (req, res) {
+  const refreshToken = req.cookies.refreshToken;
+  // if not refresh token then no need to do anything
+  if (!refreshToken) res.status(200).json({ code: 200, message: 'You are not even logged in' })
+
+  try {
+    // Get the token expiration date
+    const decoded = jwt.verify(refreshToken, JWT_SECRET_KEY);
+    const expiration = decoded.exp;
+    // Changing it to milliseconds from seconds
+    const expirationDate = new Date(expiration * 1000);
+
+    // Add the token to the blacklist so it will no longer be usable.
+    await sequelize.models.BlacklistToken.create({ token: refreshToken, expirationDate })
+
+    // Unset refresh token cookie
+    res.clearCookie("refreshToken");
+    res.status(200).json({ code: 200, message: 'Successfully logged out' })
+  }
+  catch (e) {
+    res.status(500).json({ code: 500, message: 'Unable to blacklist' })
   }
 });
 
