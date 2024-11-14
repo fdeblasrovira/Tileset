@@ -4,23 +4,26 @@
  * Module dependencies.
  */
 var express = require('express');
-var responses = require('./responses/responses');
 var cors = require('cors')
 const { Sequelize } = require('sequelize');
 var models = require('./models/Models');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 var cookieParser = require('cookie-parser');
-const e = require('express');
+
+// load env variables
+require('dotenv').config();
 
 var app = module.exports = express();
 
-
-// Secret key for signing tokens; keep it secure and do not expose in code.
-const JWT_SECRET_KEY = 'your-secure-jw-token-secret-key';
-
-// Password hash salt rounds
-const saltRounds = 10;
+// initialize the app
+try{
+  
+}
+catch(e){
+  console.error(e.message)
+  process.exit()
+}
 
 // db
 const sequelize = new Sequelize('mysql://tileset:tileset@localhost:3308/tileset', { timezone: "+09:00" })
@@ -84,7 +87,7 @@ app.post('/login', async (req, res) => {
     }
 
     // Create access token
-    const accessToken = jwt.sign({ userId: user.dataValues.id }, JWT_SECRET_KEY, {
+    const accessToken = jwt.sign({ userId: user.dataValues.id }, process.env.JWT_SECRET_KEY, {
       expiresIn: '5m',
     });
 
@@ -118,14 +121,14 @@ app.post('/register', async (req, res) => {
   try {
     const { email, password, fullName } = req.body;
 
-    const hashedPassword = bcrypt.hashSync(password, saltRounds);
+    const hashedPassword = bcrypt.hashSync(password, process.env.AUTH_SALT_ROUNDS);
 
     // register the user
     const insertedUser = await sequelize.models.User.create({ fullName: fullName, email: email, passwordHash: hashedPassword, lastConnectionAt: Date.now() })
     const userId = insertedUser.dataValues.id;
 
     // attempt to login the user by issuing the access and refresh tokens
-    const accessToken = jwt.sign({ userId: userId }, JWT_SECRET_KEY, {
+    const accessToken = jwt.sign({ userId: userId }, process.env.JWT_SECRET_KEY, {
       expiresIn: '5m',
     });
 
@@ -154,7 +157,7 @@ function generateRefreshToken(userId) {
   const payload = { userId: userId };
 
   // Create the token
-  return jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: '30d' });
+  return jwt.sign(payload, process.env.JWT_SECRET_KEY, { expiresIn: '30d' });
 }
 
 function authenticated(req, res, next) {
@@ -163,7 +166,7 @@ function authenticated(req, res, next) {
   console.log(token)
   if (!token) return res.status(401).json({ code: 401, message: 'Access denied: no access token' });
   try {
-    const decoded = jwt.verify(token, JWT_SECRET_KEY);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
     req.userId = decoded.userId;
     next();
   } catch (error) {
@@ -178,7 +181,7 @@ app.get('/refresh_auth', async function (req, res) {
   if (!refreshToken) return res.status(401).json({ code: 401, message: 'Access denied: no refresh token' });
 
   try {
-    const decoded = jwt.verify(refreshToken, JWT_SECRET_KEY);
+    const decoded = jwt.verify(refreshToken, process.env.JWT_SECRET_KEY);
     console.log("decoded")
     console.log(decoded)
 
@@ -201,7 +204,7 @@ app.get('/refresh_auth', async function (req, res) {
       }
       else {
         // Token is usable, so create new access token
-        const accessToken = jwt.sign({ userId: decoded.userId }, JWT_SECRET_KEY, {
+        const accessToken = jwt.sign({ userId: decoded.userId }, process.env.JWT_SECRET_KEY, {
           expiresIn: '5m',
         });
         res.status(200).json({ code: 200, accessToken: accessToken });
@@ -219,7 +222,7 @@ app.get('/logout', async function (req, res) {
 
   try {
     // Get the token expiration date
-    const decoded = jwt.verify(refreshToken, JWT_SECRET_KEY);
+    const decoded = jwt.verify(refreshToken, process.env.JWT_SECRET_KEY);
     const expiration = decoded.exp;
     // Changing it to milliseconds from seconds
     const expirationDate = new Date(expiration * 1000);
