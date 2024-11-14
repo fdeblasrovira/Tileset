@@ -6,7 +6,9 @@ import ListSearch from "./ListSearch.vue";
 import BaseButton from "../buttons/BaseButtonWithIcon.vue";
 import { useLoadingStore } from "@/stores/loading";
 import router from "../../router/index";
+import { useCreateTabulation } from "@/stores/createTabulation";
 
+const tabData = useCreateTabulation();
 const loadingData = useLoadingStore();
 
 const forms = ref([
@@ -73,6 +75,8 @@ function onListItemClicked(formId) {
 async function routeToCreate() {
   // Change global loading state to true
   loadingData.loading = true;
+  // Reset tab data so the first page the user sees is the generalInfo tab
+  tabData.currentTab = 1;
   await router.push("/create");
   loadingData.loading = false;
 }
