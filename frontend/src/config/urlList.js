@@ -4,5 +4,6 @@ const urlList = {
     "BACKEND_REGISTER": "http://localhost:3000/register",
     "BACKEND_REFRESH_AUTH": "http://localhost:3000/refresh_auth",
     "BACKEND_TEST": "http://localhost:3000/restricted",
+    "BACKEND_LOGOUT": "http://localhost:3000/logout",
 }
 export default urlList;

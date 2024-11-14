@@ -3,14 +3,30 @@ import { ref } from "vue";
 import NavBarItem from "./NavBarItem.vue";
 import NavBarUserItem from "./NavBarUserItem.vue";
 import { useAccountStore } from "@/stores/account";
+import { useAuthStore } from "@/stores/auth";
+import urlList from "@/config/urlList"
+import utils from "@/utils/fetch";
+import router from "@/router/index";
 
 const accountData = useAccountStore();
+const authData = useAuthStore();
 const showUserMenu = ref(false);
 
 function changeUserMenuFocus(focus) {
-  // showUserMenu.value = !showUserMenu.value;
   if (showUserMenu.value && focus) focus = false;
   showUserMenu.value = focus;
+}
+
+async function logout() {
+  // Remove the access token from the auth store and set as not authenticated
+  authData.accessToken = "";
+  authData.authenticated = false;
+
+  // Let the server revoke the refresh token
+  await utils.getData(urlList.BACKEND_LOGOUT)
+
+  // Return to login page
+  await router.push({ name: 'Login' })
 }
 </script>
 
@@ -68,7 +84,7 @@ function changeUserMenuFocus(focus) {
           <ul class="py-1" aria-labelledby="user-menu-button">
             <NavBarUserItem title="Account" route="/account" />
             <NavBarUserItem title="Settings" route="/settings" />
-            <NavBarUserItem title="Sign out" route="/logout" />
+            <NavBarUserItem @click="logout" title="Sign out" route="/logout" />
           </ul>
         </div>
         <button
