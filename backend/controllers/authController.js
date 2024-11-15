@@ -1,4 +1,6 @@
 const DB = require('./database');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 exports.handleLogin = async (req, res) => {
   try {
@@ -41,3 +43,12 @@ exports.handleLogin = async (req, res) => {
     res.status(500).json({ code: 500, message: 'Login failed' });
   }
 };
+
+
+// Function to generate refresh token
+function generateRefreshToken(userId) {
+  const payload = { userId: userId };
+
+  // Create the token
+  return jwt.sign(payload, process.env.JWT_SECRET_KEY, { expiresIn: '30d' });
+}
