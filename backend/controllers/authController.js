@@ -45,7 +45,7 @@ exports.handleLogin = async (req, res) => {
 };
 
 // User register
-app.post('/register', async (req, res) => {
+exports.handleRegister = async (req, res) => {
   // console.log("req.cookies.refreshToken")
   // console.log(req.cookies.refreshToken)
   try {
@@ -80,10 +80,10 @@ app.post('/register', async (req, res) => {
     if (error.name = "SequelizeUniqueConstraintError") res.status(500).json({ code: 500, message: "UniqueError" });
     else res.status(500).json({ code: 500, message: error.message });
   }
-});
+};
 
 // Issue a new access token if a valid refresh token is provided
-app.get('/refresh_auth', async function (req, res) {
+exports.handleRefreshAuth = async function (req, res) {
   // get the refresh token from the HttpOnly cookie
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.status(401).json({ code: 401, message: 'Access denied: no refresh token' });
@@ -121,10 +121,10 @@ app.get('/refresh_auth', async function (req, res) {
   } catch (error) {
     res.status(401).json({ code: 401, message: 'Access denied: invalid refresh token' });
   }
-});
+};
 
 // User logout
-app.get('/logout', async function (req, res) {
+exports.handleLogout = async function (req, res) {
   const refreshToken = req.cookies.refreshToken;
   // if not refresh token then no need to do anything
   if (!refreshToken) res.status(200).json({ code: 200, message: 'You are not even logged in' })
@@ -146,7 +146,7 @@ app.get('/logout', async function (req, res) {
   catch (e) {
     res.status(500).json({ code: 500, message: 'Unable to blacklist' })
   }
-});
+};
 
 // Function to generate refresh token
 function generateRefreshToken(userId) {
