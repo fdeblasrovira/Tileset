@@ -123,6 +123,7 @@ app.get('/refresh_auth', async function (req, res) {
   }
 });
 
+// User logout
 app.get('/logout', async function (req, res) {
   const refreshToken = req.cookies.refreshToken;
   // if not refresh token then no need to do anything
