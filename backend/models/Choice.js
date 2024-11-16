@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 
 exports.model = {
-  name: "ChoiceQuestion",
+  name: "Choice",
   paranoid: true,
   model: {
     order: {

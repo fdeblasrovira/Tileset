@@ -324,7 +324,7 @@ function addOption() {
             <QuestionOption v-for="(option, index) in editingOptions" @list-option-clicked="onListOptionClicked(index)"
               @delete-option="deleteOption(index)" @on-options-change="changeOption" :index="index"
               :attributes="attributes" :data="{ ...option }" :open="openedOption == index"
-              :close="lastOpenedOption == index" />
+              :close="lastOpenedOption == index" :key="'option-'+index"/>
           </div>
           <div class="flex px-2 w-full justify-center">
             <button @click="addOption()" type="button"
