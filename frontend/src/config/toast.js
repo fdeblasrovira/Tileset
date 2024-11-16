@@ -1,7 +1,6 @@
 const toastconfig = {
   text: "Registration successful",
   duration: 3000,
-  close: true,
   gravity: "bottom", // `top` or `bottom`
   position: "right", // `left`, `center` or `right`
   stopOnFocus: false, // Prevents dismissing of toast on hover

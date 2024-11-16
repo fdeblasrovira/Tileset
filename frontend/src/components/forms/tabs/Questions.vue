@@ -1,5 +1,5 @@
 <script setup>
-import { watch, ref, toRaw } from "vue";
+import { watch, ref } from "vue";
 import Input from "../../inputs/Input.vue";
 import Textarea from "../../inputs/Textarea.vue";
 import Date from "../../inputs/Date.vue";
@@ -161,6 +161,9 @@ function onListOptionClicked(index) {
 function deleteOption(index) {
   editingOptions.value.splice(index, 1);
 
+  for (const property in editingOptions.value) {
+    editingOptions.value[property].id = uuidv4()
+  }
   // reset accordion values
   openedOption.value = -1;
   lastOpenedOption.value = -1;
@@ -174,7 +177,7 @@ function changeOption(event, index) {
 }
 
 function addOption() {
-  editingOptions.value.push({ text: "", actions: {} });
+  editingOptions.value.push({ text: "", actions: {}, id: uuidv4()});
 }
 </script>
 
@@ -324,7 +327,7 @@ function addOption() {
             <QuestionOption v-for="(option, index) in editingOptions" @list-option-clicked="onListOptionClicked(index)"
               @delete-option="deleteOption(index)" @on-options-change="changeOption" :index="index"
               :attributes="attributes" :data="{ ...option }" :open="openedOption == index"
-              :close="lastOpenedOption == index" :key="'option-'+index"/>
+              :close="lastOpenedOption == index" :key="option.id"/>
           </div>
           <div class="flex px-2 w-full justify-center">
             <button @click="addOption()" type="button"

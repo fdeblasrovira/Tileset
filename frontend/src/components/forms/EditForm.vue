@@ -13,9 +13,9 @@ const tabData = useCreateTabulation();
 // const  = getformdata
 const formData = reactive(testData);
 
-// function updateGeneralInfo(newGeneralInfo) {
-//   formData.generalInfo = newGeneralInfo;
-// }
+function updateGeneralInfo(newGeneralInfo) {
+  formData.generalInfo = newGeneralInfo;
+}
 
 function updateAttributes(newAttributes) {
   formData.attributes = newAttributes;
