@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 
 exports.model = {
-  name: "ResultAttributeValue",
+  name: "AttributeValue",
   paranoid: true,
   model: {
     // Model attributes are defined here
