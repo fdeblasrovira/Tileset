@@ -9,11 +9,11 @@ exports.registerRoutes = function (app) {
   app.post('/login', authController.handleLogin);
 
   // User register
-  app.post('/register', authController.handleLogin);
+  app.post('/register', authController.handleRegister);
 
   // Issue a new access token if a valid refresh token is provided
-  app.get('/refresh_auth', authController.handleLogin);
+  app.get('/refresh_auth', authController.handleRefreshAuth);
 
   // User logout
-  app.get('/logout', authController.handleLogin);
+  app.get('/logout', authController.handleLogout);
 }

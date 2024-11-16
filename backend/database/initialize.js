@@ -1,5 +1,5 @@
 const { Sequelize } = require('sequelize');
-const models = require('../Models');
+const models = require('../models/Models');
 const DB = require('./database');
 
 exports.initializeDB = async function () {
@@ -8,19 +8,17 @@ exports.initializeDB = async function () {
   try{
     // Set up sequelize with the Database info 
     const sequelize = new Sequelize(connectionURL, { timezone: process.env.TIMEZONE })
-    DB.set(sequelize);
+    DB.sequelize = sequelize;
 
-    const connected = await testConnection(DB.get());
+    const connected = await testConnection(DB.sequelize);
     if (!connected) throw new Error("Can't initialize Database")
 
-    await syncDatabase(DB.get());
+    await syncDatabase(DB.sequelize);
   }
   catch(e){
     console.log(e)
     throw new Error("Can't initialize Database")
   }
-  
-
 }
 
 function getDBConnectionURL() {

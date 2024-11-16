@@ -1,11 +1,11 @@
 class Database {
-  set(sequelize) {
-    if (this.sequelize) throw new Error("Database is already set")
-    this.sequelize = sequelize
+  get sequelize() {
+    return this.sequelize
   }
 
-  get() {
-    return this.sequelize
+  set sequelize(sequelize) {
+    if (this.sequelize) throw new Error("Database is already set")
+    this.sequelize = sequelize
   }
 }
 

@@ -39,14 +39,17 @@ const router = createRouter({
 });
 
 // Handle user authentication
-router.beforeEach(async (to) => {
+router.beforeEach(async (to, from) => {
   // login and register screens are only for not authenticated users
-  if(to.path == '/login' || to.path == '/register' ){
+  if (to.path == '/login' || to.path == '/register') {
+    // If we just logged out, no need to chech auth status
+    if( to.query.logout == 'true')  return;
+
     // Check if authenticated. If authenticated redirect to Home
     if (await auth.isValidAuth()) return { name: 'Home' }
     return;
   }
-  else{
+  else {
     // For other screens check if the user authentication is valid
     if (await auth.isValidAuth()) return;
     else return { name: 'Login' }

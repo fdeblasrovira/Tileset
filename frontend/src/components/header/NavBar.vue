@@ -23,10 +23,10 @@ async function logout() {
   authData.authenticated = false;
 
   // Let the server revoke the refresh token
-  await utils.getData(urlList.BACKEND_LOGOUT)
+  console.log(await utils.getData(urlList.BACKEND_LOGOUT))
 
   // Return to login page
-  await router.push({ name: 'Login' })
+  await router.push({ name: 'Login', query: { logout: true } })
 }
 </script>
 
