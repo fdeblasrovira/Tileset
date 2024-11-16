@@ -5,10 +5,6 @@
  */
 const express = require('express');
 const cors = require('cors')
-const { Sequelize } = require('sequelize');
-const models = require('./models/Models');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
 const cookieParser = require('cookie-parser');
 const initializer = require('./database/initialize')
 const DB = require('./database/database');
