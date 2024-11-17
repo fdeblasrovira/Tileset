@@ -1,20 +1,7 @@
-In env, make usre that it has NODE_ENV and FRONTEND_URL
-
-Example of env
-
-NODE_ENV=development
-TIMEZONE=+09:00
-
-JWT_SECRET_KEY=QgFLqIBeDwlsVWr3DBvE0zR63iE7rXB4
-AUTH_SALT_ROUNDS=10
-
-DB_DRIVER=mysql
-DB_USER=tileset
-DB_PASSWORD=tileset
-DB_HOST=localhost
-DB_PORT=3308
-DB_DATABASE=tileset
-
-
-
-FRONTEND_URL=http://localhost:5173
+Add validation on form create / edit
+  - generalInfo
+    - Everything except image.
+  - Questions:
+    - the 3 multiple option questions, need to have at least 2 option
+  - Results:
+    - Need a picture
