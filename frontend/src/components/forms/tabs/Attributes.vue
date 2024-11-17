@@ -84,6 +84,7 @@ function deleteAttribute() {
 }
 
 function editAttribute() {
+  console.log("1")
   // The numbers are stored as strings, so we parse them as ints
   editingAttribute.value.min = Number(editingAttribute.value.min);
   editingAttribute.value.max = Number(editingAttribute.value.max);
@@ -111,6 +112,14 @@ function editAttribute() {
     return;
   }
 
+  // Check if min is equal to max
+  // If it is, display error message
+  if (editingAttribute.value.min == editingAttribute.value.max) {
+    attributeModalErrorMessage.value =
+      "Minimum value and Maximum value should be different";
+    return;
+  }
+
   // Perform defaultValue validation
   // It needs to be between min and max. In case it does not, change it to min and max values accordingly.
   // If not, display error message
@@ -122,6 +131,7 @@ function editAttribute() {
       "Default value should be between minimum and maximum values";
     return;
   }
+  console.log("2")
 
   // If there are changes to attribute's min and max value the attribute values of the results and questions need to be resetted
   if (
@@ -138,6 +148,7 @@ function editAttribute() {
         if (key === currentAttributeId) delete results.value[index].attributeValues[key]
       }
     });
+    console.log("3")
 
     // Reset questions if they were using this attribute
     questions.value.forEach((element, index) => {
@@ -148,10 +159,12 @@ function editAttribute() {
       });
     });
   }
+  console.log("4")
 
   // Commit changes
   showAttributeEditModal.value = false;
   attributes.value[selectedAttribute] = { ...editingAttribute.value };
+  console.log("5")
 }
 </script>
 
