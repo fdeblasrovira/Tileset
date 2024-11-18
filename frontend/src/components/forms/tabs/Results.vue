@@ -4,17 +4,13 @@ import Input from "../../inputs/Input.vue";
 import Textarea from "../../inputs/Textarea.vue";
 import AvatarPicture from "../../inputs/AvatarPicture.vue";
 import Range from "../../inputs/Range.vue";
-import Radio from "../../inputs/Radio.vue";
-import Checkbox from "../../inputs/Checkbox.vue";
-import Select from "../../inputs/Select.vue";
-import QuestionOption from "../../forms/edit/QuestionOption.vue";
 import FullButton from "../../buttons/FullButton.vue";
 import DefaultValues from "../../../config/defaultValues";
 import Modal from "../../overlays/Modal.vue";
 import { v4 as uuidv4 } from "uuid";
 import ResultOption from "../edit/ResultOption.vue";
 
-const props = defineProps(["results", "attributes"]);
+const props = defineProps(["results", "attributes", "errorMessage"]);
 const emits = defineEmits(["onResultsChange"]);
 
 const results = ref(props.results);
@@ -59,14 +55,7 @@ function displayResultEditModal(display, index) {
   // Initializes the editor data with the current saved data
   editingResult.value = { ...results.value[index] };
   editingResult.value.attributeValues = { ...results.value[index].attributeValues };
-  console.log("editingResult.value")
-  console.log(editingResult.value)
 
-  console.log("editingResult.value.attributeValues")
-  console.log(editingResult.value.attributeValues)
-
-  console.log("index")
-  console.log(index)
   // Initializes the attribute data of the result
   for (const [key, value] of Object.entries(attributes.value)) {
     if (!editingResult.value.attributeValues.hasOwnProperty(value.id)) {
@@ -141,6 +130,9 @@ function editResult() {
       </svg>
     </FullButton>
   </div>
+  <p v-if="props.errorMessage.length > 0" class="font-light text-tileset-red text-right text-sm italic px-4 sm:px-6">
+    {{ errorMessage }}
+  </p>
   <!-- Result delete modal -->
   <Modal :open="showResultDeleteModal" title="Delete result" description="Are you sure you want to delete this result?"
     svgBackgroundColor="bg-tileset-red">
@@ -162,7 +154,9 @@ function editResult() {
           Cancel
         </button>
       </div>
+
     </template>
+
     <!-- Result delete modal -->
   </Modal>
   <!-- Result edit modal -->
@@ -182,7 +176,7 @@ function editResult() {
         <Input v-model="editingResult.name" label="Name" :name="editingResult.id" type="text" />
         <Textarea v-model="editingResult.description" label="Description" :name="editingResult.id" />
         <AvatarPicture v-model="editingResult.picture" :image="editingResult.picture" label="Picture" />
-        <template v-for="(attribute) in attributes">
+        <template v-for="(attribute, index) in attributes" :key="index">
           <div class="border rounded-md border-tileset-grey-2 space-y-3 px-4 py-5 sm:p-6">
             <Range v-model="editingResult.attributeValues[attribute.id]" :editable="true" :min="attribute.min"
               :max="attribute.max" :defaultValue="editingResult.attributeValues[attribute.id]"

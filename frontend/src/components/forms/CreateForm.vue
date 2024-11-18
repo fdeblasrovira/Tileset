@@ -81,6 +81,13 @@ function validateForm() {
     tabData.currentTab = 3
     return false;
   }
+
+  const resultResult = validateResult();
+  if (!resultResult) {
+    // show the result form
+    tabData.currentTab = 4
+    return false;
+  }
 }
 
 function validateGeneralInfo() {
@@ -110,6 +117,14 @@ function validateAttribute() {
 function validateQuestion() {
   if (formData.questions.length <= 0) {
     errorMessage.value = "There must be at least one question"
+    return false;
+  }
+  return true;
+}
+
+function validateResult() {
+  if (formData.results.length <= 0) {
+    errorMessage.value = "There must be at least one result"
     return false;
   }
   return true;
