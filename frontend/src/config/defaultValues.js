@@ -215,29 +215,11 @@ const selectQuestionList = [
 
 const resultList = [
   {
-    name: "Cat",
-    description: "I'm a cute cat!",
+    name: "Result",
+    description: "Result's description",
     picture: "",
     attributeValues: {}
-  },
-  {
-    name: "Dog",
-    description: "Woof woof! I'm your best friend",
-    picture: "",
-    attributeValues: {}
-  },
-  {
-    name: "Doctor",
-    description: "Highly specialized and ready to rock",
-    picture: "",
-    attributeValues: {}
-  },
-  {
-    name: "Tennis Player",
-    description: "Let's play one on one",
-    picture: "",
-    attributeValues: {}
-  },
+  }
 ];
 
 function getRandomInt(max) {
