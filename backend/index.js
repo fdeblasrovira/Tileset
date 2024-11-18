@@ -10,9 +10,6 @@ const initializer = require('./database/initialize')
 const DB = require('./database/database');
 const routes = require('./routes/router');
 
-// load env variables
-require('dotenv').config();
-
 var app = module.exports = express();
 
 // initialize the app

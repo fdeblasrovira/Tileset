@@ -28,6 +28,7 @@ function getDBConnectionURL() {
   const host = process.env.DB_HOST;
   const port = process.env.DB_PORT;
   const database = process.env.DB_DATABASE;
+  console.log(`${driver}://${user}:${password}@${host}:${port}/${database}`)
   return `${driver}://${user}:${password}@${host}:${port}/${database}`
 }
 
