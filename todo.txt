@@ -1,4 +1,3 @@
-Add validation for file size for picture of form and result.
 Add validation for description size of result and form
 The result should not have testData Like tennis player and stuff.
 Create form request to backend with loading animation

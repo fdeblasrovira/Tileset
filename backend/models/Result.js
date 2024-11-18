@@ -10,7 +10,7 @@ exports.model = {
       allowNull: false,
     },
     description: {
-      type: DataTypes.TEXT('tiny'),
+      type: DataTypes.STRING(2048),
       allowNull: false
     },
     imageUrl: {

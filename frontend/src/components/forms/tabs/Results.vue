@@ -96,6 +96,14 @@ function editResult() {
     return;
   }
 
+  // Check if the description is set
+  // If not, display error message
+  if (editingResult.value.description.length > 2048) {
+    resultModalErrorMessage.value =
+      "Description too large";
+    return;
+  }
+
   // Check if the picture is set
   // If not, display error message
   if (!editingResult.value.picture) {
@@ -176,7 +184,7 @@ function editResult() {
       <span class="flex my-2 p-[1px] bg-tileset-grey-2"></span>
       <div class="space-y-3 mt-3">
         <Input v-model="editingResult.name" label="Name" :name="editingResult.id" type="text" />
-        <Textarea v-model="editingResult.description" label="Description" :name="editingResult.id" />
+        <Textarea v-model="editingResult.description" label="Description" :name="editingResult.id" :maxCharacters="2048" />
         <AvatarPicture v-model="editingResult.picture" :image="editingResult.picture" label="Picture" />
         <template v-for="(attribute, index) in attributes" :key="index">
           <div class="border rounded-md border-tileset-grey-2 space-y-3 px-4 py-5 sm:p-6">

@@ -16,7 +16,7 @@ const generalInfo = ref(props.generalInfo);
     <Input v-model="generalInfo.formName" label="Form name" name="form-name" type="text"
       placeholder="This is my form's name" />
     <Textarea v-model="generalInfo.description" label="Form description" name="form-description"
-      placeholder="Description of the form" />
+      placeholder="Description of the form" :maxCharacters="2048"/>
     <AvatarPicture v-model="generalInfo.picture" label="Form picture" :image="generalInfo.picture" />
     <div class="block text-sm font-medium mt-3">
       <label class="block text-base font-medium">Visibility</label>
