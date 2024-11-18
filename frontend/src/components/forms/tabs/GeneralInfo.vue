@@ -1,12 +1,12 @@
 <script setup>
-import { watch, ref } from "vue";
+import { ref } from "vue";
 import Input from "../../inputs/Input.vue";
 import Textarea from "../../inputs/Textarea.vue";
 import AvatarPicture from "../../inputs/AvatarPicture.vue";
 import Radio from "../../inputs/Radio.vue";
 
-const props = defineProps(["generalInfo"]);
-const emits = defineEmits(["onGeneralInfoChange"]);
+const props = defineProps(["generalInfo", "errorMessage"]);
+// const emits = defineEmits(["onGeneralInfoChange"]);
 
 const generalInfo = ref(props.generalInfo);
 
@@ -27,6 +27,9 @@ const generalInfo = ref(props.generalInfo);
         value="private" :checked="generalInfo.visibility == 'private' ? true : false" />
     </div>
   </div>
+  <p v-if="props.errorMessage.length > 0" class="font-light text-tileset-red text-right text-sm italic px-4 sm:px-6">
+    {{ errorMessage }}
+  </p>
 </template>
 
 <style scoped></style>

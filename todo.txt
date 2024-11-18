@@ -1,6 +1,9 @@
 Add validation on form create / edit
   - generalInfo
     - Everything except image.
+  - At least one attribute
+  - At least one Question
+  - At least one Result
   - Questions:
     - the 3 multiple option questions, need to have at least 2 option
   - Results:

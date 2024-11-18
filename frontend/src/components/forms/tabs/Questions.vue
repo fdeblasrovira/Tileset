@@ -12,7 +12,7 @@ import DefaultValues from "../../../config/defaultValues";
 import Modal from "../../overlays/Modal.vue";
 import { v4 as uuidv4 } from "uuid";
 
-const props = defineProps(["questions", "attributes"]);
+const props = defineProps(["questions", "attributes", "errorMessage"]);
 const emits = defineEmits(["onQuestionChange"]);
 
 const questions = ref(props.questions);
@@ -177,7 +177,7 @@ function changeOption(event, index) {
 }
 
 function addOption() {
-  editingOptions.value.push({ text: "", actions: {}, id: uuidv4()});
+  editingOptions.value.push({ text: "", actions: {}, id: uuidv4() });
 }
 </script>
 
@@ -202,7 +202,7 @@ function addOption() {
           <div class="block text-sm font-medium mt-3">
             <label class="block text-base font-medium">{{
               question.question
-              }}</label>
+            }}</label>
             <Radio v-for="(option, optionsIndex) in question.options" :label="option.text"
               :name="`radio_${question.id}`" :id="`radio_${question.id}_${optionsIndex}`" :key="optionsIndex" />
           </div>
@@ -211,7 +211,7 @@ function addOption() {
           <div class="block text-sm font-medium mt-3">
             <label class="block text-base font-medium">{{
               question.question
-              }}</label>
+            }}</label>
             <Checkbox v-for="(option, optionsIndex) in question.options" :label="option.text"
               :name="`radio_${question.id}`" :id="`radio_${question.id}_${optionsIndex}`" :key="optionsIndex" />
           </div>
@@ -220,7 +220,7 @@ function addOption() {
           <div class="block text-sm font-medium mt-3">
             <label class="block text-base font-medium">{{
               question.question
-              }}</label>
+            }}</label>
             <Select :id="question.id">
               <option v-for="(option, optionsIndex) in question.options" :value="optionsIndex" :key="optionsIndex">
                 {{ option.text }}
@@ -266,6 +266,9 @@ function addOption() {
       </FullButton>
     </div>
   </div>
+  <p v-if="props.errorMessage.length > 0" class="font-light text-tileset-red text-right text-sm italic px-4 sm:px-6">
+    {{ errorMessage }}
+  </p>
   <!-- Question delete modal -->
   <Modal :open="showQuestionDeleteModal" title="Delete question"
     description="Are you sure you want to delete this question?" svgBackgroundColor="bg-tileset-red">
@@ -327,7 +330,7 @@ function addOption() {
             <QuestionOption v-for="(option, index) in editingOptions" @list-option-clicked="onListOptionClicked(index)"
               @delete-option="deleteOption(index)" @on-options-change="changeOption" :index="index"
               :attributes="attributes" :data="{ ...option }" :open="openedOption == index"
-              :close="lastOpenedOption == index" :key="option.id"/>
+              :close="lastOpenedOption == index" :key="option.id" />
           </div>
           <div class="flex px-2 w-full justify-center">
             <button @click="addOption()" type="button"

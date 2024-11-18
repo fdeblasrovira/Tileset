@@ -24,6 +24,11 @@ exports.model = {
             throw new Error('Max Value is smaller than min value');
           }
         }
+      },
+      hasCorrectRangeLength(value) {
+        if (Math.abs(parseInt(this.minValue)) + Math.abs(parseInt(value)) > 50) {
+          throw new Error('Range of attribute is too long');
+        }
       }
     },
     defaultValue: {

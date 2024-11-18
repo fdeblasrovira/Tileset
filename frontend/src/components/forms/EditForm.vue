@@ -60,22 +60,4 @@ function saveContents() {
     </div>
   </div>
 </template>
-
-<!-- <div class="block text-sm font-medium mt-3">
-          <label class="block">Select one </label>
-
-          <Checkbox label="This is a test 1" name="checkbox-1" id="checkbox1" />
-          <Checkbox
-            label="This is a test 1234567"
-            name="checkbox-1"
-            id="checkbox2"
-          />
-          <Checkbox label="This" name="checkbox-1" id="checkbox3" />
-        </div>
-        <Select label="Select option" id="select3">
-          <option value="1">Japan</option>
-          <option value="2">Spain</option>
-          <option value="3">China</option>
-        </Select> -->
-
 <style scoped></style>

@@ -8,7 +8,7 @@ import DefaultValues from "../../../config/defaultValues";
 import Modal from "../../overlays/Modal.vue";
 import { v4 as uuidv4 } from "uuid";
 
-const props = defineProps(["attributes", "results", "questions"]);
+const props = defineProps(["attributes", "results", "questions", "errorMessage"]);
 const emits = defineEmits(["onAttributeChange", "onResultChange", "onQuestionChange"]);
 
 const attributes = ref(props.attributes);
@@ -71,7 +71,6 @@ function addAttribute() {
 
   //Generate a unique ID for this specific attribute
   defaultAttribute.id = uuidv4();
-  console.log({ ...defaultAttribute });
 
   attributes.value.push({ ...defaultAttribute });
 }
@@ -84,7 +83,6 @@ function deleteAttribute() {
 }
 
 function editAttribute() {
-  console.log("1")
   // The numbers are stored as strings, so we parse them as ints
   editingAttribute.value.min = Number(editingAttribute.value.min);
   editingAttribute.value.max = Number(editingAttribute.value.max);
@@ -131,7 +129,6 @@ function editAttribute() {
       "Default value should be between minimum and maximum values";
     return;
   }
-  console.log("2")
 
   // If there are changes to attribute's min and max value the attribute values of the results and questions need to be resetted
   if (
@@ -148,7 +145,6 @@ function editAttribute() {
         if (key === currentAttributeId) delete results.value[index].attributeValues[key]
       }
     });
-    console.log("3")
 
     // Reset questions if they were using this attribute
     questions.value.forEach((element, index) => {
@@ -159,12 +155,10 @@ function editAttribute() {
       });
     });
   }
-  console.log("4")
 
   // Commit changes
   showAttributeEditModal.value = false;
   attributes.value[selectedAttribute] = { ...editingAttribute.value };
-  console.log("5")
 }
 </script>
 
@@ -208,6 +202,9 @@ function editAttribute() {
       </svg>
     </FullButton>
   </div>
+  <p v-if="props.errorMessage.length > 0" class="font-light text-tileset-red text-right text-sm italic px-4 sm:px-6">
+    {{ errorMessage }}
+  </p>
   <!-- Attribute delete modal -->
   <Modal :open="showAttributeDeleteModal" title="Delete attribute"
     description="Are you sure you want to delete this attribute?" svgBackgroundColor="bg-tileset-red">
