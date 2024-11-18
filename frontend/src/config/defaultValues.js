@@ -1,4 +1,4 @@
-const pictureFolder = "src/assets/pictures/"
+// const pictureFolder = "src/assets/pictures/"
 
 const attributeList = [
   {
@@ -217,25 +217,25 @@ const resultList = [
   {
     name: "Cat",
     description: "I'm a cute cat!",
-    picture: pictureFolder + "cat.jpg",
+    picture: "",
     attributeValues: {}
   },
   {
     name: "Dog",
     description: "Woof woof! I'm your best friend",
-    picture: pictureFolder + "dog.jpg",
+    picture: "",
     attributeValues: {}
   },
   {
     name: "Doctor",
     description: "Highly specialized and ready to rock",
-    picture: pictureFolder + "doctor.jpg",
+    picture: "",
     attributeValues: {}
   },
   {
     name: "Tennis Player",
     description: "Let's play one on one",
-    picture: pictureFolder + "tennisPlayer.jpg",
+    picture: "",
     attributeValues: {}
   },
 ];

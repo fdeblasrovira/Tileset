@@ -86,16 +86,22 @@ function editQuestion() {
 
   // Each option needs a label text
   let validationErrorFlag = false;
-
+  
   editingOptions.value.forEach((element) => {
-    console.log(element.text.trim());
     if (element.text.trim().length <= 0) {
       questionModalErrorMessage.value = "The option text can't be blank";
       validationErrorFlag = true;
     }
   });
-
   if (validationErrorFlag) return;
+
+  // In questions that have options to choose from, there has to be at least 2 options
+  if (editingOptions.value.length <= 1){
+    questionModalErrorMessage.value = "There must be at least 2 options";
+    validationErrorFlag = true;
+  }
+  if (validationErrorFlag) return;
+
 
   // Commit changes
   showQuestionEditModal.value = false;
@@ -171,9 +177,7 @@ function deleteOption(index) {
 
 // Changes one of the options of a question
 function changeOption(event, index) {
-  console.log("changeOption");
   editingOptions.value[index] = { ...event };
-  console.log(editingOptions.value[index]);
 }
 
 function addOption() {

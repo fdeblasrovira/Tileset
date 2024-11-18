@@ -12,7 +12,6 @@ function previewFiles(event) {
     emits("update:modelValue", reader.result)
   });
   reader.readAsDataURL(event.target.files[0]);
-
 }
 </script>
 

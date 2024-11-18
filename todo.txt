@@ -8,3 +8,5 @@ Add validation on form create / edit
     - the 3 multiple option questions, need to have at least 2 option
   - Results:
     - Need a picture
+
+Maybe you should remove the emits thingy because its not working lol

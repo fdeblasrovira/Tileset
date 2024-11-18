@@ -33,22 +33,18 @@ watch(formData.results, () => {
 let errorMessage = ref("")
 
 function updateGeneralInfo(newGeneralInfo) {
-  errorMessage.value = ""
   formData.generalInfo = newGeneralInfo;
 }
 
 function updateAttributes(newAttributes) {
-  errorMessage.value = ""
   formData.attributes = newAttributes;
 }
 
 function updateQuestions(newQuestions) {
-  errorMessage.value = ""
   formData.questions = newQuestions;
 }
 
 function updateResults(newResults) {
-  errorMessage.value = ""
   formData.results = newResults;
 }
 
@@ -59,6 +55,7 @@ function saveContents() {
   if (!result) return;
 }
 
+// Validates if the data entered in the form is in the correct form or not
 function validateForm() {
   errorMessage.value = ""
   const generalInfoResult = validateGeneralInfo();

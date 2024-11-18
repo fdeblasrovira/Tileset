@@ -60,14 +60,14 @@
     {
       "name": "Doctor",
       "description": "When were you born?",
-      "picture": "src/assets/pictures/doctor.jpg",
+      "picture": "",
       "attributeValues": {},
       "id": "b4c2f10d-e10d-410a-9d62-fa40e67fb370"
     },
     {
       "name": "Dog",
       "description": "When were you born?",
-      "picture": "src/assets/pictures/dog.jpg",
+      "picture": "",
       "attributeValues": {},
       "id": "f71f49d4-910b-45b9-9c63-593619972471"
     }

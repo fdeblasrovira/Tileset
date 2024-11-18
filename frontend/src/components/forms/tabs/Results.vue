@@ -94,11 +94,19 @@ function editResult() {
     return;
   }
 
-  // Check if the name is set
+  // Check if the description is set
   // If not, display error message
   if (editingResult.value.description.length <= 0) {
     resultModalErrorMessage.value =
       "The description can't be empty";
+    return;
+  }
+
+  // Check if the picture is set
+  // If not, display error message
+  if (!editingResult.value.picture) {
+    resultModalErrorMessage.value =
+      "The picture can't be empty";
     return;
   }
 
