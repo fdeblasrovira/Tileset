@@ -15,9 +15,8 @@ function deleteResult() {
       <li class="flex flex-row">
         <div class="hover:bg-gray-50 flex flex-1 items-center p-4">
           <div class="flex flex-col w-10 h-10 justify-center items-center mr-4">
-            <a href="#" class="block relative" v-if="props.data.picture">
-              <img alt="profil" :src="props.data.picture" class="mx-auto object-cover rounded-full h-10 w-10" />
-            </a>
+            <img v-if="props.data.picture" alt="profil" :src="props.data.picture"
+              class="mx-auto object-cover rounded-full h-10 w-10" />
             <div v-if="!props.data.picture" class="bg-tileset-full-white rounded-full w-10 h-10">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="flex w-6 h-6 m-auto mt-2 self-center">

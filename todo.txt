@@ -1,12 +1,8 @@
-Add validation on form create / edit
-  - generalInfo
-    - Everything except image.
-  - At least one attribute
-  - At least one Question
-  - At least one Result
-  - Questions:
-    - the 3 multiple option questions, need to have at least 2 option
-  - Results:
-    - Need a picture
+Add validation for file size for picture of form and result.
+Add validation for description size of result and form
 
-Maybe you should remove the emits thingy because its not working lol
+Create form request to backend with loading animation
+Edit form request to backend with loading animation
+Create Route Controller Service for 2 of the above
+Take a look on how to run localstack to mimic S3.
+Also you can run lambda to getRid of blacklist token using localstack to test.
