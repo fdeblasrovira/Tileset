@@ -6,7 +6,6 @@ import AvatarPicture from "../../inputs/AvatarPicture.vue";
 import Radio from "../../inputs/Radio.vue";
 
 const props = defineProps(["generalInfo", "errorMessage"]);
-// const emits = defineEmits(["onGeneralInfoChange"]);
 
 const generalInfo = ref(props.generalInfo);
 

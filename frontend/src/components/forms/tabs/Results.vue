@@ -1,5 +1,5 @@
 <script setup>
-import { watch, ref } from "vue";
+import { ref } from "vue";
 import Input from "../../inputs/Input.vue";
 import Textarea from "../../inputs/Textarea.vue";
 import AvatarPicture from "../../inputs/AvatarPicture.vue";
@@ -11,15 +11,9 @@ import { v4 as uuidv4 } from "uuid";
 import ResultOption from "../edit/ResultOption.vue";
 
 const props = defineProps(["results", "attributes", "errorMessage"]);
-const emits = defineEmits(["onResultsChange"]);
 
 const results = ref(props.results);
 const attributes = ref(props.attributes);
-
-// After any change to the questions, we tell the parent component to update the value
-watch(results, (newResults) => {
-  emit(onResultsChange(newResults));
-});
 
 // Toggle for the delete modal
 const showResultDeleteModal = ref(false);

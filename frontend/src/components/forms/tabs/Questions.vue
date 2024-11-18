@@ -1,5 +1,5 @@
 <script setup>
-import { watch, ref } from "vue";
+import { ref } from "vue";
 import Input from "../../inputs/Input.vue";
 import Textarea from "../../inputs/Textarea.vue";
 import Date from "../../inputs/Date.vue";
@@ -13,15 +13,9 @@ import Modal from "../../overlays/Modal.vue";
 import { v4 as uuidv4 } from "uuid";
 
 const props = defineProps(["questions", "attributes", "errorMessage"]);
-const emits = defineEmits(["onQuestionChange"]);
 
 const questions = ref(props.questions);
 const attributes = ref(props.attributes);
-
-// After any change to the questions, we tell the parent component to update the value
-watch(questions, (newQuestions) => {
-  emit(onQuestionChange(newQuestions));
-});
 
 // Toggle for the delete modal
 const showQuestionDeleteModal = ref(false);

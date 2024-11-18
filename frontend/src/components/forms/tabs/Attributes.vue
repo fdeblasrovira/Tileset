@@ -1,5 +1,5 @@
 <script setup>
-import { watch, ref } from "vue";
+import { ref } from "vue";
 import Input from "../../inputs/Input.vue";
 import Range from "../../inputs/Range.vue";
 import ColorPicker from "../../vendor/ColorPicker.vue";
@@ -9,24 +9,10 @@ import Modal from "../../overlays/Modal.vue";
 import { v4 as uuidv4 } from "uuid";
 
 const props = defineProps(["attributes", "results", "questions", "errorMessage"]);
-const emits = defineEmits(["onAttributeChange", "onResultChange", "onQuestionChange"]);
 
 const attributes = ref(props.attributes);
 const questions = ref(props.questions);
 const results = ref(props.results);
-
-// After any change to the attributes, questions or results, we tell the parent component to update the value
-watch(attributes, (newAttributes) => {
-  emit(onAttributeChange(newAttributes));
-});
-
-watch(questions, (newQuestions) => {
-  emit(onAttributeChange(newQuestions));
-});
-
-watch(results, (newResults) => {
-  emit(onAttributeChange(newResults));
-});
 
 // Toggle for the delete modal
 const showAttributeDeleteModal = ref(false);
