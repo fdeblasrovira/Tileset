@@ -30,7 +30,10 @@ async function initialize(){
       origin: process.env.FRONTEND_URL,
       credentials: true
     }))
-  
+    
+    console.log(process.env.FRONTEND_URL)
+    console.log(process.env.FRONTEND_URL)
+    console.log(process.env.FRONTEND_URL)
     app.use(function (req, res, next) {
       res.setHeader('Access-Control-Allow-Credentials', true);
       res.setHeader('Content-Type', 'application/json');

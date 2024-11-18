@@ -6,6 +6,9 @@ import urlList from "../config/urlList"
 import router from "../router/index";
 import utils from "@/utils/fetch";
 import { useAuthStore } from '@/stores/auth'
+import { useLoadingStore } from '@/stores/loading'
+
+const loadingData = useLoadingStore();
 
 const authFormData = ref({
   email: "",
@@ -28,7 +31,13 @@ async function login() {
     return;
   }
 
+  // Show loading animation
+  loadingData.loading = true;
+
   const response = await utils.postData(urlList.BACKEND_LOGIN, authFormData.value)
+
+  // Unshow loading animation
+  loadingData.loading = false;
 
   if (response.code == 200){
     authData.authenticated = true;

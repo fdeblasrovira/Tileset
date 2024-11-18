@@ -8,6 +8,9 @@ import utils from "@/utils/fetch";
 import { useAuthStore } from "@/stores/auth"
 import toastConfig from "@/config/toast"
 import Toastify from "toastify-js"
+import { useLoadingStore } from '@/stores/loading'
+
+const loadingData = useLoadingStore();
 
 const authFormData = ref({
   email: "",
@@ -42,8 +45,13 @@ async function register() {
     return;
   }
 
+  // Show loading animation
+  loadingData.loading = true;
+
   const response = await utils.postData(urlList.BACKEND_REGISTER, authFormData.value)
-  console.log(response);
+
+  // Unshow loading animation
+  loadingData.loading = false;
 
   if (response.message == "UniqueError") {
     errorMessage.value = "Email already in use"

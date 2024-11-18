@@ -2,12 +2,10 @@
 import { ref } from "vue";
 import BaseButton from "../buttons/BaseButtonWithIcon.vue";
 import Modal from "../overlays/Modal.vue";
-import { useLoadingStore } from "@/stores/loading";
 import router from "../../router/index";
 import { useCreateTabulation } from "@/stores/createTabulation";
 
 const tabData = useCreateTabulation();
-const loadingData = useLoadingStore();
 
 const props = defineProps(["data", "position", "open", "close"]);
 const emit = defineEmits(["listItemClicked"]);
@@ -25,12 +23,9 @@ function changeModalDisplay(display) {
 }
 
 async function routeToEdit() {
-  // Change global loading state to true
-  loadingData.loading = true;
   // Reset tab data so the first page the user sees is the generalInfo tab
   tabData.currentTab = 1;
   await router.push({ name: 'Edit_form'})
-  loadingData.loading = false;
 }
 
 function deleteForm() {
