@@ -59,7 +59,7 @@ async function saveContents() {
   // Show loading animation
   loadingData.loading = true;
 
-  const response = await utils.postData(urlList.BACKEND_CREATE_FORM, {formData: formData})
+  const response = await utils.postData(urlList.BACKEND_CREATE_FORM, { formData: formData })
   // const response = await utils.postData(urlList.BACKEND_CREATE_FORM, formData)
 
   console.log(response)
@@ -138,7 +138,16 @@ function validateResult() {
     errorMessage.value = "There must be at least one result"
     return false;
   }
-  return true;
+
+  // Check that every result has a picture
+  let error = false;
+  formData.results.forEach((element) => {
+    if (!element.picture) {
+      errorMessage.value = "Every result must have a picture set"
+      error = true;
+    }
+  });
+  return (!error)
 }
 </script>
 

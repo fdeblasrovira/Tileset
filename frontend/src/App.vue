@@ -14,11 +14,12 @@ const authData = useAuthStore();
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
   <div class="flex min-w-full min-h-screen flex-col">
+    <Spinner :open="loadingData.loading" />
+
     <header class="flex min-h-min sticky top-0 z-50">
       <NavBar v-if="authData.authenticated"/>
     </header>
     <main class="flex justify-center grow overflow-y-scroll flex-col">
-      <Spinner :open="loadingData.loading" />
       <router-view></router-view>
       
     </main>

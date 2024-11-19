@@ -21,7 +21,7 @@ async function initialize(){
     await initializer.initializeDB();
   
     // Set the middleware
-    app.use(express.json());
+    app.use(express.json({limit: '100mb'}));
     app.use(express.text());
     app.use(cookieParser())
   

@@ -5,7 +5,7 @@ const props = defineProps(["open"]);
 <template>
   <div
     v-if="props.open"
-    class="relative z-10"
+    class="relative z-50 w-full h-full"
     aria-labelledby="spinner"
     role="dialog"
     aria-modal="true"
@@ -31,7 +31,7 @@ const props = defineProps(["open"]);
 <style scoped>
 .spinner {
   animation: rotate 2s linear infinite;
-  z-index: 2;
+  z-index: 50;
   position: absolute;
   top: 50%;
   left: 50%;
