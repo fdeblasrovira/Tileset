@@ -5,12 +5,16 @@ import GeneralInfo from "./tabs/GeneralInfo.vue";
 import Attributes from "./tabs/Attributes.vue";
 import Questions from "./tabs/Questions.vue";
 import Results from "./tabs/Results.vue";
+import urlList from "../../config/urlList"
+import utils from "@/utils/fetch";
 import { useCreateTabulation } from "@/stores/createTabulation";
+import { useLoadingStore } from '@/stores/loading'
 
+const loadingData = useLoadingStore();
 const tabData = useCreateTabulation();
 
 const formData = reactive({
-  generalInfo: {},
+  generalInfo: { "formName": "", "description": "" },
   attributes: [],
   questions: [],
   results: [],
@@ -48,11 +52,20 @@ function updateResults(newResults) {
   formData.results = newResults;
 }
 
-function saveContents() {
-  let json = JSON.stringify(formData)
-  console.log(json)
+async function saveContents() {
   const result = validateForm();
   if (!result) return;
+  console.log(formData)
+  // Show loading animation
+  loadingData.loading = true;
+
+  const response = await utils.postData(urlList.BACKEND_CREATE_FORM, {formData: formData})
+  // const response = await utils.postData(urlList.BACKEND_CREATE_FORM, formData)
+
+  console.log(response)
+
+  // Unshow loading animation
+  loadingData.loading = false;
 }
 
 // Validates if the data entered in the form is in the correct form or not
@@ -85,6 +98,7 @@ function validateForm() {
     tabData.currentTab = 4
     return false;
   }
+  return true;
 }
 
 function validateGeneralInfo() {
