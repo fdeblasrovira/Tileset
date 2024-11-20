@@ -6,8 +6,9 @@
 const express = require('express');
 const cors = require('cors')
 const cookieParser = require('cookie-parser');
-const initializer = require('./database/initialize')
+const DBInitializer = require('./database/initialize')
 const DB = require('./database/database');
+const LocalStackInitializer = require('./aws/initialize');
 const routes = require('./routes/router');
 
 var app = module.exports = express();
@@ -15,25 +16,26 @@ var app = module.exports = express();
 // initialize the app
 initialize()
 
-async function initialize(){
+async function initialize() {
   try {
     // DB initialization
-    await initializer.initializeDB();
-  
+    await DBInitializer.initializeDB();
+
+    if (process.env.NODE_ENV === "development") {
+      await LocalStackInitializer.initializeLocalStack();
+    }
+
     // Set the middleware
-    app.use(express.json({limit: '100mb'}));
+    app.use(express.json({ limit: '100mb' }));
     app.use(express.text());
     app.use(cookieParser())
-  
+
     // allow only this app's frontend to access the site
     app.use(cors({
       origin: process.env.FRONTEND_URL,
       credentials: true
     }))
-    
-    console.log(process.env.FRONTEND_URL)
-    console.log(process.env.FRONTEND_URL)
-    console.log(process.env.FRONTEND_URL)
+
     app.use(function (req, res, next) {
       res.setHeader('Access-Control-Allow-Credentials', true);
       res.setHeader('Content-Type', 'application/json');

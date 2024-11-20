@@ -1,6 +1,9 @@
 # Node modules
 node_modules/
 
+# Localstack
+aws/volume/
+
 # Environment variables
 .env
 

@@ -3,3 +3,6 @@ Edit form request to backend with loading animation
 Create Route Controller Service for 2 of the above
 Take a look on how to run localstack to mimic S3.
 Also you can run lambda to getRid of blacklist token using localstack to test.
+
+You will have to install dependencies in the backend using npm install
+you also will need to instla awslocal cli tool manually!
