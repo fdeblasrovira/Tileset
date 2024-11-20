@@ -6,3 +6,5 @@ Also you can run lambda to getRid of blacklist token using localstack to test.
 
 You will have to install dependencies in the backend using npm install
 you also will need to instla awslocal cli tool manually!
+
+https://stackoverflow.com/questions/7511321/uploading-base64-encoded-image-to-amazon-s3-via-node-js
