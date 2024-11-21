@@ -9,7 +9,7 @@ exports.handleCreateForm = async function (req, res) {
 
     const { userId } = req;
     const result = await formService.handleCreateForm(formData, userId);
-    if (result.error) return res.status(result.code).json({ code: result.code, message: result.message });
+    if (result.error) return res.status(400).json({ code: 400, message: result.message });
 
     res.status(200).json({ code: 200 });
   }

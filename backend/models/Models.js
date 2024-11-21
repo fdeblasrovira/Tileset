@@ -1,3 +1,4 @@
+const Associations = require('./Associations');
 const User = require('./User');
 const Attribute = require('./Attribute');
 const Form = require('./Form');
@@ -14,6 +15,7 @@ exports.defineModels = async function (sequelize) {
   activeModels.forEach((activeModel) => {
     sequelize.define(activeModel.model.name, activeModel.model.model, { paranoid: activeModel.model.paranoid })
   })
+  await Associations.loadAssociations();
 }
 
 // Sync the Database with the defined models
