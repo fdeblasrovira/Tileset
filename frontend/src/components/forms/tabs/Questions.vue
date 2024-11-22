@@ -80,7 +80,7 @@ function editQuestion() {
 
   // Each option needs a label text
   let validationErrorFlag = false;
-  
+
   editingOptions.value.forEach((element) => {
     if (element.text.trim().length <= 0) {
       questionModalErrorMessage.value = "The option text can't be blank";
@@ -90,7 +90,7 @@ function editQuestion() {
   if (validationErrorFlag) return;
 
   // In questions that have options to choose from, there has to be at least 2 options
-  if (editingOptions.value.length <= 1){
+  if (editingOptions.value.length <= 1) {
     questionModalErrorMessage.value = "There must be at least 2 options";
     validationErrorFlag = true;
   }

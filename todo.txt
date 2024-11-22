@@ -8,3 +8,40 @@ You will have to install dependencies in the backend using npm install
 you also will need to instla awslocal cli tool manually!
 
 https://stackoverflow.com/questions/7511321/uploading-base64-encoded-image-to-amazon-s3-via-node-js
+
+questions: [
+    {
+      type: 'input',
+      question: "What's your dog's name?",
+      id: '94ea30b5-69ab-429f-bae9-8b6ee13d1827'
+    },
+    {
+      type: 'textarea',
+      question: 'Comments',
+      id: 'c148df14-5023-49f8-bc46-271f4d6cf599'
+    },
+    {
+      type: 'date',
+      question: 'When did you finish school?',
+      format: 'date',
+      id: '02226f16-f564-4da1-b5df-d082aac09e90'
+    },
+    {
+      type: 'radio',
+      question: "What's your favorite movie genre?",
+      options: [Array],
+      id: '5d917a71-154b-4513-8900-ee34ee24aa6e'
+    },
+    {
+      type: 'checkbox',
+      question: 'What animals do you like? Select at least one option',
+      options: [Array],
+      id: '721a4b4f-7713-4f7b-9c83-4d92a4519716'
+    },
+    {
+      type: 'select',
+      question: 'Main form of contact',
+      options: [Array],
+      id: '7d1b7bb8-5434-4875-9d5f-349bd11d6f30'
+    }
+  ],

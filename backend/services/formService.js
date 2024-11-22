@@ -24,7 +24,7 @@ exports.handleCreateForm = async function (formData, userId) {
           visibility: formData.generalInfo.visibility == 'public',
           version: 1
         },
-        { transaction: t},
+        { transaction: t },
       );
 
       // Prepare attribute data to insert
@@ -43,10 +43,21 @@ exports.handleCreateForm = async function (formData, userId) {
 
       // Prepare question data to insert
       // Divide the questions in 2 types: Input questions and choice questions
-      // Keep in mind you need to add form version to question and you need to keep the correct order
+      const inputQuestions = [], choiceQuestions = [];
+      formData.questions.forEach((element, index) => {
+        // Add order value
+        element.order = index
+        if (element.type == "input" || element.type == "textarea" || element.type == "date") inputQuestions.push(element)
+        else choiceQuestions.push(element)
+      });
+
+      console.log("inputQuestions")
+      console.log(inputQuestions)
+      console.log("choiceQuestions")
+      console.log(choiceQuestions)
 
       const result = await DB.sequelize.models.Attribute.bulkCreate(attributestoInsert, { transaction: t })
-      
+
 
 
     });

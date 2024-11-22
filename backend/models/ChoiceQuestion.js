@@ -11,6 +11,10 @@ exports.model = {
     label: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    formVersion: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false,
     }
   }
 }
