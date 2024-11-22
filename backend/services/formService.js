@@ -16,8 +16,7 @@ exports.handleCreateForm = async function (formData, userId) {
       // Get User
       const user = await DB.sequelize.models.User.findOne({ where: { id: userId } });
 
-      // const form = await user.createForm(
-      // await user.createForm(
+      // Create a user form
       const form = await user.createForm(
         {
           name: formData.generalInfo.formName,
@@ -25,8 +24,31 @@ exports.handleCreateForm = async function (formData, userId) {
           visibility: formData.generalInfo.visibility == 'public',
           version: 1
         },
-        { transaction: t },
+        { transaction: t},
       );
+
+      // Prepare attribute data to insert
+      const attributestoInsert = formData.attributes.map((attribute, index) => ({
+        leftLabel: attribute.leftLabel,
+        rightLabel: attribute.rightLabel,
+        leftColor: attribute.leftColor,
+        rightColor: attribute.rightColor,
+        defaultValue: attribute.defaultValue,
+        minValue: attribute.min,
+        maxValue: attribute.max,
+        order: index,
+        formVersion: form.version,
+        FormId: form.id
+      }))
+
+      // Prepare question data to insert
+      // Divide the questions in 2 types: Input questions and choice questions
+      // Keep in mind you need to add form version to question and you need to keep the correct order
+
+      const result = await DB.sequelize.models.Attribute.bulkCreate(attributestoInsert, { transaction: t })
+      
+
+
     });
   } catch (error) {
     // If the execution reaches this line, an error occurred.

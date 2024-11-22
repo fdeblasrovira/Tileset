@@ -53,5 +53,9 @@ exports.model = {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
     },
+    formVersion: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false,
+    }
   }
 }
