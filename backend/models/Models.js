@@ -7,9 +7,10 @@ const AttributeValue = require('./AttributeValue');
 const BlacklistToken = require('./BlacklistToken');
 const InputQuestion = require('./InputQuestion');
 const ChoiceQuestion = require('./ChoiceQuestion');
+const Choice = require('./Choice');
 
 // Models to be loaded
-const activeModels = [User, Attribute, Form, Result, AttributeValue, BlacklistToken, InputQuestion, ChoiceQuestion];
+const activeModels = [User, Attribute, Form, Result, AttributeValue, BlacklistToken, InputQuestion, ChoiceQuestion, Choice];
 
 exports.defineModels = async function (sequelize) {
   activeModels.forEach((activeModel) => {

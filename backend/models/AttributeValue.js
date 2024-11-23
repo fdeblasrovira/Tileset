@@ -5,7 +5,7 @@ exports.model = {
   paranoid: true,
   model: {
     // Model attributes are defined here
-    attributeID:{
+    attributeId:{
       type: DataTypes.STRING,
       allowNull: false,
     },

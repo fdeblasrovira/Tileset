@@ -4,7 +4,7 @@ import router from "@/router/index";
 
 
 export const postData = async function postData(url, data) {
-	if (!isValidAuth) await router.push({ name: 'Login' })
+	if (!await isValidAuth) await router.push({ name: 'Login' })
 
 	const authData = useAuthStore();
 	try {
@@ -26,7 +26,7 @@ export const postData = async function postData(url, data) {
 }
 
 export const getData = async function getData(url) {
-	if (!isValidAuth) await router.push({ name: 'Login' })
+	if (!await isValidAuth) await router.push({ name: 'Login' })
 		
 	const authData = useAuthStore();
 	try {

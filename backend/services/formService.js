@@ -3,13 +3,6 @@ const DB = require('../database/database');
 exports.handleCreateForm = async function (formData, userId) {
   console.log(formData)
   console.log(userId)
-  // Get form data
-  // Transaction
-  // Register GeneralInfo besides image
-  // Register Attribute
-  // Register Question
-  // Register Result
-
   try {
     // Use transaction to ensure data integrity
     await DB.sequelize.transaction(async t => {
@@ -28,7 +21,7 @@ exports.handleCreateForm = async function (formData, userId) {
       );
 
       // Prepare attribute data to insert
-      const attributestoInsert = formData.attributes.map((attribute, index) => ({
+      const attributesToInsert = formData.attributes.map((attribute, index) => ({
         leftLabel: attribute.leftLabel,
         rightLabel: attribute.rightLabel,
         leftColor: attribute.leftColor,
@@ -51,20 +44,106 @@ exports.handleCreateForm = async function (formData, userId) {
         else choiceQuestions.push(element)
       });
 
-      console.log("inputQuestions")
-      console.log(inputQuestions)
-      console.log("choiceQuestions")
-      console.log(choiceQuestions)
+      const inputQuestionsToInsert = inputQuestions.map((question, index) => ({
+        type: question.type,
+        order: question.order,
+        label: question.question,
+        formVersion: form.version,
+        FormId: form.id
+      }))
 
-      const result = await DB.sequelize.models.Attribute.bulkCreate(attributestoInsert, { transaction: t })
+      const choiceQuestionsToInsert = choiceQuestions.map((question, index) => ({
+        type: question.type,
+        order: question.order,
+        label: question.question,
+        formVersion: form.version,
+        FormId: form.id
+      }))
+
+      const attributeResult = await DB.sequelize.models.Attribute.bulkCreate(attributesToInsert, { transaction: t })
+
+      const attributeIdMap = {}
+      formData.attributes.forEach((attribute, index) => {
+        attributeIdMap[attribute.id] = attributeResult[index].id;
+      });
 
 
+      const inputQuestionResult = await DB.sequelize.models.InputQuestion.bulkCreate(inputQuestionsToInsert, { transaction: t })
+      const choiceQuestionResult = await DB.sequelize.models.ChoiceQuestion.bulkCreate(choiceQuestionsToInsert, { transaction: t })
 
+
+      for (let i = 0; i < choiceQuestionResult.length; ++i) {
+        const question = choiceQuestionResult[i];
+
+        // get question order so we can use it as index to get it's options
+        const index = question.order;
+        const options = formData.questions[index].options;
+
+        // prepare to insert all the options and link it to the question
+        const choicesToInsert = options.map((option, index) => ({
+          order: index,
+          label: option.text,
+          ChoiceQuestionId: question.id
+        }))
+
+        const choiceResult = await DB.sequelize.models.Choice.bulkCreate(choicesToInsert, { transaction: t })
+
+        const attributeValuesToInsert = []
+
+        // Create the AttributeValue data for each option
+        for (let j = 0; j < options.length; ++j) {
+          const option = options[j];
+          const actionKeys = Object.keys(option.actions)
+          // We loop through every action of every option
+          for (let k = 0; k < actionKeys.length; ++k) {
+            const attribute = actionKeys[k];
+            const value = option.actions[attribute];
+
+            // For each attribute and value we create an AttributeValue record
+            attributeValuesToInsert.push(
+              {attributeId: attributeIdMap[attribute], value: value, ChoiceId: choiceResult[j].id}
+            )
+          }
+        }
+
+        const attributeValueResult = await DB.sequelize.models.AttributeValue.bulkCreate(attributeValuesToInsert, { transaction: t })
+      }
+
+      // Prepare results to insert
+      const resultsToInsert = formData.results.map((result, index) => ({
+        name: result.name,
+        description: result.description,
+        imageUrl: "urltoImage",
+        order: index,
+        formVersion: form.version,
+        FormId: form.id
+      }))
+
+      const resultsResult = await DB.sequelize.models.Result.bulkCreate(resultsToInsert, { transaction: t })
+
+      const attributeValuesToInsert = []
+
+      for (let i = 0; i < formData.results.length; ++i){
+        const result = formData.results[i]
+        const attributeValues = result.attributeValues
+
+        const attributeKeys = Object.keys(attributeValues)
+
+        for (let j = 0; j < attributeKeys.length; ++j){
+          const attributeId = attributeIdMap[attributeKeys[j]]
+          const value = attributeValues[attributeKeys[j]]
+
+          attributeValuesToInsert.push(
+            {attributeId: attributeId, value: value, ResultId: resultsResult[i].id}
+          )
+        }
+      }
+
+      const attributeValueResult = await DB.sequelize.models.AttributeValue.bulkCreate(attributeValuesToInsert, { transaction: t })
     });
   } catch (error) {
     // If the execution reaches this line, an error occurred.
     // The transaction has already been rolled back
-    console.error(error.message)
     return { error: true, message: error.message }
   }
 

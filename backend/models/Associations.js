@@ -1,6 +1,6 @@
 const DB = require('../database/database');
 
-exports.loadAssociations = async function(){
+exports.loadAssociations = async function () {
   // User - form One-To-Many
   await DB.sequelize.models.User.hasMany(DB.sequelize.models.Form)
   await DB.sequelize.models.Form.belongsTo(DB.sequelize.models.User)
@@ -21,11 +21,15 @@ exports.loadAssociations = async function(){
   await DB.sequelize.models.Form.hasMany(DB.sequelize.models.Result)
   await DB.sequelize.models.Result.belongsTo(DB.sequelize.models.Form)
 
-  /* falta
-  I think each Choice question has multiple choices. (one to many should do)
-  I think each Choice has multiple attribute values. (one to many should do)
-  I think each Result also has multiple attribute values. (one to many should do)
+  // ChoiceQuestion - Choice One-To-Many
+  await DB.sequelize.models.ChoiceQuestion.hasMany(DB.sequelize.models.Choice)
+  await DB.sequelize.models.Choice.belongsTo(DB.sequelize.models.ChoiceQuestion)
 
-  */
-  
+  // Choice - AttributeValue One-To-One
+  await DB.sequelize.models.Choice.hasOne(DB.sequelize.models.AttributeValue)
+  await DB.sequelize.models.AttributeValue.belongsTo(DB.sequelize.models.Choice)
+
+  // Result - AttributeValue One-To-One
+  await DB.sequelize.models.Result.hasMany(DB.sequelize.models.AttributeValue)
+  await DB.sequelize.models.AttributeValue.belongsTo(DB.sequelize.models.Result)
 }

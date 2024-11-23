@@ -1,12 +1,5 @@
-Create form request to backend with loading animation
-Edit form request to backend with loading animation
-Create Route Controller Service for 2 of the above
-Take a look on how to run localstack to mimic S3.
 Also you can run lambda to getRid of blacklist token using localstack to test.
-
-You will have to install dependencies in the backend using npm install
-you also will need to instla awslocal cli tool manually!
-
+When I open a new choice question, the previous choice index is still having effect and automatically opens an choice. When opening a question all the choices should be closed
 https://stackoverflow.com/questions/7511321/uploading-base64-encoded-image-to-amazon-s3-via-node-js
 
 questions: [
