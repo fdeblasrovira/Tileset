@@ -1,4 +1,5 @@
 const DB = require('../database/database');
+const { S3, generatePresignedUrl } = require("../aws/S3");
 
 exports.handleCreateForm = async function (formData, userId) {
   console.log(formData)
@@ -101,7 +102,7 @@ exports.handleCreateForm = async function (formData, userId) {
 
             // For each attribute and value we create an AttributeValue record
             attributeValuesToInsert.push(
-              {attributeId: attributeIdMap[attribute], value: value, ChoiceId: choiceResult[j].id}
+              { attributeId: attributeIdMap[attribute], value: value, ChoiceId: choiceResult[j].id }
             )
           }
         }
@@ -123,23 +124,48 @@ exports.handleCreateForm = async function (formData, userId) {
 
       const attributeValuesToInsert = []
 
-      for (let i = 0; i < formData.results.length; ++i){
+      for (let i = 0; i < formData.results.length; ++i) {
         const result = formData.results[i]
         const attributeValues = result.attributeValues
 
         const attributeKeys = Object.keys(attributeValues)
 
-        for (let j = 0; j < attributeKeys.length; ++j){
+        for (let j = 0; j < attributeKeys.length; ++j) {
           const attributeId = attributeIdMap[attributeKeys[j]]
           const value = attributeValues[attributeKeys[j]]
 
           attributeValuesToInsert.push(
-            {attributeId: attributeId, value: value, ResultId: resultsResult[i].id}
+            { attributeId: attributeId, value: value, ResultId: resultsResult[i].id }
           )
         }
       }
 
       const attributeValueResult = await DB.sequelize.models.AttributeValue.bulkCreate(attributeValuesToInsert, { transaction: t })
+
+      /* 
+        The form data has been successfully stored.
+        We now create S3 signed URLs so the client can upload their pictures
+        We need one URL for the form picture and one URL for each of the results
+      */
+
+      const bucketName = process.env.S3_IMAGE_BUCKET_NAME;
+      // Url is in this format: user/formId/formVersion/
+      const formImagePath = `${userId}/${form.id}/${form.version}/`
+      const formImageFileName = "form.jpg"
+
+      // Form picture
+      const formUrl = await generatePresignedUrl(bucketName, formImagePath + formImageFileName)
+      console.log(formUrl)
+
+      const resultUrlArray = []
+      // Results pictures
+      for (let i = 0; i < resultsResult.length; ++i){
+        const resultId = resultsResult[i].id;
+
+        resultUrlArray.push(await generatePresignedUrl(bucketName, formImagePath + resultId))
+      }
+
+      console.log(resultUrlArray)
     });
   } catch (error) {
     // If the execution reaches this line, an error occurred.
