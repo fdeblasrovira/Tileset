@@ -154,7 +154,7 @@ exports.handleCreateForm = async function (formData, userId) {
       const bucketName = process.env.S3_IMAGE_BUCKET_NAME;
       // Url is in this format: user/formId/formVersion/
       const formImagePath = `${userId}/${form.id}/${form.version}/`
-      const formImageFileName = "form.jpg"
+      const formImageFileName = "form.jpeg"
 
       // Form picture
       formUrl = await generatePresignedUrl(bucketName, formImagePath + formImageFileName)
@@ -163,7 +163,7 @@ exports.handleCreateForm = async function (formData, userId) {
       for (let i = 0; i < resultsResult.length; ++i){
         const resultId = resultsResult[i].id;
 
-        resultUrlArray.push(await generatePresignedUrl(bucketName, formImagePath + resultId))
+        resultUrlArray.push(await generatePresignedUrl(bucketName, formImagePath + resultId + ".jpeg"))
       }
       
     });

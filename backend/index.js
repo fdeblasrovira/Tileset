@@ -26,7 +26,7 @@ async function initialize() {
     }
 
     // Set the middleware
-    app.use(express.json({ limit: '100mb' }));
+    app.use(express.json({ limit: '5mb' }));
     app.use(express.text());
     app.use(cookieParser())
 

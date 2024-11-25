@@ -6,7 +6,7 @@ import urlList from "../config/urlList"
 import router from "../router/index";
 import utils from "@/utils/fetch";
 import { useAuthStore } from "@/stores/auth"
-import toastConfig from "@/config/toast"
+import {registrationSuccess, registrationError} from "@/config/toast"
 import Toastify from "toastify-js"
 import { useLoadingStore } from '@/stores/loading'
 
@@ -62,8 +62,11 @@ async function register() {
     authData.authenticated = true;
     authData.accessToken = response.accessToken;
 
-    Toastify(toastConfig).showToast();
+    Toastify(registrationSuccess).showToast();
     await router.push({ name: 'Home' })
+  }
+  else{
+    Toastify(registrationError).showToast();
   }
 }
 </script>

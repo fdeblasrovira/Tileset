@@ -33,7 +33,7 @@ function previewFiles(event) {
       const ctx = canvas.getContext("2d");
       ctx.drawImage(helperImage, 0, 0, width, height);
 
-      compressedImage = canvas.toDataURL("image/jpeg", 0.7); // get the data from canvas as 70% JPG (can be also PNG, etc.)
+      compressedImage = canvas.toDataURL("image/jpeg", 1); 
 
       // Images should not be larger than 2mb
       if (event.total >= 2048000) {

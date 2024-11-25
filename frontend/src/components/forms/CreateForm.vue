@@ -9,6 +9,9 @@ import urlList from "../../config/urlList"
 import utils from "@/utils/fetch";
 import { useCreateTabulation } from "@/stores/createTabulation";
 import { useLoadingStore } from '@/stores/loading'
+import { formCreationSuccess, formCreationError } from "@/config/toast"
+import Toastify from "toastify-js"
+import router from "@/router/index";
 
 const loadingData = useLoadingStore();
 const tabData = useCreateTabulation();
@@ -56,6 +59,18 @@ async function saveContents() {
   const result = validateForm();
   if (!result) return;
   console.log(formData)
+
+  // We copy the form data because we need to remove the images before sending it to the server
+  const copyFormData = { ...formData }
+  delete copyFormData.generalInfo.picture
+
+  copyFormData.results.forEach((element) => {delete element.picture})
+
+  console.log("copyFormData")
+  console.log(copyFormData)
+  console.log("formData")
+  console.log(formData)
+
   // Show loading animation
   loadingData.loading = true;
 
@@ -63,18 +78,34 @@ async function saveContents() {
   console.log(response)
 
   // If the response is successful, in the response there will be image upload urls. We will use these to upload the necessary images.
-  if (response.code == 200){
+  if (response.code == 200) {
     const formImageUpload = response.formImageUpload;
     const resultsImageUpload = response.resultsImageUpload;
 
-    console.log("formImageUpload")
-    console.log(formImageUpload)
-    console.log("resultsImageUpload")
-    console.log(resultsImageUpload)
+    // Check that the amount of URLs and the amount of results match
+    if (resultsImageUpload.length != formData.results.length) {
+      console.log("Result number and URL number missmatch")
+      return;
+    }
 
-    const imageUploadResult = await utils.uploadImage(resultsImageUpload, formData.results[0].picture)
-    console.log(imageUploadResult)
+    // Upload all the form images
+    await utils.uploadImage(formImageUpload, formData.generalInfo.picture)
+
+    for (let i = 0; i < formData.results.length; ++i) {
+      const currentResult = formData.results[i]
+      await utils.uploadImage(resultsImageUpload[i], currentResult.picture)
+    }
+
+    // Show successful toast
+    Toastify(formCreationSuccess).showToast();
+
+    await router.push({ name: 'Home' })
   }
+  else {
+    // Error in creating a form. Show error as a toast
+    Toastify(formCreationError).showToast();
+  }
+
   // Unshow loading animation
   loadingData.loading = false;
 }
