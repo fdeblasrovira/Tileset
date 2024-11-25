@@ -27,7 +27,7 @@ export const postData = async function postData(url, data) {
 
 export const getData = async function getData(url) {
 	if (!await isValidAuth) await router.push({ name: 'Login' })
-		
+
 	const authData = useAuthStore();
 	try {
 		const response = await fetch(url, {
@@ -44,4 +44,23 @@ export const getData = async function getData(url) {
 		console.error(error.message);
 	}
 }
-export default { postData, getData }
+
+export const uploadImage = async function uploadImage(url, data) {
+	try {
+		return await fetch(url, {
+			method: "PUT",
+			headers: {
+				'ContentEncoding': 'base64',
+				'ContentType': 'image/jpeg',
+				'Access-Control-Allow-Origin': "*",
+				'Access-Control-Allow-Methods': "PUT",
+				'Access-Control-Allow-Headers': "Origin, ContentEncoding, ContentType"
+			},
+			body: data
+		});
+	} catch (error) {
+		console.error(error.message);
+	}
+}
+
+export default { postData, getData, uploadImage }

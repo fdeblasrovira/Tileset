@@ -71,6 +71,9 @@ async function saveContents() {
     console.log(formImageUpload)
     console.log("resultsImageUpload")
     console.log(resultsImageUpload)
+
+    const imageUploadResult = await utils.uploadImage(resultsImageUpload, formData.results[0].picture)
+    console.log(imageUploadResult)
   }
   // Unshow loading animation
   loadingData.loading = false;
