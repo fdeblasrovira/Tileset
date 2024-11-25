@@ -4,6 +4,9 @@ const { S3, generatePresignedUrl } = require("../aws/S3");
 exports.handleCreateForm = async function (formData, userId) {
   console.log(formData)
   console.log(userId)
+
+  let formUrl = "";
+  const resultUrlArray = []
   try {
     // Use transaction to ensure data integrity
     await DB.sequelize.transaction(async t => {
@@ -154,18 +157,15 @@ exports.handleCreateForm = async function (formData, userId) {
       const formImageFileName = "form.jpg"
 
       // Form picture
-      const formUrl = await generatePresignedUrl(bucketName, formImagePath + formImageFileName)
-      console.log(formUrl)
+      formUrl = await generatePresignedUrl(bucketName, formImagePath + formImageFileName)
 
-      const resultUrlArray = []
       // Results pictures
       for (let i = 0; i < resultsResult.length; ++i){
         const resultId = resultsResult[i].id;
 
         resultUrlArray.push(await generatePresignedUrl(bucketName, formImagePath + resultId))
       }
-
-      console.log(resultUrlArray)
+      
     });
   } catch (error) {
     // If the execution reaches this line, an error occurred.
@@ -173,6 +173,7 @@ exports.handleCreateForm = async function (formData, userId) {
     return { error: true, message: error.message }
   }
 
-  return { error: false };
+  console.log(formUrl,resultUrlArray)
+  return { error: false, formImageUpload: formUrl, resultsImageUpload: resultUrlArray};
 }
 

@@ -60,10 +60,18 @@ async function saveContents() {
   loadingData.loading = true;
 
   const response = await utils.postData(urlList.BACKEND_CREATE_FORM, { formData: formData })
-  // const response = await utils.postData(urlList.BACKEND_CREATE_FORM, formData)
-
   console.log(response)
 
+  // If the response is successful, in the response there will be image upload urls. We will use these to upload the necessary images.
+  if (response.code == 200){
+    const formImageUpload = response.formImageUpload;
+    const resultsImageUpload = response.resultsImageUpload;
+
+    console.log("formImageUpload")
+    console.log(formImageUpload)
+    console.log("resultsImageUpload")
+    console.log(resultsImageUpload)
+  }
   // Unshow loading animation
   loadingData.loading = false;
 }
