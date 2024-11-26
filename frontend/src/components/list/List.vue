@@ -6,6 +6,10 @@ import ListSearch from "./ListSearch.vue";
 import BaseButton from "../buttons/BaseButtonWithIcon.vue";
 import router from "../../router/index";
 import { useCreateTabulation } from "@/stores/createTabulation";
+import formData from "../../../test/data/formRegistrationData.json";
+import urlList from "../../config/urlList"
+import utils from "@/utils/fetch";
+
 
 const tabData = useCreateTabulation();
 
@@ -77,11 +81,62 @@ async function routeToCreate() {
 }
 
 const totalItems = 114;
+
+async function testRegisterData() {
+  const copyFormData = {...formData}
+  delete copyFormData.generalInfo.picture;
+  copyFormData.results.forEach((element) => {delete element.picture});
+
+  const response = await utils.postData(urlList.BACKEND_CREATE_FORM, { formData: formData })
+  console.log(response)
+
+  // If the response is successful, in the response there will be image upload urls. We will use these to upload the necessary images.
+  if (response.code == 200) {
+    const formImageUpload = response.formImageUpload;
+    const resultsImageUpload = response.resultsImageUpload;
+
+    // Check that the amount of URLs and the amount of results match
+    if (resultsImageUpload.length != formData.results.length) {
+      console.log("Result number and URL number missmatch")
+      return;
+    }
+
+    // Upload all the form images
+    await utils.uploadImage(formImageUpload, formData.generalInfo.picture)
+
+    for (let i = 0; i < formData.results.length; ++i) {
+      const currentResult = formData.results[i]
+      await utils.uploadImage(resultsImageUpload[i], currentResult.picture)
+    }
+  }
+  else {
+    // 
+  }
+}
+
+async function testGetData() {
+  const response = await utils.getData(urlList.BACKEND_GET_FORM+"?id=1")
+  console.log(response)
+}
 </script>
 
 <template>
   <div class="flex flex-row justify-between mb-3 items-center">
     <h2 class="text-lg mb-2 text-tileset-black">Forms: {{ totalItems }}</h2>
+    <BaseButton @click="testRegisterData" text="testRegisterData" color="bg-tileset-green" hover="hover:bg-tileset-green-1"
+      :class="{ glowingAnimation: forms.length <= 0 }">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+        class="w-6 h-6 stroke-tileset-white m-auto">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    </BaseButton>
+    <BaseButton @click="testGetData" text="testGetData" color="bg-tileset-green" hover="hover:bg-tileset-green-1"
+      :class="{ glowingAnimation: forms.length <= 0 }">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+        class="w-6 h-6 stroke-tileset-white m-auto">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    </BaseButton>
     <BaseButton @click="routeToCreate" text="Create" color="bg-tileset-green" hover="hover:bg-tileset-green-1"
       :class="{ glowingAnimation: forms.length <= 0 }">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"

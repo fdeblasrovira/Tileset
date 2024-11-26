@@ -1,0 +1,85 @@
+{
+    "generalInfo": {
+        "formName": "123",
+        "description": "123",
+        "visibility": "public"
+    },
+    "attributes": [
+        {
+            "min": "-5",
+            "max": "5",
+            "defaultValue": "0",
+            "leftColor": "#a98467",
+            "leftLabel": "Poor",
+            "rightColor": "#be95c4",
+            "rightLabel": "Rich",
+            "id": "a7572d6a-25bf-4c9b-817d-7d25017b35d5"
+        },
+        {
+            "min": -10,
+            "max": 10,
+            "defaultValue": 2,
+            "leftColor": "#457b9d",
+            "leftLabel": "Hate",
+            "rightColor": "#e63946",
+            "rightLabel": "Love",
+            "id": "b5290d86-cbcb-4244-9e31-f743687f90c2"
+        }
+    ],
+    "questions": [
+        {
+            "type": "radio",
+            "question": "Love is",
+            "options": [
+                {
+                    "text": "Everything",
+                    "actions": {
+                        "a7572d6a-25bf-4c9b-817d-7d25017b35d5": 2
+                    },
+                    "id": "7c1df358-8278-4d37-8f04-6fe1884daca4"
+                },
+                {
+                    "text": "Very important",
+                    "actions": {
+                        "b5290d86-cbcb-4244-9e31-f743687f90c2": -1
+                    },
+                    "id": "e10d3e6b-03b5-414e-ad8b-a7ba8c0fc003"
+                },
+                {
+                    "text": "Something I'm looking for",
+                    "actions": {},
+                    "id": "489d3132-9fae-4f67-a26c-bb27175219d6"
+                },
+                {
+                    "text": "Overrated",
+                    "actions": {
+                        "b5290d86-cbcb-4244-9e31-f743687f90c2": 4,
+                        "a7572d6a-25bf-4c9b-817d-7d25017b35d5": 4
+                    },
+                    "id": "496ef098-8197-4246-ba77-00bd1a35ace1"
+                }
+            ],
+            "id": "053c5f01-5193-4492-87a2-295d7c98417f"
+        }
+    ],
+    "results": [
+        {
+            "name": "Result",
+            "description": "Result's description",
+            "attributeValues": {
+                "a7572d6a-25bf-4c9b-817d-7d25017b35d5": "-3",
+                "b5290d86-cbcb-4244-9e31-f743687f90c2": "-4"
+            },
+            "id": "2e0b5b72-52eb-45ed-8cd7-39a991a2dd11"
+        },
+        {
+            "name": "Result2",
+            "description": "Result's description2",
+            "attributeValues": {
+                "a7572d6a-25bf-4c9b-817d-7d25017b35d5": "3",
+                "b5290d86-cbcb-4244-9e31-f743687f90c2": "6"
+            },
+            "id": "948ce0e2-b4a3-4738-97c0-654cc08242c5"
+        }
+    ]
+}

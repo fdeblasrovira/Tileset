@@ -160,12 +160,12 @@ exports.handleCreateForm = async function (formData, userId) {
       formUrl = await generatePresignedUrl(bucketName, formImagePath + formImageFileName)
 
       // Results pictures
-      for (let i = 0; i < resultsResult.length; ++i){
+      for (let i = 0; i < resultsResult.length; ++i) {
         const resultId = resultsResult[i].id;
 
         resultUrlArray.push(await generatePresignedUrl(bucketName, formImagePath + resultId + ".jpeg"))
       }
-      
+
     });
   } catch (error) {
     // If the execution reaches this line, an error occurred.
@@ -173,7 +173,22 @@ exports.handleCreateForm = async function (formData, userId) {
     return { error: true, message: error.message }
   }
 
-  console.log(formUrl,resultUrlArray)
-  return { error: false, formImageUpload: formUrl, resultsImageUpload: resultUrlArray};
+  console.log(formUrl, resultUrlArray)
+  return { error: false, formImageUpload: formUrl, resultsImageUpload: resultUrlArray };
 }
 
+// Get form
+exports.handleGetForm = async function (formId, userId) {
+  console.log(formId)
+  console.log(userId)
+
+  try {
+
+  } catch (error) {
+    // If the execution reaches this line, an error occurred.
+    // The transaction has already been rolled back
+    return { error: true, message: error.message }
+  }
+
+  return { error: false };
+}

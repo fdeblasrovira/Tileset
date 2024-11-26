@@ -7,5 +7,6 @@ const urlList = {
     "BACKEND_LOGOUT": "http://localhost:3000/logout",
 
     "BACKEND_CREATE_FORM": "http://localhost:3000/create_form",
+    "BACKEND_GET_FORM": "http://localhost:3000/get_form",
 }
 export default urlList;
