@@ -195,18 +195,20 @@ exports.handleGetForm = async function (formId, userId) {
           association: 'InputQuestions',
           where: {
             formVersion: Sequelize.col('Form.version'),
-          }
+          },
+          required: false
         },
         {
           association: 'ChoiceQuestions',
           where: {
             formVersion: Sequelize.col('Form.version'),
           },
+          required: false,
           include: [
             {
               association: 'Choices',
               include: ["AttributeValue"]
-            }
+            },
           ],
         },
         {
