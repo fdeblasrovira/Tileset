@@ -1,5 +1,6 @@
 const DB = require('../database/database');
-const { S3, generatePresignedUrl } = require("../aws/S3");
+const { generatePresignedUrl } = require("../aws/S3");
+const { Sequelize } = require('sequelize');
 
 exports.handleCreateForm = async function (formData, userId) {
   console.log(formData)
@@ -181,12 +182,55 @@ exports.handleCreateForm = async function (formData, userId) {
 exports.handleGetForm = async function (formId, userId) {
   console.log(formId)
   console.log(userId)
-
   try {
-
+    const form = await DB.sequelize.models.Form.findOne({
+      include: [
+        {
+          association: 'Attributes',
+          where: {
+            formVersion: Sequelize.col('Form.version'),
+          }
+        },
+        {
+          association: 'InputQuestions',
+          where: {
+            formVersion: Sequelize.col('Form.version'),
+          }
+        },
+        {
+          association: 'ChoiceQuestions',
+          where: {
+            formVersion: Sequelize.col('Form.version'),
+          },
+          include: [
+            {
+              association: 'Choices',
+              include: ["AttributeValue"]
+            }
+          ],
+        },
+        {
+          association: 'Results',
+          where: {
+            formVersion: Sequelize.col('Form.version'),
+          },
+          include: [
+            {
+              association: 'AttributeValues',
+            }
+          ],
+        },
+      ],
+      where: {
+        id: formId,
+      },
+    });
+    console.log("form")
+    console.log(form)
   } catch (error) {
     // If the execution reaches this line, an error occurred.
     // The transaction has already been rolled back
+    console.error(error.message)
     return { error: true, message: error.message }
   }
 
