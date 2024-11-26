@@ -9,3 +9,13 @@ cors guide look!
 https://docs.localstack.cloud/user-guide/aws/s3/
 
 pip install awscli-local[ver1]
+
+
+const posts = await Post.findAll({
+  include: [
+    {
+      association: 'comments',
+      include: ['author'],
+    },
+  ],
+});
