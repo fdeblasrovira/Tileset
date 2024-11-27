@@ -126,6 +126,39 @@ exports.handleCreateForm = async function (formData, userId) {
 
       const resultsResult = await DB.sequelize.models.Result.bulkCreate(resultsToInsert, { transaction: t })
 
+      /* 
+       We now create S3 signed URLs so the client can upload their pictures
+       We need one URL for the form picture and one URL for each of the results
+     */
+
+      // Store all the UPDATE queries
+      const resultURLQueries = []
+
+      const bucketName = process.env.S3_IMAGE_BUCKET_NAME;
+      // Url is in this format: user/formId/formVersion/
+      const formImagePath = `${userId}/${form.id}/${form.version}/`
+      const formImageFileName = "form.jpeg"
+
+      // Form picture
+      formUrl = await generatePresignedUrl(bucketName, formImagePath + formImageFileName)
+
+      // Results pictures
+      for (let i = 0; i < resultsResult.length; ++i) {
+        const resultId = resultsResult[i].id;
+
+        const generatedURL = await generatePresignedUrl(bucketName, formImagePath + resultId + ".jpeg")
+
+        // We want to update the results image URL. Instead of updating one by one, we merge all the UPDATE queries into one.
+        resultURLQueries.push(`UPDATE 'Results' SET 'Results'.'imageUrl' = '${generatedURL}' WHERE 'Results'.'id' = '${resultId}';`)
+        resultUrlArray.push(generatedURL)
+      }
+
+      // Merge all the Update queries into one
+      const fullUpdateQuery = resultURLQueries.join('')
+      console.log(fullUpdateQuery)
+
+      await DB.sequelize.query(resultURLQueries);
+
       const attributeValuesToInsert = []
 
       for (let i = 0; i < formData.results.length; ++i) {
@@ -145,27 +178,6 @@ exports.handleCreateForm = async function (formData, userId) {
       }
 
       const attributeValueResult = await DB.sequelize.models.AttributeValue.bulkCreate(attributeValuesToInsert, { transaction: t })
-
-      /* 
-        The form data has been successfully stored.
-        We now create S3 signed URLs so the client can upload their pictures
-        We need one URL for the form picture and one URL for each of the results
-      */
-
-      const bucketName = process.env.S3_IMAGE_BUCKET_NAME;
-      // Url is in this format: user/formId/formVersion/
-      const formImagePath = `${userId}/${form.id}/${form.version}/`
-      const formImageFileName = "form.jpeg"
-
-      // Form picture
-      formUrl = await generatePresignedUrl(bucketName, formImagePath + formImageFileName)
-
-      // Results pictures
-      for (let i = 0; i < resultsResult.length; ++i) {
-        const resultId = resultsResult[i].id;
-
-        resultUrlArray.push(await generatePresignedUrl(bucketName, formImagePath + resultId + ".jpeg"))
-      }
 
     });
   } catch (error) {
