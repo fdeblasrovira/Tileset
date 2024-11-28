@@ -11,7 +11,7 @@ exports.handleCreateForm = async function (req, res) {
     const result = await formService.handleCreateForm(formData, userId);
     if (result.error) return res.status(400).json({ code: 400, message: result.message });
 
-    res.status(200).json({ code: 200 , formImageUpload: result.formImageUpload, resultsImageUpload: result.resultsImageUpload});
+    res.status(200).json({ code: 200, formImageUpload: result.formImageUpload, resultsImageUpload: result.resultsImageUpload });
   }
   catch (e) {
     console.error(e.message)
@@ -30,7 +30,7 @@ exports.handleGetForm = async function (req, res) {
     const result = await formService.handleGetForm(formId, userId);
     if (result.error) return res.status(500).json({ code: 500, message: result.message });
 
-    res.status(200).json({ code: 200 });
+    res.status(200).json({ code: 200, form: result.form });
   }
   catch (e) {
     console.error(e.message)

@@ -190,10 +190,9 @@ exports.handleCreateForm = async function (formData, userId) {
 
 // Get form
 exports.handleGetForm = async function (formId, userId) {
-  console.log(formId)
-  console.log(userId)
+  let form;
   try {
-    const form = await DB.sequelize.models.Form.findOne({
+    form = await DB.sequelize.models.Form.findOne({
       include: [
         {
           association: 'Attributes',
@@ -237,8 +236,6 @@ exports.handleGetForm = async function (formId, userId) {
         id: formId,
       },
     });
-    console.log("form")
-    console.log(form)
   } catch (error) {
     // If the execution reaches this line, an error occurred.
     // The transaction has already been rolled back
@@ -246,5 +243,5 @@ exports.handleGetForm = async function (formId, userId) {
     return { error: true, message: error.message }
   }
 
-  return { error: false };
+  return { error: false, form: form};
 }
