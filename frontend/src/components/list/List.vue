@@ -83,9 +83,9 @@ async function routeToCreate() {
 const totalItems = 114;
 
 async function testRegisterData() {
-  const copyFormData = {...formData}
+  const copyFormData = { ...formData }
   delete copyFormData.generalInfo.picture;
-  copyFormData.results.forEach((element) => {delete element.picture});
+  copyFormData.results.forEach((element) => { delete element.picture });
 
   const response = await utils.postData(urlList.BACKEND_CREATE_FORM, { formData: formData })
   console.log(response)
@@ -115,7 +115,17 @@ async function testRegisterData() {
 }
 
 async function testGetData() {
-  const response = await utils.getData(urlList.BACKEND_GET_FORM+"?id=1")
+  const response = await utils.getData(urlList.BACKEND_GET_FORM + "?id=1")
+  console.log(response)
+}
+
+async function testRegisterUser() {
+  const authFormData = {
+    email: "a@a.com",
+    password: "1",
+    fullName: "1",
+  }
+  const response = await utils.postData(urlList.BACKEND_REGISTER, authFormData)
   console.log(response)
 }
 </script>
@@ -123,8 +133,15 @@ async function testGetData() {
 <template>
   <div class="flex flex-row justify-between mb-3 items-center">
     <h2 class="text-lg mb-2 text-tileset-black">Forms: {{ totalItems }}</h2>
-    <BaseButton @click="testRegisterData" text="testRegisterData" color="bg-tileset-green" hover="hover:bg-tileset-green-1"
+    <BaseButton @click="testRegisterUser" text="Register User" color="bg-tileset-green" hover="hover:bg-tileset-green-1"
       :class="{ glowingAnimation: forms.length <= 0 }">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+        class="w-6 h-6 stroke-tileset-white m-auto">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    </BaseButton>
+    <BaseButton @click="testRegisterData" text="testRegisterData" color="bg-tileset-green"
+      hover="hover:bg-tileset-green-1" :class="{ glowingAnimation: forms.length <= 0 }">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
         class="w-6 h-6 stroke-tileset-white m-auto">
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />

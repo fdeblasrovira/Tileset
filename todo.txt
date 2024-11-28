@@ -3,10 +3,14 @@
 -Public private difference.
     If you are private, only you can view your form. It's useful while editing a long form.
 - If the version of the form is not set in the getForm request, fetch the latest form. If not fetch that specific version.
+
 - Do the edit screen
 - Do the List screen.
 
-
+- Form versioning
+    - If I create a new form for every edit, I will not be able to see previous form history.
+    - If I keep the actual design, If I change the name of the form, All the previous versions of the form will also change the name.
+    - I think I need to make the version a composite primary key (version and id columns form a primary id together) 
 
 {
     "generalInfo": {
