@@ -141,6 +141,8 @@ exports.handleCreateForm = async function (formData, userId) {
 
       // Form picture
       formUrl = await generatePresignedUrl(bucketName, formImagePath + formImageFileName)
+      form.imageUrl = formUrl;
+      await form.save({ transaction: t })
 
       // Results pictures
       for (let i = 0; i < resultsResult.length; ++i) {
