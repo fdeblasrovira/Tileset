@@ -1,8 +1,12 @@
-Also you can run lambda to getRid of blacklist token using localstack to test.
-When I open a new choice question, the previous choice index is still having effect and automatically opens an choice. When opening a question all the choices should be closed
+- Also you can run lambda to getRid of blacklist token using localstack to test.
+- When I open a new choice question, the previous choice index is still having effect and automatically opens an choice. When opening a question all the choices should be closed
+-Public private difference.
+    If you are private, only you can view your form. It's useful while editing a long form.
+- Change data naming conventions in backend to fit the frontend :(
+- Do the edit screen
+- Do the List screen.
 
-Public private difference.
-If you are private, only you can view your form. It's useful while editing a long form.
+
 
 {
     "generalInfo": {
