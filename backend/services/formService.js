@@ -189,7 +189,7 @@ exports.handleCreateForm = async function (formData, userId) {
 }
 
 // Get form
-exports.handleGetForm = async function (formId, userId) {
+exports.handleGetForm = async function (formId, userId, version) {
   let form;
   try {
     form = await DB.sequelize.models.Form.findOne({
@@ -235,6 +235,7 @@ exports.handleGetForm = async function (formId, userId) {
       ],
       where: {
         id: formId,
+        version: version ? version : DB.sequelize.fn('MAX', Sequelize.col('version'))
       },
     });
   } catch (error) {
