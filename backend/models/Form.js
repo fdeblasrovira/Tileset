@@ -5,7 +5,7 @@ exports.model = {
   paranoid: true,
   model: {
     // Model attributes are defined here
-    name: {
+    formName: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -15,7 +15,6 @@ exports.model = {
     },
     imageUrl: {
       type: DataTypes.STRING(512),
-      defaultValue: "urltoTILESETlogo",
     },
     visibility: {
       type: DataTypes.BOOLEAN,

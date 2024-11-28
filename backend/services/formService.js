@@ -17,7 +17,7 @@ exports.handleCreateForm = async function (formData, userId) {
       // Create a user form
       const form = await user.createForm(
         {
-          name: formData.generalInfo.formName,
+          formName: formData.generalInfo.formName,
           description: formData.generalInfo.description,
           visibility: formData.generalInfo.visibility == 'public',
           version: 1
@@ -196,6 +196,7 @@ exports.handleGetForm = async function (formId, userId) {
       include: [
         {
           association: 'Attributes',
+          attributes: { exclude: ['formVersion'] },
           where: {
             formVersion: Sequelize.col('Form.version'),
           }
