@@ -148,16 +148,11 @@ exports.handleCreateForm = async function (formData, userId) {
 
         const generatedURL = await generatePresignedUrl(bucketName, formImagePath + resultId + ".jpeg")
 
-        // We want to update the results image URL. Instead of updating one by one, we merge all the UPDATE queries into one.
-        resultURLQueries.push(`UPDATE 'Results' SET 'Results'.'imageUrl' = '${generatedURL}' WHERE 'Results'.'id' = '${resultId}';`)
+        // TODO Update all results in one query and not one query for every result
+        resultsResult[i].imageUrl = generatedURL;
+        await resultsResult[i].save({ transaction: t })
         resultUrlArray.push(generatedURL)
       }
-
-      // Merge all the Update queries into one
-      const fullUpdateQuery = resultURLQueries.join('')
-      console.log(fullUpdateQuery)
-
-      await DB.sequelize.query(resultURLQueries);
 
       const attributeValuesToInsert = []
 
@@ -183,6 +178,7 @@ exports.handleCreateForm = async function (formData, userId) {
   } catch (error) {
     // If the execution reaches this line, an error occurred.
     // The transaction has already been rolled back
+    console.log(error)
     return { error: true, message: error.message }
   }
 
