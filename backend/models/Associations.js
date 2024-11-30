@@ -5,6 +5,10 @@ exports.loadAssociations = async function () {
   await DB.sequelize.models.User.hasMany(DB.sequelize.models.Form)
   await DB.sequelize.models.Form.belongsTo(DB.sequelize.models.User)
 
+  // Form - GeneralInfo One-To-Many
+  await DB.sequelize.models.Form.hasOne(DB.sequelize.models.GeneralInfo)
+  await DB.sequelize.models.GeneralInfo.belongsTo(DB.sequelize.models.Form)
+
   // Form - Attribute One-To-Many
   await DB.sequelize.models.Form.hasMany(DB.sequelize.models.Attribute)
   await DB.sequelize.models.Attribute.belongsTo(DB.sequelize.models.Form)

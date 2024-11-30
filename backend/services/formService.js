@@ -17,13 +17,20 @@ exports.handleCreateForm = async function (formData, userId) {
       // Create a user form
       const form = await user.createForm(
         {
-          formName: formData.generalInfo.formName,
-          description: formData.generalInfo.description,
           visibility: formData.generalInfo.visibility == 'public',
           version: 1
         },
         { transaction: t },
       );
+
+      // Prepare to insert general info
+      const generalInfoToInsert = {
+        formName: formData.generalInfo.formName,
+        description: formData.generalInfo.description,
+        FormId: form.id
+      }
+
+      const generalInfoResult = await DB.sequelize.models.GeneralInfo.create(generalInfoToInsert, { transaction: t })
 
       // Prepare attribute data to insert
       const attributesToInsert = formData.attributes.map((attribute, index) => ({
@@ -141,8 +148,8 @@ exports.handleCreateForm = async function (formData, userId) {
 
       // Form picture
       formUrl = await generatePresignedUrl(bucketName, formImagePath + formImageFileName)
-      form.imageUrl = formUrl;
-      await form.save({ transaction: t })
+      generalInfoResult.imageUrl = formUrl;
+      await generalInfoResult.save({ transaction: t })
 
       // Results pictures
       for (let i = 0; i < resultsResult.length; ++i) {
