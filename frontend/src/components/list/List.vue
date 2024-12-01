@@ -29,8 +29,8 @@ async function getFormList() {
         formId: form.id,
         formName: form.GeneralInfos[0].formName,
         formDescription: form.GeneralInfos[0].description,
-        formImage: "http://s3.localhost.localstack.cloud:4566/tileset-development-user-images/1/1/1/form.jpeg",
-        // formImage: form.GeneralInfos[0].imageUrl,
+        // formImage: "http://s3.localhost.localstack.cloud:4566/tileset-development-user-images/1/1/1/form.jpeg",
+        formImage: form.GeneralInfos[0].imageUrl,
       }
     })
   }

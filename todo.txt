@@ -6,8 +6,11 @@ Add a slider type questions. (like attribute)
 - Do the List screen.
 
 On list image error fetch, show tileset logo
+auth behaves weird
 
 When clicking public or private in form registration, remove error messages
+
+save images as images and not strings in s3.
 
 {
     "generalInfo": {

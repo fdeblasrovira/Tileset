@@ -61,7 +61,7 @@ async function saveContents() {
   console.log(formData)
 
   // We copy the form data because we need to remove the images before sending it to the server
-  const copyFormData = { ...formData }
+  const copyFormData = JSON.parse(JSON.stringify(formData))
   delete copyFormData.generalInfo.picture
 
   copyFormData.results.forEach((element) => {delete element.picture})
@@ -74,7 +74,7 @@ async function saveContents() {
   // Show loading animation
   loadingData.loading = true;
 
-  const response = await utils.postData(urlList.BACKEND_CREATE_FORM, { formData: formData })
+  const response = await utils.postData(urlList.BACKEND_CREATE_FORM, { formData: copyFormData })
   console.log(response)
 
   // If the response is successful, in the response there will be image upload urls. We will use these to upload the necessary images.
@@ -87,6 +87,14 @@ async function saveContents() {
       console.log("Result number and URL number missmatch")
       return;
     }
+    console.log("test")
+    console.log("test")
+    console.log("test")
+    console.log("test")
+    console.log("formImageUpload")
+    console.log(formImageUpload)
+    console.log("formData.generalInfo.picture")
+    console.log(formData.generalInfo.picture)
 
     // Upload all the form images
     const formImageResponse = await utils.uploadImage(formImageUpload, formData.generalInfo.picture)

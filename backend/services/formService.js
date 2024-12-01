@@ -146,7 +146,8 @@ exports.handleCreateForm = async function (formData, userId) {
 
       // Form picture
       formUrl = await generatePresignedUrl(bucketName, formImagePath + formImageFileName)
-      generalInfoResult.imageUrl = formUrl;
+      // http://<bucket-name>.s3.<region>.localhost.localstack.cloud:4566/<key-name>
+      generalInfoResult.imageUrl = process.env.S3_HOST + bucketName + '/' + formImagePath + formImageFileName;
       await generalInfoResult.save({ transaction: t })
 
       // Results pictures
@@ -156,7 +157,7 @@ exports.handleCreateForm = async function (formData, userId) {
         const generatedURL = await generatePresignedUrl(bucketName, formImagePath + resultId + ".jpeg")
 
         // TODO Update all results in one query and not one query for every result
-        resultsResult[i].imageUrl = generatedURL;
+        resultsResult[i].imageUrl = process.env.S3_HOST + bucketName + '/' + formImagePath + resultId + ".jpeg";
         await resultsResult[i].save({ transaction: t })
         resultUrlArray.push(generatedURL)
       }

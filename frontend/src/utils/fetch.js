@@ -47,29 +47,20 @@ export const getData = async function getData(url) {
 
 export const uploadImage = async function uploadImage(url, data) {
 	if (!data) return
-	const blob = dataURItoBlob(data)
 	try {
 		return await fetch(url, {
 			method: "PUT",
 			headers: {
 				'ContentType': 'image/jpeg',
+				'ContentEncoding': 'base64',
 				'Access-Control-Allow-Origin': "*",
 				'Access-Control-Allow-Methods': "PUT",
 				'Access-Control-Allow-Headers': "Origin, ContentEncoding, ContentType"
 			},
-			body: blob
+			body: data
 		});
 	} catch (error) {
 		console.error(error.message);
-	}
-
-	function dataURItoBlob(dataURI) {
-		var binary = atob(dataURI.split(',')[1]);
-		var array = [];
-		for(var i = 0; i < binary.length; i++) {
-			array.push(binary.charCodeAt(i));
-		}
-		return new Blob([new Uint8Array(array)], {type: 'image/jpeg'});
 	}
 }
 
