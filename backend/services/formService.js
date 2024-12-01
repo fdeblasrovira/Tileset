@@ -212,17 +212,29 @@ async function getFormGuest(formId) {
     form = await DB.sequelize.models.Form.findOne({
       include: [
         {
-          association: 'GeneralInfos'
+          association: 'GeneralInfos',
+          through: {
+            attributes: [] // Excludes data from the junction table
+          }
         },
         {
           association: 'Attributes',
+          through: {
+            attributes: [] // Excludes data from the junction table
+          }
         },
         {
           association: 'InputQuestions',
+          through: {
+            attributes: [] // Excludes data from the junction table
+          },
           required: false
         },
         {
           association: 'ChoiceQuestions',
+          through: {
+            attributes: [] // Excludes data from the junction table
+          },
           required: false,
           include: [
             {
@@ -233,6 +245,9 @@ async function getFormGuest(formId) {
         },
         {
           association: 'Results',
+          through: {
+            attributes: [] // Excludes data from the junction table
+          },
           include: [
             {
               association: 'AttributeValues',
