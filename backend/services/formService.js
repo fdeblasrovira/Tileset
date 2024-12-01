@@ -349,7 +349,77 @@ async function getFormUser(formId, userId) {
   return { error: false, form: form };
 }
 
-// Get the form where the visibility is true (only the latest version has visibility true)
+// Get the form with a specific version (only the creator can see it)
 async function getFormVersion(formId, userId, version) {
+  const whereClause = {
+    [Op.and]: [
+      { id: formId },
+      { userId: userId },
+      { version: version },
+    ],
+  };
 
+  let form;
+  try {
+    form = await DB.sequelize.models.Form.findOne({
+      include: [
+        {
+          association: 'GeneralInfos',
+          through: {
+            attributes: [], // Excludes data from the junction table
+            where: { version: version }
+          }
+        },
+        {
+          association: 'Attributes',
+          through: {
+            attributes: [], // Excludes data from the junction table
+            where: { version: version }
+          }
+        },
+        {
+          association: 'InputQuestions',
+          through: {
+            attributes: [], // Excludes data from the junction table
+            where: { version: version }
+          },
+          required: false
+        },
+        {
+          association: 'ChoiceQuestions',
+          through: {
+            attributes: [], // Excludes data from the junction table
+            where: { version: version }
+          },
+          required: false,
+          include: [
+            {
+              association: 'Choices',
+              include: ["AttributeValue"]
+            },
+          ],
+        },
+        {
+          association: 'Results',
+          through: {
+            attributes: [], // Excludes data from the junction table
+            where: { version: version }
+          },
+          include: [
+            {
+              association: 'AttributeValues',
+            }
+          ],
+        },
+      ],
+      where: whereClause
+    });
+  } catch (error) {
+    // If the execution reaches this line, an error occurred.
+    // The transaction has already been rolled back
+    console.error(error.message)
+    return { error: true, message: error.message }
+  }
+
+  return { error: false, form: form };
 }
