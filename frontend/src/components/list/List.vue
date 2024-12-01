@@ -6,64 +6,39 @@ import ListSearch from "./ListSearch.vue";
 import BaseButton from "../buttons/BaseButtonWithIcon.vue";
 import router from "../../router/index";
 import { useCreateTabulation } from "@/stores/createTabulation";
+import { useLoadingStore } from '@/stores/loading'
 import formData from "../../../test/data/formRegistrationData.json";
 import urlList from "../../config/urlList"
 import utils from "@/utils/fetch";
 
-
 const tabData = useCreateTabulation();
+const loadingData = useLoadingStore();
 
-const forms = ref([
-  {
-    formId: 1,
-    formName: "Form1",
-    formDescription: "Form description",
-    formImage:
-      "https://raw.githubusercontent.com/IQAndreas/sample-images/gh-pages/100-100-color/00.jpg",
-    views: "1670",
-  },
-  {
-    formId: 2,
-    formName: "What animal are you?",
-    formDescription: "What animal are you? test yourself.",
-    formImage:
-      "https://raw.githubusercontent.com/IQAndreas/sample-images/gh-pages/100-100-color/01.jpg",
-    views: "15647",
-  },
-  {
-    formId: 3,
-    formName: "Testing something",
-    formDescription: "Just a test form",
-    formImage:
-      "https://raw.githubusercontent.com/IQAndreas/sample-images/gh-pages/100-100-color/02.jpg",
-    views: "80",
-  },
-  {
-    formId: 4,
-    formName: "Lost in the jungle",
-    formDescription: "Escape the jungle",
-    formImage:
-      "https://raw.githubusercontent.com/IQAndreas/sample-images/gh-pages/100-100-color/03.jpg",
-    views: "155",
-  },
-  {
-    formId: 5,
-    formName: "Zombiez",
-    formDescription:
-      "Survive in this apocalypse. Escape the zombies and venture into a world of madness",
-    formImage:
-      "https://raw.githubusercontent.com/IQAndreas/sample-images/gh-pages/100-100-color/04.jpg",
-    views: "0",
-  },
-  {
-    formId: 6,
-    formName: "Form1",
-    formDescription: "Form description",
-    formImage:
-      "https://raw.githubusercontent.com/IQAndreas/sample-images/gh-pages/100-100-color/00.jpg",
-    views: "1670",
-  },
-]);
+const forms = ref([]);
+
+async function getFormList() {
+  // Show loading animation
+  loadingData.loading = true;
+
+  const response = await utils.getData(urlList.BACKEND_GET_FORM_LIST)
+  console.log(response.forms)
+  if (response.forms.length <= 0) forms.value = []
+  else {
+    forms.value = response.forms.map((form) => {
+      return {
+        formId: form.id,
+        formName: form.GeneralInfos[0].formName,
+        formDescription: form.GeneralInfos[0].description,
+        formImage: "http://s3.localhost.localstack.cloud:4566/tileset-development-user-images/1/1/1/form.jpeg",
+        // formImage: form.GeneralInfos[0].imageUrl,
+      }
+    })
+  }
+  console.log(forms.value)
+  loadingData.loading = false;
+};
+getFormList()
+
 
 const openedItem = ref(0);
 const lastOpenedItem = ref(0);
@@ -169,8 +144,10 @@ async function testRegisterUser() {
       <div v-if="forms.length <= 0" class="h-20 flex items-center m-auto font-light italic">
         There are no forms yet
       </div>
-      <ListItem v-for="form in forms" @list-item-clicked="onListItemClicked" :data="form" :key="form.formId"
-        :position="start" :open="openedItem == form.formId" :close="lastOpenedItem == form.formId" />
+      <div v-else>
+        <ListItem v-for="form in forms" @list-item-clicked="onListItemClicked" :data="form" :key="form.formId"
+          :position="start" :open="openedItem == form.formId" :close="lastOpenedItem == form.formId" />
+      </div>
     </ul>
     <ListPagination :maxItemsPage="10" :totalItems="totalItems" :maxPaginationItems="5" />
   </div>

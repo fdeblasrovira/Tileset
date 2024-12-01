@@ -89,8 +89,9 @@ async function saveContents() {
     }
 
     // Upload all the form images
-    await utils.uploadImage(formImageUpload, formData.generalInfo.picture)
+    const formImageResponse = await utils.uploadImage(formImageUpload, formData.generalInfo.picture)
 
+    console.log(formImageResponse)
     for (let i = 0; i < formData.results.length; ++i) {
       const currentResult = formData.results[i]
       await utils.uploadImage(resultsImageUpload[i], currentResult.picture)

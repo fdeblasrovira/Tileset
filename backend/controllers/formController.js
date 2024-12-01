@@ -38,3 +38,19 @@ exports.handleGetForm = async function (req, res) {
     res.status(500).json({ code: 500, message: 'Server error: form creation error' });
   }
 };
+
+// Controller for getting the user's form list
+exports.handleGetFormList = async function (req, res) {
+  try {
+    const { userId, searchConditions } = req;
+    const result = await formService.handleGetFormList(userId, searchConditions);
+    if (result.error) return res.status(500).json({ code: 500, message: result.message });
+
+    console.log(result.forms)
+    res.status(200).json({ code: 200, forms: result.forms });
+  }
+  catch (e) {
+    console.error(e.message)
+    res.status(500).json({ code: 500, message: 'Server error: form creation error' });
+  }
+};

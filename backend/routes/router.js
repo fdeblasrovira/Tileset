@@ -29,4 +29,7 @@ exports.registerRoutes = function (app) {
 
   // Get Form
   app.get('/get_form', authenticated, formController.handleGetForm);
+
+  // Get Form List
+  app.get('/get_form_list', authenticated, formController.handleGetFormList);
 }

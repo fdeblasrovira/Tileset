@@ -1,6 +1,6 @@
 const DB = require('../database/database');
 const { generatePresignedUrl } = require("../aws/S3");
-const { Op } = require('sequelize');
+const { Sequelize, Op } = require('sequelize');
 
 exports.handleCreateForm = async function (formData, userId) {
   console.log(formData)
@@ -422,4 +422,37 @@ async function getFormVersion(formId, userId, version) {
   }
 
   return { error: false, form: form };
+}
+
+// Get the form where the visibility is true (only the latest version has visibility true)
+exports.handleGetFormList = async function (userId, searchConditions) {
+  let forms, count;
+  try {
+    forms = await DB.sequelize.models.Form.findAll({
+      attributes: {
+        exclude: ['UserId', 'visibility']
+      },
+      include: [
+        {
+          association: 'GeneralInfos',
+          through: {
+            attributes: [] // Excludes data from the junction table
+          }
+        }
+      ],
+      where: {
+        UserId: userId,
+        version: {
+          [Op.in]: Sequelize.literal("(SELECT MAX(version) FROM Forms AS sub WHERE sub.id = `sub`.`id`)")
+        }
+      },
+    });
+  } catch (error) {
+    // If the execution reaches this line, an error occurred.
+    // The transaction has already been rolled back
+    console.error(error.message)
+    return { error: true, message: error.message }
+  }
+
+  return { error: false, forms: forms };
 }
