@@ -6,24 +6,24 @@ exports.loadAssociations = async function () {
   await DB.sequelize.models.Form.belongsTo(DB.sequelize.models.User)
 
   // Form - GeneralInfo One-To-Many
-  await DB.sequelize.models.Form.hasOne(DB.sequelize.models.GeneralInfo)
-  await DB.sequelize.models.GeneralInfo.belongsTo(DB.sequelize.models.Form)
+  await DB.sequelize.models.Form.belongsToMany(DB.sequelize.models.GeneralInfo, { through: DB.sequelize.models.FormGeneralInfo })
+  await DB.sequelize.models.GeneralInfo.belongsToMany(DB.sequelize.models.Form, { through: DB.sequelize.models.FormGeneralInfo })
 
-  // Form - Attribute One-To-Many
-  await DB.sequelize.models.Form.hasMany(DB.sequelize.models.Attribute)
-  await DB.sequelize.models.Attribute.belongsTo(DB.sequelize.models.Form)
+  // Form - Attribute Many-To-Many
+  await DB.sequelize.models.Form.belongsToMany(DB.sequelize.models.Attribute, { through: DB.sequelize.models.FormAttribute })
+  await DB.sequelize.models.Attribute.belongsToMany(DB.sequelize.models.Form, { through: DB.sequelize.models.FormAttribute })
 
-  // Form - InputQuestion One-To-Many
-  await DB.sequelize.models.Form.hasMany(DB.sequelize.models.InputQuestion)
-  await DB.sequelize.models.InputQuestion.belongsTo(DB.sequelize.models.Form)
+  // Form - InputQuestion Many-To-Many
+  await DB.sequelize.models.Form.belongsToMany(DB.sequelize.models.InputQuestion, { through: DB.sequelize.models.FormInputQuestion })
+  await DB.sequelize.models.InputQuestion.belongsToMany(DB.sequelize.models.Form, { through: DB.sequelize.models.FormInputQuestion })
 
-  // Form - ChoiceQuestion One-To-Many
-  await DB.sequelize.models.Form.hasMany(DB.sequelize.models.ChoiceQuestion)
-  await DB.sequelize.models.ChoiceQuestion.belongsTo(DB.sequelize.models.Form)
+  // Form - ChoiceQuestion Many-To-Many
+  await DB.sequelize.models.Form.belongsToMany(DB.sequelize.models.ChoiceQuestion, { through: DB.sequelize.models.FormChoiceQuestion })
+  await DB.sequelize.models.ChoiceQuestion.belongsToMany(DB.sequelize.models.Form, { through: DB.sequelize.models.FormChoiceQuestion })
 
-  // Form - Result One-To-Many
-  await DB.sequelize.models.Form.hasMany(DB.sequelize.models.Result)
-  await DB.sequelize.models.Result.belongsTo(DB.sequelize.models.Form)
+  // Form - Result Many-To-Many
+  await DB.sequelize.models.Form.belongsToMany(DB.sequelize.models.Result, { through: DB.sequelize.models.FormResult })
+  await DB.sequelize.models.Result.belongsToMany(DB.sequelize.models.Form, { through: DB.sequelize.models.FormResult })
 
   // ChoiceQuestion - Choice One-To-Many
   await DB.sequelize.models.ChoiceQuestion.hasMany(DB.sequelize.models.Choice)
@@ -33,7 +33,7 @@ exports.loadAssociations = async function () {
   await DB.sequelize.models.Choice.hasOne(DB.sequelize.models.AttributeValue)
   await DB.sequelize.models.AttributeValue.belongsTo(DB.sequelize.models.Choice)
 
-  // Result - AttributeValue One-To-One
+  // Result - AttributeValue One-To-Many
   await DB.sequelize.models.Result.hasMany(DB.sequelize.models.AttributeValue)
   await DB.sequelize.models.AttributeValue.belongsTo(DB.sequelize.models.Result)
 }

@@ -16,9 +16,5 @@ exports.model = {
       type: DataTypes.STRING(255),
       allowNull: false,
     },
-    formVersion: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: false,
-    }
   }
 }

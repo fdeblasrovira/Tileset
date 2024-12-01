@@ -3,6 +3,7 @@
 -Public private difference.
     If you are private, only you can view your form. It's useful while editing a long form.
 - If the version of the form is not set in the getForm request, fetch the latest form. If not fetch that specific version.
+Add a slider type questions. (like attribute)
 
 - Do the edit screen
 - Do the List screen.
@@ -11,6 +12,35 @@
     - If I create a new form for every edit, I will not be able to see previous form history.
     - If I keep the actual design, If I change the name of the form, All the previous versions of the form will also change the name.
     - I think I need to make the version a composite primary key (version and id columns form a primary id together) 
+
+
+When you call get form there are basically 3 parameters:
+    - FormId: Required
+    - UserId: Optional
+    - version: Optional
+
+    When only the formId is provided It meand that the user requesting it is a Guest:
+        - if form found by ID return that form (where visible = true)
+        - If the form is not found we return 404.
+
+    When the UserId is provided it means that some user currently logged in wants to see the form. 
+        - If the form is visible return it.
+        - If the form is not visible return it only if the userId matches the column UserId in Forms table.
+
+    When the version is provided it means that the Creator of the form is taking a look at a previous version:
+        - If the formId and userId and version all matches then return the form.
+        - Otherwise not found
+        ※ if the version is provided but the userId is not provided return 404.
+
+
+The questions attribute and results should be many to many with form: the same question can be part of many versions of a form.
+For example: 
+Form have one GeneralInfo but the General info has many forms
+Form can have many attributes and attributes can have many forms
+Form can have many questions and questions can have many forms
+Form can have many Results and Results can have many forms
+
+ADAPTER
 
 {
     "generalInfo": {

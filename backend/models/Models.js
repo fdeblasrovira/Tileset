@@ -9,13 +9,24 @@ const InputQuestion = require('./InputQuestion');
 const ChoiceQuestion = require('./ChoiceQuestion');
 const Choice = require('./Choice');
 const GeneralInfo = require('./GeneralInfo');
+const FormAttribute = require('./FormAttribute');
+const FormInputQuestion = require('./FormInputQuestion');
+const FormChoiceQuestion = require('./FormChoiceQuestion');
+const FormResult = require('./FormResult');
+const FormGeneralInfo = require('./FormGeneralInfo');
 
 // Models to be loaded
-const activeModels = [User, Attribute, Form, Result, AttributeValue, BlacklistToken, InputQuestion, ChoiceQuestion, Choice, GeneralInfo];
+const activeModels = [User, Form, Attribute, Result, AttributeValue, BlacklistToken, InputQuestion, ChoiceQuestion, Choice, GeneralInfo, FormAttribute, FormInputQuestion, FormChoiceQuestion, FormResult, FormGeneralInfo];
 
 exports.defineModels = async function (sequelize) {
   activeModels.forEach((activeModel) => {
-    sequelize.define(activeModel.model.name, activeModel.model.model, { paranoid: activeModel.model.paranoid })
+    sequelize.define(activeModel.model.name, activeModel.model.model, {
+      paranoid: activeModel.model.paranoid, defaultScope: {
+        attributes: {
+          exclude: ['createdAt', 'updatedAt', 'deletedAt']
+        }
+      }
+    })
   })
   await Associations.loadAssociations();
 }

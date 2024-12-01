@@ -1,6 +1,6 @@
 const DB = require('../database/database');
 const { generatePresignedUrl } = require("../aws/S3");
-const { Sequelize } = require('sequelize');
+const { Op } = require('sequelize');
 
 exports.handleCreateForm = async function (formData, userId) {
   console.log(formData)
@@ -31,6 +31,7 @@ exports.handleCreateForm = async function (formData, userId) {
       }
 
       const generalInfoResult = await DB.sequelize.models.GeneralInfo.create(generalInfoToInsert, { transaction: t })
+      await form.addGeneralInfo(generalInfoResult, { through: { version: form.version }, transaction: t });
 
       // Prepare attribute data to insert
       const attributesToInsert = formData.attributes.map((attribute, index) => ({
@@ -42,7 +43,6 @@ exports.handleCreateForm = async function (formData, userId) {
         minValue: attribute.min,
         maxValue: attribute.max,
         order: index,
-        formVersion: form.version,
         FormId: form.id
       }))
 
@@ -60,7 +60,6 @@ exports.handleCreateForm = async function (formData, userId) {
         type: question.type,
         order: question.order,
         label: question.question,
-        formVersion: form.version,
         FormId: form.id
       }))
 
@@ -68,11 +67,11 @@ exports.handleCreateForm = async function (formData, userId) {
         type: question.type,
         order: question.order,
         label: question.question,
-        formVersion: form.version,
         FormId: form.id
       }))
 
       const attributeResult = await DB.sequelize.models.Attribute.bulkCreate(attributesToInsert, { transaction: t })
+      await form.addAttributes(attributeResult, { through: { version: form.version }, transaction: t });
 
       const attributeIdMap = {}
       formData.attributes.forEach((attribute, index) => {
@@ -81,7 +80,9 @@ exports.handleCreateForm = async function (formData, userId) {
 
 
       const inputQuestionResult = await DB.sequelize.models.InputQuestion.bulkCreate(inputQuestionsToInsert, { transaction: t })
+      await form.addInputQuestions(inputQuestionResult, { through: { version: form.version }, transaction: t });
       const choiceQuestionResult = await DB.sequelize.models.ChoiceQuestion.bulkCreate(choiceQuestionsToInsert, { transaction: t })
+      await form.addChoiceQuestions(choiceQuestionResult, { through: { version: form.version }, transaction: t });
 
 
       for (let i = 0; i < choiceQuestionResult.length; ++i) {
@@ -127,19 +128,16 @@ exports.handleCreateForm = async function (formData, userId) {
         description: result.description,
         imageUrl: "urltoImage",
         order: index,
-        formVersion: form.version,
         FormId: form.id
       }))
 
       const resultsResult = await DB.sequelize.models.Result.bulkCreate(resultsToInsert, { transaction: t })
+      await form.addResults(resultsResult, { through: { version: form.version }, transaction: t });
 
       /* 
        We now create S3 signed URLs so the client can upload their pictures
        We need one URL for the form picture and one URL for each of the results
-     */
-
-      // Store all the UPDATE queries
-      const resultURLQueries = []
+      */
 
       const bucketName = process.env.S3_IMAGE_BUCKET_NAME;
       // Url is in this format: user/formId/formVersion/
@@ -197,28 +195,112 @@ exports.handleCreateForm = async function (formData, userId) {
 
 // Get form
 exports.handleGetForm = async function (formId, userId, version) {
+  // If there's no UserId, a guest is trying to view the form
+  if (!userId) return await getFormGuest(formId);
+
+  // If the version is not provided it means that a logged in user want to see the latest version of form.
+  if (!version) return await getFormUser(formId, userId);
+
+  // If we got here, it means that a logged in user want to see a specific version of a form.
+  return await getFormVersion(formId, userId, version);
+}
+
+// Get the form where the visibility is true (only the latest version has visibility true)
+async function getFormGuest(formId) {
   let form;
   try {
     form = await DB.sequelize.models.Form.findOne({
       include: [
         {
+          association: 'GeneralInfos'
+        },
+        {
           association: 'Attributes',
-          attributes: { exclude: ['formVersion'] },
-          where: {
-            formVersion: Sequelize.col('Form.version'),
+        },
+        {
+          association: 'InputQuestions',
+          required: false
+        },
+        {
+          association: 'ChoiceQuestions',
+          required: false,
+          include: [
+            {
+              association: 'Choices',
+              include: ["AttributeValue"]
+            },
+          ],
+        },
+        {
+          association: 'Results',
+          include: [
+            {
+              association: 'AttributeValues',
+            }
+          ],
+        },
+      ],
+      where: {
+        id: formId,
+        visibility: true
+      },
+    });
+  } catch (error) {
+    // If the execution reaches this line, an error occurred.
+    // The transaction has already been rolled back
+    console.error(error.message)
+    return { error: true, message: error.message }
+  }
+
+  return { error: false, form: form };
+}
+
+// Get the form where the visibility is true if the user is not the creator, or get it regardless of visibility if it's the author
+async function getFormUser(formId, userId) {
+  const whereClause = {
+    [Op.or]: [
+      {
+        [Op.and]: [
+          { id: formId },
+          { visibility: true },
+        ],
+      },
+      {
+        [Op.and]: [
+          { id: formId },
+          { userId: userId },
+        ],
+      },
+    ],
+  };
+
+  let form;
+  try {
+    form = await DB.sequelize.models.Form.findOne({
+      include: [
+        {
+          association: 'GeneralInfos',
+          through: {
+            attributes: [] // Excludes data from the junction table
+          }
+        },
+        {
+          association: 'Attributes',
+          through: {
+            attributes: [] // Excludes data from the junction table
           }
         },
         {
           association: 'InputQuestions',
-          where: {
-            formVersion: Sequelize.col('Form.version'),
+          through: {
+            attributes: [] // Excludes data from the junction table
           },
           required: false
         },
         {
           association: 'ChoiceQuestions',
-          where: {
-            formVersion: Sequelize.col('Form.version'),
+          through: {
+            attributes: [] // Excludes data from the junction table
           },
           required: false,
           include: [
@@ -230,8 +312,8 @@ exports.handleGetForm = async function (formId, userId, version) {
         },
         {
           association: 'Results',
-          where: {
-            formVersion: Sequelize.col('Form.version'),
+          through: {
+            attributes: [] // Excludes data from the junction table
           },
           include: [
             {
@@ -240,10 +322,7 @@ exports.handleGetForm = async function (formId, userId, version) {
           ],
         },
       ],
-      where: {
-        id: formId,
-        version: version ? version : DB.sequelize.fn('MAX', Sequelize.col('version'))
-      },
+      where: whereClause
     });
   } catch (error) {
     // If the execution reaches this line, an error occurred.
@@ -252,5 +331,10 @@ exports.handleGetForm = async function (formId, userId, version) {
     return { error: true, message: error.message }
   }
 
-  return { error: false, form: form};
+  return { error: false, form: form };
+}
+
+// Get the form where the visibility is true (only the latest version has visibility true)
+async function getFormVersion(formId, userId, version) {
+
 }
