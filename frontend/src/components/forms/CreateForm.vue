@@ -56,9 +56,9 @@ function updateResults(newResults) {
 }
 
 async function saveContents() {
+  console.log(formData)
   const result = validateForm();
   if (!result) return;
-  console.log(formData)
 
   // We copy the form data because we need to remove the images before sending it to the server
   const copyFormData = JSON.parse(JSON.stringify(formData))
