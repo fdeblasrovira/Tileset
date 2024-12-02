@@ -52,10 +52,9 @@ export const uploadImage = async function uploadImage(url, data) {
 			method: "PUT",
 			headers: {
 				'ContentType': 'image/jpeg',
-				'ContentEncoding': 'base64',
 				'Access-Control-Allow-Origin': "*",
 				'Access-Control-Allow-Methods': "PUT",
-				'Access-Control-Allow-Headers': "Origin, ContentEncoding, ContentType"
+				'Access-Control-Allow-Headers': "Origin, ContentType"
 			},
 			body: data
 		});

@@ -7,6 +7,7 @@ import Questions from "./tabs/Questions.vue";
 import Results from "./tabs/Results.vue";
 import urlList from "../../config/urlList"
 import utils from "@/utils/fetch";
+import imageHandling from "@/utils/imageHandling";
 import { useCreateTabulation } from "@/stores/createTabulation";
 import { useLoadingStore } from '@/stores/loading'
 import { formCreationSuccess, formCreationError } from "@/config/toast"
@@ -85,24 +86,21 @@ async function saveContents() {
     // Check that the amount of URLs and the amount of results match
     if (resultsImageUpload.length != formData.results.length) {
       console.log("Result number and URL number missmatch")
+      Toastify(formCreationError).showToast();
       return;
     }
-    console.log("test")
-    console.log("test")
-    console.log("test")
-    console.log("test")
-    console.log("formImageUpload")
-    console.log(formImageUpload)
-    console.log("formData.generalInfo.picture")
-    console.log(formData.generalInfo.picture)
 
+    const blobForm = await imageHandling.dataUrlToFile(formData.generalInfo.picture, "form.jpeg")
+    
     // Upload all the form images
-    const formImageResponse = await utils.uploadImage(formImageUpload, formData.generalInfo.picture)
+    const formImageResponse = await utils.uploadImage(formImageUpload, blobForm)
 
     console.log(formImageResponse)
     for (let i = 0; i < formData.results.length; ++i) {
       const currentResult = formData.results[i]
-      await utils.uploadImage(resultsImageUpload[i], currentResult.picture)
+      const blobResult = await imageHandling.dataUrlToFile(currentResult.picture, (i+1)+".jpeg")
+      
+      await utils.uploadImage(resultsImageUpload[i], blobResult)
     }
 
     // Show successful toast

@@ -26,3 +26,7 @@ curl http://localhost:3000/restricted
 # process
 lsof -i tcp:3000
 kill -9 1605
+
+# s3
+awslocal s3 ls --recursive s3://tileset-development-user-images
+awslocal s3 rm --recursive s3://tileset-development-user-images
