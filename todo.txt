@@ -1,3 +1,4 @@
+zjl1028A
 - Also you can run lambda to getRid of blacklist token using localstack to test.
 - When I open a new choice question, the previous choice index is still having effect and automatically opens an choice. When opening a question all the choices should be closed
 Add a slider type questions. (like attribute)
@@ -19,13 +20,14 @@ export async function dataUrlToFile(dataUrl: string, fileName: string): Promise<
     return new File([blob], fileName, { type: 'image/png' });
 }
 
+
 const url = 'data:image/png;base6....';
 fetch(url)
   .then(res => res.blob())
   .then(blob => {
     const file = new File([blob], "File name",{ type: "image/png" })
   })
-  
+
 document.querySelector('input[type="file"]').onchange = async (event) => {
   const { signedUrl } = await fetch('/api/images/signed-url').then(res => res.json())
 
