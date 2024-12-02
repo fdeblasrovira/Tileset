@@ -11,6 +11,21 @@ auth behaves weird
 save images as images and not strings in s3.
     Go back to converting images to jpeg.
 
+
+export async function dataUrlToFile(dataUrl: string, fileName: string): Promise<File> {
+
+    const res: Response = await fetch(dataUrl);
+    const blob: Blob = await res.blob();
+    return new File([blob], fileName, { type: 'image/png' });
+}
+
+const url = 'data:image/png;base6....';
+fetch(url)
+  .then(res => res.blob())
+  .then(blob => {
+    const file = new File([blob], "File name",{ type: "image/png" })
+  })
+  
 document.querySelector('input[type="file"]').onchange = async (event) => {
   const { signedUrl } = await fetch('/api/images/signed-url').then(res => res.json())
 
