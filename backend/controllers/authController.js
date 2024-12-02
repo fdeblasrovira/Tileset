@@ -84,4 +84,3 @@ exports.handleLogout = async function (req, res) {
     res.status(500).json({ code: 500, message: 'Unable to blacklist' })
   }
 };
-
