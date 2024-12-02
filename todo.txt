@@ -9,6 +9,29 @@ On list image error fetch, show tileset logo
 auth behaves weird
 
 save images as images and not strings in s3.
+    Go back to converting images to jpeg.
+
+document.querySelector('input[type="file"]').onchange = async (event) => {
+  const { signedUrl } = await fetch('/api/images/signed-url').then(res => res.json())
+
+  const target = event.target
+  const file = target.files[0]
+  const reader = new FileReader()
+
+  reader.onload = async (event) => {
+    event.target.value = null
+
+    await fetch(signedUrl, {
+      method: 'PUT',
+      body: event.target.result,
+      headers: {
+        "Content-Type": "image/jpeg"
+      }
+    })
+  }
+
+  reader.readAsText(file)
+}
 
 {
     "generalInfo": {
