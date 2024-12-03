@@ -10,32 +10,45 @@ import { useLoadingStore } from '@/stores/loading'
 import formData from "../../../test/data/formRegistrationData.json";
 import urlList from "../../config/urlList"
 import utils from "@/utils/fetch";
+import { listFetchError } from "@/config/toast"
+import Toastify from "toastify-js"
 
 const tabData = useCreateTabulation();
 const loadingData = useLoadingStore();
 
 const forms = ref([]);
+const totalItems = ref(0);
 
 async function getFormList() {
-  // Show loading animation
-  loadingData.loading = true;
+  try {
+    // Show loading animation
+    loadingData.loading = true;
+    const response = await utils.getData(urlList.BACKEND_GET_FORM_LIST)
+    console.log(response)
 
-  const response = await utils.getData(urlList.BACKEND_GET_FORM_LIST)
-  console.log(response.forms)
-  if (response.forms.length <= 0) forms.value = []
-  else {
-    forms.value = response.forms.map((form) => {
-      return {
-        formId: form.id,
-        formName: form.GeneralInfos[0].formName,
-        formDescription: form.GeneralInfos[0].description,
-        // formImage: "http://s3.localhost.localstack.cloud:4566/tileset-development-user-images/1/1/1/form.jpeg",
-        formImage: form.GeneralInfos[0].imageUrl,
-      }
-    })
+    totalItems.value = response.count
+
+    if (response.forms.length <= 0) forms.value = []
+    else {
+      forms.value = response.forms.map((form) => {
+        return {
+          formId: form.id,
+          formName: form.GeneralInfos[0].formName,
+          formDescription: form.GeneralInfos[0].description,
+          // formImage: "http://s3.localhost.localstack.cloud:4566/tileset-development-user-images/1/1/1/form.jpeg",
+          formImage: form.GeneralInfos[0].imageUrl,
+        }
+      })
+    }
+    console.log(forms.value)
   }
-  console.log(forms.value)
-  loadingData.loading = false;
+  catch (e) {
+    console.log(e);
+    Toastify(listFetchError).showToast();
+  }
+  finally {
+    loadingData.loading = false;
+  }
 };
 getFormList()
 
@@ -55,7 +68,6 @@ async function routeToCreate() {
   await router.push("/create");
 }
 
-const totalItems = 114;
 
 async function testRegisterData() {
   const copyFormData = { ...formData }
@@ -149,7 +161,7 @@ async function testRegisterUser() {
           :position="start" :open="openedItem == form.formId" :close="lastOpenedItem == form.formId" />
       </div>
     </ul>
-    <ListPagination :maxItemsPage="10" :totalItems="totalItems" :maxPaginationItems="5" />
+    <ListPagination v-if="forms.length > 0" :maxItemsPage="5" :totalItems="totalItems" :maxPaginationItems="5" />
   </div>
 </template>
 

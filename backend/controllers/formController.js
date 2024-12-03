@@ -43,11 +43,11 @@ exports.handleGetForm = async function (req, res) {
 exports.handleGetFormList = async function (req, res) {
   try {
     const { userId, searchConditions } = req;
-    const result = await formService.handleGetFormList(userId, searchConditions);
+    const result = await formService.handleGetFormList(userId, searchConditions ? searchConditions : {});
     if (result.error) return res.status(500).json({ code: 500, message: result.message });
 
     console.log(result.forms)
-    res.status(200).json({ code: 200, forms: result.forms });
+    res.status(200).json({ code: 200, forms: result.forms, count: result.count });
   }
   catch (e) {
     console.error(e.message)

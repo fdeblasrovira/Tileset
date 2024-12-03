@@ -41,4 +41,15 @@ export const formCreationError = {
     background: "linear-gradient(to right, #c44127, #c78a7d)",
   }
 }
-export default { registrationSuccess, registrationError, formCreationSuccess, formCreationError };
+
+export const listFetchError = {
+  text: "Couldn't fetch the list",
+  duration: 3000,
+  gravity: "bottom", // `top` or `bottom`
+  position: "right", // `left`, `center` or `right`
+  stopOnFocus: false, // Prevents dismissing of toast on hover
+  style: {
+    background: "linear-gradient(to right, #c44127, #c78a7d)",
+  }
+}
+export default { registrationSuccess, registrationError, formCreationSuccess, formCreationError, listFetchError };

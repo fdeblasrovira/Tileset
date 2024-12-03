@@ -429,7 +429,8 @@ async function getFormVersion(formId, userId, version) {
 exports.handleGetFormList = async function (userId, searchConditions) {
   let forms, count;
   try {
-    forms = await DB.sequelize.models.Form.findAll({
+    // forms = await DB.sequelize.models.Form.findAll({
+     const response = await DB.sequelize.models.Form.findAndCountAll({
       attributes: {
         exclude: ['UserId', 'visibility']
       },
@@ -447,7 +448,14 @@ exports.handleGetFormList = async function (userId, searchConditions) {
           [Op.in]: Sequelize.literal("(SELECT MAX(version) FROM Forms AS sub WHERE sub.id = `sub`.`id`)")
         }
       },
+      // get only five items each time.
+      // The minimum number for page is 1.
+      offset: searchConditions.page ? (searchConditions.page-1) * 5 : 0,
+      limit: 5,
     });
+
+    count = response.count;
+    forms = response.rows;
   } catch (error) {
     // If the execution reaches this line, an error occurred.
     // The transaction has already been rolled back
@@ -455,5 +463,5 @@ exports.handleGetFormList = async function (userId, searchConditions) {
     return { error: true, message: error.message }
   }
 
-  return { error: false, forms: forms };
+  return { error: false, forms: forms, count: count};
 }

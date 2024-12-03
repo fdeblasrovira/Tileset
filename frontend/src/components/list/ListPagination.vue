@@ -4,13 +4,13 @@ import ListPaginationItem from "./ListPaginationItem.vue";
 
 const props = defineProps(["maxItemsPage", "totalItems", "maxPaginationItems"]);
 const offset = ref(0);
+const totalItems = ref(props.totalItems)
 
-const totalNumberOfPagination =
-  Math.floor(props.totalItems / props.maxItemsPage) + 1;
+const totalNumberOfPagination = ref(Math.floor(((totalItems.value - 1) / props.maxItemsPage) + 1))
 
 const elementsToDisplay = Math.min(
   props.maxPaginationItems,
-  totalNumberOfPagination
+  totalNumberOfPagination.value
 );
 
 const currentPagination = computed(() => {
@@ -25,13 +25,13 @@ const startingIndex = computed(() => {
     return 0;
   } else if (
     currentPagination.value + additionalPaginationItems >
-    totalNumberOfPagination
+    totalNumberOfPagination.value
   ) {
     // Pagination elements are reaching the end of the list
     let overflowingAmount =
       currentPagination.value +
       additionalPaginationItems -
-      totalNumberOfPagination;
+      totalNumberOfPagination.value;
     return (
       currentPagination.value -
       additionalPaginationItems -
@@ -47,7 +47,7 @@ const emit = defineEmits(["next", "previous", "goto"]);
 
 function nextOffset() {
   // Only calculate if it does not exceed the max number
-  if (offset.value + props.maxItemsPage < props.totalItems) {
+  if (offset.value + props.maxItemsPage < totalItems.value) {
     offset.value += props.maxItemsPage;
   }
   emit("next");
@@ -87,17 +87,20 @@ function goToOffset(pagination) {
           v-if="i + startingIndex == currentPagination"
           :index="currentPagination"
           :selected="true"
+          :key="i"
         />
         <ListPaginationItem
           @click="goToOffset(i + startingIndex)"
           v-else-if="i + startingIndex > currentPagination"
           :index="i + startingIndex"
           :selected="false"
+          :key="i+79"
         />
         <ListPaginationItem
           @click="goToOffset(i + startingIndex)"
           v-else-if="i + startingIndex < currentPagination"
           :index="i + startingIndex"
+          :key="i+10000"
           :selected="false"
         />
       </template>
