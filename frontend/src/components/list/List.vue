@@ -23,7 +23,7 @@ async function getFormList() {
   try {
     // Show loading animation
     loadingData.loading = true;
-    const response = await utils.getData(urlList.BACKEND_GET_FORM_LIST)
+    const response = await utils.getData(urlList.BACKEND_GET_FORM_LIST+"?textSearch=ferran")
     console.log(response)
 
     totalItems.value = response.count

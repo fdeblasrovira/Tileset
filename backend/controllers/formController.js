@@ -42,8 +42,14 @@ exports.handleGetForm = async function (req, res) {
 // Controller for getting the user's form list
 exports.handleGetFormList = async function (req, res) {
   try {
-    const { userId, searchConditions } = req;
-    const result = await formService.handleGetFormList(userId, searchConditions ? searchConditions : {});
+    const { userId } = req;
+    const { textSearch, sort } = req.query;
+
+    console.log(req.query)
+    const searchConditions = { textSearch: textSearch, sort: sort }
+    console.log(searchConditions)
+
+    const result = await formService.handleGetFormList(userId, searchConditions );
     if (result.error) return res.status(500).json({ code: 500, message: result.message });
 
     console.log(result.forms)

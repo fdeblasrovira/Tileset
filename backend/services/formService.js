@@ -427,16 +427,22 @@ async function getFormVersion(formId, userId, version) {
 
 // Get the form where the visibility is true (only the latest version has visibility true)
 exports.handleGetFormList = async function (userId, searchConditions) {
+  console.log(searchConditions)
+  const textSearchWhereClause = {
+    formName: { [Op.substring]: searchConditions.textSearch ? searchConditions.textSearch : "" }
+  }
+
   let forms, count;
   try {
     // forms = await DB.sequelize.models.Form.findAll({
-     const response = await DB.sequelize.models.Form.findAndCountAll({
+    const response = await DB.sequelize.models.Form.findAndCountAll({
       attributes: {
         exclude: ['UserId', 'visibility']
       },
       include: [
         {
           association: 'GeneralInfos',
+          where: textSearchWhereClause,
           through: {
             attributes: [] // Excludes data from the junction table
           }
@@ -450,7 +456,7 @@ exports.handleGetFormList = async function (userId, searchConditions) {
       },
       // get only five items each time.
       // The minimum number for page is 1.
-      offset: searchConditions.page ? (searchConditions.page-1) * 5 : 0,
+      offset: searchConditions.page ? (searchConditions.page - 1) * 5 : 0,
       limit: 5,
     });
 
@@ -463,5 +469,5 @@ exports.handleGetFormList = async function (userId, searchConditions) {
     return { error: true, message: error.message }
   }
 
-  return { error: false, forms: forms, count: count};
+  return { error: false, forms: forms, count: count };
 }
