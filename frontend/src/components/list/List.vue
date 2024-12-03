@@ -19,11 +19,17 @@ const loadingData = useLoadingStore();
 const forms = ref([]);
 const totalItems = ref(0);
 
+let searchConditions = {
+  textSearch: "",
+  sort: ""
+}
+
+
 async function getFormList() {
   try {
     // Show loading animation
     loadingData.loading = true;
-    const response = await utils.getData(urlList.BACKEND_GET_FORM_LIST+"?textSearch=ferran")
+    const response = await utils.getData(`${urlList.BACKEND_GET_FORM_LIST}?textSearch=${searchConditions.textSearch}&sort=${searchConditions.sort}`)
     console.log(response)
 
     totalItems.value = response.count
@@ -40,7 +46,6 @@ async function getFormList() {
         }
       })
     }
-    console.log(forms.value)
   }
   catch (e) {
     console.log(e);
@@ -68,6 +73,12 @@ async function routeToCreate() {
   await router.push("/create");
 }
 
+async function search(conditions){
+  console.log("conditions")
+  console.log(conditions)
+  searchConditions = conditions;
+  await getFormList()
+}
 
 async function testRegisterData() {
   const copyFormData = { ...formData }
@@ -149,7 +160,7 @@ async function testRegisterUser() {
       </svg>
     </BaseButton>
   </div>
-  <ListSearch />
+  <ListSearch @search="search"/>
 
   <div class="flex flex-col container min-w-full mx-auto items-center justify-center">
     <ul class="flex flex-col divide-y w-full bg-tileset-grey-1 rounded-lg shadow">
@@ -161,7 +172,7 @@ async function testRegisterUser() {
           :position="start" :open="openedItem == form.formId" :close="lastOpenedItem == form.formId" />
       </div>
     </ul>
-    <ListPagination v-if="forms.length > 0" :maxItemsPage="5" :totalItems="totalItems" :maxPaginationItems="5" />
+    <ListPagination v-if="totalItems > 0" :maxItemsPage="5" :totalItems="totalItems" :maxPaginationItems="5" />
   </div>
 </template>
 

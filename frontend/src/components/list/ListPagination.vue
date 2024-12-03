@@ -1,16 +1,15 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import ListPaginationItem from "./ListPaginationItem.vue";
 
 const props = defineProps(["maxItemsPage", "totalItems", "maxPaginationItems"]);
 const offset = ref(0);
-const totalItems = ref(props.totalItems)
 
-const totalNumberOfPagination = ref(Math.floor(((totalItems.value - 1) / props.maxItemsPage) + 1))
+const totalNumberOfPagination = Math.floor(((props.totalItems - 1) / props.maxItemsPage) + 1)
 
 const elementsToDisplay = Math.min(
   props.maxPaginationItems,
-  totalNumberOfPagination.value
+  totalNumberOfPagination
 );
 
 const currentPagination = computed(() => {
@@ -25,13 +24,13 @@ const startingIndex = computed(() => {
     return 0;
   } else if (
     currentPagination.value + additionalPaginationItems >
-    totalNumberOfPagination.value
+    totalNumberOfPagination
   ) {
     // Pagination elements are reaching the end of the list
     let overflowingAmount =
       currentPagination.value +
       additionalPaginationItems -
-      totalNumberOfPagination.value;
+      totalNumberOfPagination;
     return (
       currentPagination.value -
       additionalPaginationItems -
@@ -47,11 +46,12 @@ const emit = defineEmits(["next", "previous", "goto"]);
 
 function nextOffset() {
   // Only calculate if it does not exceed the max number
-  if (offset.value + props.maxItemsPage < totalItems.value) {
+  if (offset.value + props.maxItemsPage < props.totalItems) {
     offset.value += props.maxItemsPage;
   }
   emit("next");
   console.log("startingIndex", startingIndex.value);
+  console.log("totalNumberOfPagination", totalNumberOfPagination);
 }
 
 function previousOffset() {
