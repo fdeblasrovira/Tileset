@@ -24,7 +24,6 @@ let searchConditions = {
   sort: ""
 }
 
-
 async function getFormList() {
   try {
     // Show loading animation
@@ -77,6 +76,7 @@ async function search(conditions){
   console.log("conditions")
   console.log(conditions)
   searchConditions = conditions;
+  totalItems.value = 0
   await getFormList()
 }
 
