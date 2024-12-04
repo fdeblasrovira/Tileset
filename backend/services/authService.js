@@ -16,7 +16,7 @@ exports.handleLogin = async function (email, password) {
 
   // Create access token
   const accessToken = jwt.sign({ userId: user.dataValues.id }, process.env.JWT_SECRET_KEY, {
-    expiresIn: '1m',
+    expiresIn: '5m',
   });
 
   // generate refresh token
@@ -38,7 +38,7 @@ exports.handleRegister = async function (email, password, fullName) {
 
   // attempt to login the user by issuing the access and refresh tokens
   const accessToken = jwt.sign({ userId: userId }, process.env.JWT_SECRET_KEY, {
-    expiresIn: '1m',
+    expiresIn: '5m',
   });
 
   const refreshToken = generateRefreshToken(userId)
@@ -70,7 +70,7 @@ exports.handleRefreshAuth = async function (refreshToken) {
       else {
         // Token is usable, so create new access token
         const accessToken = jwt.sign({ userId: decoded.userId }, process.env.JWT_SECRET_KEY, {
-          expiresIn: '1m',
+          expiresIn: '5m',
         });
         return { accessToken: accessToken }
 

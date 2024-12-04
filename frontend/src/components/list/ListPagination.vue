@@ -21,7 +21,7 @@ const currentPagination = computed(() => {
 // Calculates the left-most index number of pagination
 const startingIndex = computed(() => {
   let additionalPaginationItems = Math.floor(props.maxPaginationItems / 2);
-  if (currentPagination.value - additionalPaginationItems < 1) {
+  if (currentPagination.value - additionalPaginationItems < 3) {
     // Pagination elements will start with 1
     return 0;
   } else if (
@@ -36,8 +36,7 @@ const startingIndex = computed(() => {
     return (
       currentPagination.value -
       additionalPaginationItems -
-      overflowingAmount -
-      1
+      overflowingAmount - 1
     );
   } else {
     return currentPagination.value - additionalPaginationItems - 1;
@@ -50,6 +49,8 @@ function nextOffset() {
   if (offset.value + props.maxItemsPage < props.totalItems) {
     offset.value += props.maxItemsPage;
     emit("change", currentPagination.value);
+
+    console.log(startingIndex.value, currentPagination.value)
   }
 }
 
@@ -77,11 +78,11 @@ function goToOffset(pagination) {
       </li>
       <template v-for="i in elementsToDisplay">
         <ListPaginationItem @click="goToOffset(i + startingIndex)" v-if="i + startingIndex == currentPagination"
-          :index="currentPagination" :selected="true" :key="i" />
-        <ListPaginationItem @click="goToOffset(i + startingIndex)" v-else-if="i + startingIndex > currentPagination"
-          :index="i + startingIndex" :selected="false" :key="i + 79" />
-        <ListPaginationItem @click="goToOffset(i + startingIndex)" v-else-if="i + startingIndex < currentPagination"
-          :index="i + startingIndex" :key="i + 10000" :selected="false" />
+          :index="currentPagination" :selected="true" />
+        <ListPaginationItem @click="goToOffset(i + startingIndex)" v-else="i + startingIndex > currentPagination"
+          :index="i + startingIndex" :selected="false" />
+        <!-- <ListPaginationItem @click="goToOffset(i + startingIndex)" v-else-if="i + startingIndex < currentPagination"
+          :index="i + startingIndex" :selected="false" /> -->
       </template>
       <li>
         <a @click="nextOffset()"

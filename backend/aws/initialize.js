@@ -12,7 +12,7 @@ exports.initializeLocalStack = async function () {
             console.log("Success", data.Location);
         }
     });
-    console.log("Configuring S3 bucket CORS")
+    console.log("Configuring S3 bucket CORS...")
     exec(`awslocal s3api put-bucket-cors --bucket ${userImageBucketName} --cors-configuration file://aws/cors.json`, (err, stdout, stderr) => {
         if (err) {
             // node couldn't execute the command
@@ -22,4 +22,16 @@ exports.initializeLocalStack = async function () {
 
         console.log("CORS configuration successfully applied")
     });
+
+    console.log("Clearing contents of S3...")
+    exec(`awslocal s3 rm --recursive s3://${process.env.S3_IMAGE_BUCKET_NAME}`, (err, stdout, stderr) => {
+        if (err) {
+            // node couldn't execute the command
+            console.log(err)
+            return;
+        }
+
+        console.log("Successfully cleared S3 contents")
+    });
+    
 }
