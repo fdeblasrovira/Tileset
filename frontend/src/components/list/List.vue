@@ -21,14 +21,15 @@ const totalItems = ref(0);
 
 let searchConditions = {
   textSearch: "",
-  sort: ""
+  sort: "",
+  page: 1
 }
 
 async function getFormList() {
   try {
     // Show loading animation
     loadingData.loading = true;
-    const response = await utils.getData(`${urlList.BACKEND_GET_FORM_LIST}?textSearch=${searchConditions.textSearch}&sort=${searchConditions.sort}`, true)
+    const response = await utils.getData(`${urlList.BACKEND_GET_FORM_LIST}?textSearch=${searchConditions.textSearch}&sort=${searchConditions.sort}&page=${searchConditions.page}`, true)
     console.log(response)
 
     totalItems.value = response.count
@@ -75,8 +76,15 @@ async function routeToCreate() {
 async function search(conditions){
   console.log("conditions")
   console.log(conditions)
-  searchConditions = conditions;
+  searchConditions.textSearch = conditions.textSearch;
+  searchConditions.sort = conditions.sort;
   totalItems.value = 0
+  await getFormList()
+}
+
+async function changePage(page){
+  console.log(page)
+  searchConditions.page = page
   await getFormList()
 }
 
@@ -172,7 +180,7 @@ async function testRegisterUser() {
           :position="start" :open="openedItem == form.formId" :close="lastOpenedItem == form.formId" />
       </div>
     </ul>
-    <ListPagination v-if="totalItems > 0" :maxItemsPage="5" :totalItems="totalItems" :maxPaginationItems="5" />
+    <ListPagination v-if="totalItems > 0" @change="changePage" :maxItemsPage="5" :totalItems="totalItems" :maxPaginationItems="5" />
   </div>
 </template>
 

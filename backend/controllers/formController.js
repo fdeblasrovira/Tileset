@@ -43,10 +43,10 @@ exports.handleGetForm = async function (req, res) {
 exports.handleGetFormList = async function (req, res) {
   try {
     const { userId } = req;
-    const { textSearch, sort } = req.query;
+    const { textSearch, sort, page } = req.query;
 
     console.log(req.query)
-    const searchConditions = { textSearch: textSearch, sort: sort }
+    const searchConditions = { textSearch: textSearch, sort: sort, page: page }
     console.log(searchConditions)
 
     const result = await formService.handleGetFormList(userId, searchConditions );
