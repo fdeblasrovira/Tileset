@@ -1,10 +1,12 @@
 import { useAuthStore } from '@/stores/auth'
-import isValidAuth from '@/auth/auth'
+import Auth from '@/auth/auth'
 import router from "@/router/index";
 
 
-export const postData = async function postData(url, data) {
-	if (!await isValidAuth) await router.push({ name: 'Login' })
+export const postData = async function postData(url, data, authentication = true) {
+	if (authentication){
+		if (!await Auth.isValidAuth()) await router.push({ name: 'Login', query: { logout: true } })
+	}
 
 	const authData = useAuthStore();
 	try {
@@ -25,9 +27,11 @@ export const postData = async function postData(url, data) {
 	}
 }
 
-export const getData = async function getData(url) {
-	if (!await isValidAuth) await router.push({ name: 'Login' })
-
+export const getData = async function getData(url, authentication) {
+	if (authentication){
+		if (!await Auth.isValidAuth()) await router.push({ name: 'Login', query: { logout: true } })
+	}
+		
 	const authData = useAuthStore();
 	try {
 		const response = await fetch(url, {

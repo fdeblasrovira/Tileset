@@ -48,7 +48,7 @@ async function register() {
   // Show loading animation
   loadingData.loading = true;
 
-  const response = await utils.postData(urlList.BACKEND_REGISTER, authFormData.value)
+  const response = await utils.postData(urlList.BACKEND_REGISTER, authFormData.value, false)
 
   // Unshow loading animation
   loadingData.loading = false;

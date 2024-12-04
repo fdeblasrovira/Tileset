@@ -4,13 +4,13 @@ import utils from "@/utils/fetch";
 import { jwtDecode } from "jwt-decode";
 
 // Check whether everything is correct in order to access protected resources
-export async function isValidAuth() {
+export const isValidAuth = async function isValidAuth() {
     const authData = useAuthStore();
     try {
         if (!authData.authenticated) {
             console.log("not authenticated")
             // request for new access token using refresh
-            const response = await utils.getData(urlList.BACKEND_REFRESH_AUTH)
+            const response = await utils.getData(urlList.BACKEND_REFRESH_AUTH, false)
 
             // set new auth data and return true as the user is authenticated 
             if (response.code == 200) {
@@ -44,7 +44,7 @@ export async function isValidAuth() {
             // We substract 10 seconds from the expiry date as a leeway
             if (currentTimestamp >= (expiration - 10)) {
                 // Token is expired, we need to get a new one.
-                const response = await utils.getData(urlList.BACKEND_REFRESH_AUTH)
+                const response = await utils.getData(urlList.BACKEND_REFRESH_AUTH, false)
 
                 // set new auth data and return true as the user is authenticated 
                 if (response.code == 200) {
@@ -59,7 +59,7 @@ export async function isValidAuth() {
                     return false;
                 }
             }
-            else{
+            else {
                 // The user is good to go
                 return true;
             }

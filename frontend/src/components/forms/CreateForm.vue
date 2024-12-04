@@ -75,7 +75,7 @@ async function saveContents() {
   // Show loading animation
   loadingData.loading = true;
 
-  const response = await utils.postData(urlList.BACKEND_CREATE_FORM, { formData: copyFormData })
+  const response = await utils.postData(urlList.BACKEND_CREATE_FORM, { formData: copyFormData }, true)
   console.log(response)
 
   // If the response is successful, in the response there will be image upload urls. We will use these to upload the necessary images.

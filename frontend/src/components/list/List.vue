@@ -28,7 +28,7 @@ async function getFormList() {
   try {
     // Show loading animation
     loadingData.loading = true;
-    const response = await utils.getData(`${urlList.BACKEND_GET_FORM_LIST}?textSearch=${searchConditions.textSearch}&sort=${searchConditions.sort}`)
+    const response = await utils.getData(`${urlList.BACKEND_GET_FORM_LIST}?textSearch=${searchConditions.textSearch}&sort=${searchConditions.sort}`, true)
     console.log(response)
 
     totalItems.value = response.count
@@ -85,7 +85,7 @@ async function testRegisterData() {
   delete copyFormData.generalInfo.picture;
   copyFormData.results.forEach((element) => { delete element.picture });
 
-  const response = await utils.postData(urlList.BACKEND_CREATE_FORM, { formData: formData })
+  const response = await utils.postData(urlList.BACKEND_CREATE_FORM, { formData: formData }, true)
   console.log(response)
 
   // If the response is successful, in the response there will be image upload urls. We will use these to upload the necessary images.
@@ -113,7 +113,7 @@ async function testRegisterData() {
 }
 
 async function testGetData() {
-  const response = await utils.getData(urlList.BACKEND_GET_FORM + "?id=1")
+  const response = await utils.getData(urlList.BACKEND_GET_FORM + "?id=1", true)
   console.log(response)
 }
 
@@ -123,7 +123,7 @@ async function testRegisterUser() {
     password: "1",
     fullName: "1",
   }
-  const response = await utils.postData(urlList.BACKEND_REGISTER, authFormData)
+  const response = await utils.postData(urlList.BACKEND_REGISTER, authFormData, true)
   console.log(response)
 }
 </script>

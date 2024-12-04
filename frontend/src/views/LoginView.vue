@@ -34,7 +34,7 @@ async function login() {
   // Show loading animation
   loadingData.loading = true;
 
-  const response = await utils.postData(urlList.BACKEND_LOGIN, authFormData.value)
+  const response = await utils.postData(urlList.BACKEND_LOGIN, authFormData.value, false)
 
   // Unshow loading animation
   loadingData.loading = false;
