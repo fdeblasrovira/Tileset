@@ -21,7 +21,7 @@ const totalItems = ref(0);
 
 let searchConditions = {
   textSearch: "",
-  sort: "",
+  sort: 0,
   page: 1
 }
 

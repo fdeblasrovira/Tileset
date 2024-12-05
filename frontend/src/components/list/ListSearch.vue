@@ -10,12 +10,13 @@ let sortByValue = 0;
 
 const searchConditions = ref({
   textSearch: "",
-  sort: "",
+  sort: 0,
 });
 
 function changeSortBy(value, text) {
   sortByValue = value;
   sortByText = text;
+  searchConditions.value.sort = value
 }
 
 function search() {
@@ -60,12 +61,14 @@ function search() {
       <div :class="{ invisible: !sortVisible }"
         class="absolute right-0 z-10 mt-1 w-56 origin-top-right divide-gray-100 border rounded-md border-tileset-grey-5 bg-tileset-full-white shadow-lg"
         role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
-        <ListSortByItem @change-sort-by="changeSortBy" text="Name ASC" :value="1" />
-        <ListSortByItem @change-sort-by="changeSortBy" text="Name DESC" :value="2" />
-        <ListSortByItem @change-sort-by="changeSortBy" text="Popularity ASC" :value="3" />
-        <ListSortByItem @change-sort-by="changeSortBy" text="Popularity DESC" :value="4" />
-        <ListSortByItem @change-sort-by="changeSortBy" text="Creation date ASC" :value="5" />
-        <ListSortByItem @change-sort-by="changeSortBy" text="Creation date DESC" :value="6" />
+        <ListSortByItem @change-sort-by="changeSortBy" text="Name ASC" :value="0" />
+        <ListSortByItem @change-sort-by="changeSortBy" text="Name DESC" :value="1" />
+        <ListSortByItem @change-sort-by="changeSortBy" text="Popularity ASC" :value="2" />
+        <ListSortByItem @change-sort-by="changeSortBy" text="Popularity DESC" :value="3" />
+        <ListSortByItem @change-sort-by="changeSortBy" text="Creation date ASC" :value="4" />
+        <ListSortByItem @change-sort-by="changeSortBy" text="Creation date DESC" :value="5" />
+        <ListSortByItem @change-sort-by="changeSortBy" text="Modified date ASC" :value="6" />
+        <ListSortByItem @change-sort-by="changeSortBy" text="Modified date DESC" :value="7" />
       </div>
     </div>
     <button @click="search"

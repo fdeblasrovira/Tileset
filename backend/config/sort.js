@@ -1,0 +1,8 @@
+exports.NAME_ASC = 0
+exports.NAME_DESC = 1
+exports.POPULARITY_ASC = 2
+exports.POPULARITY_DESC = 3
+exports.CREATION_DATE_ASC = 4
+exports.CREATION_DATE_DESC = 5
+exports.MODIFIED_DATE_ASC = 6
+exports.MODIFIED_DATE_DESC = 7

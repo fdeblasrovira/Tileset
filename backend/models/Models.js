@@ -21,11 +21,7 @@ const activeModels = [User, Form, Attribute, Result, AttributeValue, BlacklistTo
 exports.defineModels = async function (sequelize) {
   activeModels.forEach((activeModel) => {
     sequelize.define(activeModel.model.name, activeModel.model.model, {
-      paranoid: activeModel.model.paranoid, defaultScope: {
-        attributes: {
-          exclude: ['createdAt', 'updatedAt', 'deletedAt']
-        }
-      }
+      paranoid: activeModel.model.paranoid,
     })
   })
   await Associations.loadAssociations();

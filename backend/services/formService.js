@@ -1,6 +1,7 @@
 const DB = require('../database/database');
 const { generatePresignedUrl } = require("../aws/S3");
 const { Sequelize, Op } = require('sequelize');
+const sortConfig = require('../config/sort');
 
 exports.handleCreateForm = async function (formData, userId) {
   console.log(formData)
@@ -214,18 +215,27 @@ async function getFormGuest(formId) {
       include: [
         {
           association: 'GeneralInfos',
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'deletedAt']
+          },
           through: {
             attributes: [] // Excludes data from the junction table
           }
         },
         {
           association: 'Attributes',
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'deletedAt']
+          },
           through: {
             attributes: [] // Excludes data from the junction table
           }
         },
         {
           association: 'InputQuestions',
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'deletedAt']
+          },
           through: {
             attributes: [] // Excludes data from the junction table
           },
@@ -233,6 +243,9 @@ async function getFormGuest(formId) {
         },
         {
           association: 'ChoiceQuestions',
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'deletedAt']
+          },
           through: {
             attributes: [] // Excludes data from the junction table
           },
@@ -240,18 +253,27 @@ async function getFormGuest(formId) {
           include: [
             {
               association: 'Choices',
+              attributes: {
+                exclude: ['createdAt', 'updatedAt', 'deletedAt']
+              },
               include: ["AttributeValue"]
             },
           ],
         },
         {
           association: 'Results',
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'deletedAt']
+          },
           through: {
             attributes: [] // Excludes data from the junction table
           },
           include: [
             {
               association: 'AttributeValues',
+              attributes: {
+                exclude: ['createdAt', 'updatedAt', 'deletedAt']
+              },
             }
           ],
         },
@@ -264,7 +286,7 @@ async function getFormGuest(formId) {
   } catch (error) {
     // If the execution reaches this line, an error occurred.
     // The transaction has already been rolled back
-    console.error(error.message)
+    console.error(error)
     return { error: true, message: error.message }
   }
 
@@ -296,18 +318,27 @@ async function getFormUser(formId, userId) {
       include: [
         {
           association: 'GeneralInfos',
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'deletedAt']
+          },
           through: {
             attributes: [] // Excludes data from the junction table
           }
         },
         {
           association: 'Attributes',
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'deletedAt']
+          },
           through: {
             attributes: [] // Excludes data from the junction table
           }
         },
         {
           association: 'InputQuestions',
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'deletedAt']
+          },
           through: {
             attributes: [] // Excludes data from the junction table
           },
@@ -315,6 +346,9 @@ async function getFormUser(formId, userId) {
         },
         {
           association: 'ChoiceQuestions',
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'deletedAt']
+          },
           through: {
             attributes: [] // Excludes data from the junction table
           },
@@ -322,18 +356,27 @@ async function getFormUser(formId, userId) {
           include: [
             {
               association: 'Choices',
+              attributes: {
+                exclude: ['createdAt', 'updatedAt', 'deletedAt']
+              },
               include: ["AttributeValue"]
             },
           ],
         },
         {
           association: 'Results',
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'deletedAt']
+          },
           through: {
             attributes: [] // Excludes data from the junction table
           },
           include: [
             {
               association: 'AttributeValues',
+              attributes: {
+                exclude: ['createdAt', 'updatedAt', 'deletedAt']
+              },
             }
           ],
         },
@@ -343,7 +386,7 @@ async function getFormUser(formId, userId) {
   } catch (error) {
     // If the execution reaches this line, an error occurred.
     // The transaction has already been rolled back
-    console.error(error.message)
+    console.error(error)
     return { error: true, message: error.message }
   }
 
@@ -366,6 +409,9 @@ async function getFormVersion(formId, userId, version) {
       include: [
         {
           association: 'GeneralInfos',
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'deletedAt']
+          },
           through: {
             attributes: [], // Excludes data from the junction table
             where: { version: version }
@@ -373,6 +419,9 @@ async function getFormVersion(formId, userId, version) {
         },
         {
           association: 'Attributes',
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'deletedAt']
+          },
           through: {
             attributes: [], // Excludes data from the junction table
             where: { version: version }
@@ -380,6 +429,9 @@ async function getFormVersion(formId, userId, version) {
         },
         {
           association: 'InputQuestions',
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'deletedAt']
+          },
           through: {
             attributes: [], // Excludes data from the junction table
             where: { version: version }
@@ -388,6 +440,9 @@ async function getFormVersion(formId, userId, version) {
         },
         {
           association: 'ChoiceQuestions',
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'deletedAt']
+          },
           through: {
             attributes: [], // Excludes data from the junction table
             where: { version: version }
@@ -396,12 +451,18 @@ async function getFormVersion(formId, userId, version) {
           include: [
             {
               association: 'Choices',
+              attributes: {
+                exclude: ['createdAt', 'updatedAt', 'deletedAt']
+              },
               include: ["AttributeValue"]
             },
           ],
         },
         {
           association: 'Results',
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'deletedAt']
+          },
           through: {
             attributes: [], // Excludes data from the junction table
             where: { version: version }
@@ -409,6 +470,9 @@ async function getFormVersion(formId, userId, version) {
           include: [
             {
               association: 'AttributeValues',
+              attributes: {
+                exclude: ['createdAt', 'updatedAt', 'deletedAt']
+              },
             }
           ],
         },
@@ -418,7 +482,7 @@ async function getFormVersion(formId, userId, version) {
   } catch (error) {
     // If the execution reaches this line, an error occurred.
     // The transaction has already been rolled back
-    console.error(error.message)
+    console.error(error)
     return { error: true, message: error.message }
   }
 
@@ -432,6 +496,38 @@ exports.handleGetFormList = async function (userId, searchConditions) {
     formName: { [Op.substring]: searchConditions.textSearch ? searchConditions.textSearch : "" }
   }
 
+  let sortClause;
+  switch (Number(searchConditions.sort)) {
+    case sortConfig.NAME_ASC:
+      sortClause = ['GeneralInfos', 'formName', 'ASC']
+      break;
+    case sortConfig.NAME_DESC:
+      sortClause = ['GeneralInfos', 'formName', 'DESC']
+      break;
+    case sortConfig.POPULARITY_ASC:
+      sortClause = []
+      break;
+    case sortConfig.POPULARITY_DESC:
+      sortClause = []
+      break;
+    case sortConfig.CREATION_DATE_ASC:
+      sortClause = ['createdAt', 'ASC']
+      break;
+    case sortConfig.CREATION_DATE_DESC:
+      sortClause = ['createdAt', 'DESC']
+      break;
+    case sortConfig.MODIFIED_DATE_ASC:
+      sortClause = ['updatedAt', 'ASC']
+      break;
+    case sortConfig.MODIFIED_DATE_DESC:
+      sortClause = ['updatedAt', 'DESC']
+      break;
+    default:
+      sortClause = ['updatedAt', 'DESC']
+  }
+  console.log("sortClause")
+  console.log(sortClause)
+
   let forms, count;
   try {
     const response = await DB.sequelize.models.Form.findAndCountAll({
@@ -442,6 +538,9 @@ exports.handleGetFormList = async function (userId, searchConditions) {
         {
           association: 'GeneralInfos',
           where: textSearchWhereClause,
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'deletedAt']
+          },
           through: {
             attributes: [] // Excludes data from the junction table
           }
@@ -457,6 +556,7 @@ exports.handleGetFormList = async function (userId, searchConditions) {
       // The minimum number for page is 1.
       offset: searchConditions.page ? (searchConditions.page - 1) * 5 : 0,
       limit: 5,
+      order: [sortClause]
     });
 
     count = response.count;
@@ -464,7 +564,7 @@ exports.handleGetFormList = async function (userId, searchConditions) {
   } catch (error) {
     // If the execution reaches this line, an error occurred.
     // The transaction has already been rolled back
-    console.error(error.message)
+    console.error(error)
     return { error: true, message: error.message }
   }
 
