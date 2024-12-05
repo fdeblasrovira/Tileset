@@ -434,7 +434,6 @@ exports.handleGetFormList = async function (userId, searchConditions) {
 
   let forms, count;
   try {
-    // forms = await DB.sequelize.models.Form.findAll({
     const response = await DB.sequelize.models.Form.findAndCountAll({
       attributes: {
         exclude: ['UserId', 'visibility']
