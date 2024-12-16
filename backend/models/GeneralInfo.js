@@ -14,6 +14,18 @@ exports.model = {
         },
         imageUrl: {
             type: DataTypes.STRING(512),
-        }
+        },
+        questionPerPage: {
+            type: DataTypes.TINYINT.UNSIGNED,
+            defaultValue: 1,
+            allowNull: false,
+            validate: {
+                hasCorrectRange(value) {
+                    if (parseInt(value) < 1 || parseInt(value) > 10) {
+                        throw new Error('Wrong questions per page setting value');
+                    }
+                }
+            },
+        },
     }
 }

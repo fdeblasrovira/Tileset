@@ -82,6 +82,16 @@ function validateGeneralInfo() {
     errorMessage.value = "Please selecte visibility option"
     return false;
   }
+  if (!formData.generalInfo.questionsPerPage || formData.generalInfo.questionsPerPage === undefined) {
+    errorMessage.value = "Please set the questions per page setting"
+    return false;
+  }
+  else{
+    if (formData.generalInfo.questionsPerPage > 10 || formData.generalInfo.questionsPerPage < 1){
+      errorMessage.value = "Incorrect value in questions per page setting"
+      return false;
+    }
+  }
   return true;
 }
 

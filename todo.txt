@@ -1,6 +1,8 @@
 - Also you can run lambda to getRid of blacklist token using localstack to test.
 - When I open a new choice question, the previous choice index is still having effect and automatically opens an choice. When opening a question all the choices should be closed
 Add a slider type questions. (like attribute)
+On list navigation buttons, if a button can't be pressed (for example there's only one page and you click next page button), add a visual clue (cursor change? color change?)
+cursor: not-allowed;
 
 - Do the edit screen
 

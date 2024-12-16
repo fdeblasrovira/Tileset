@@ -160,8 +160,18 @@ function validateGeneralInfo() {
     return false;
   }
   if (!formData.generalInfo.visibility || formData.generalInfo.visibility === undefined) {
-    errorMessage.value = "Please selecte visibility option"
+    errorMessage.value = "Please select visibility option"
     return false;
+  }
+  if (!formData.generalInfo.questionsPerPage || formData.generalInfo.questionsPerPage === undefined) {
+    errorMessage.value = "Please select visibility option"
+    return false;
+  }
+  else{
+    if (formData.generalInfo.questionsPerPage > 10 || formData.generalInfo.questionsPerPage < 1){
+      errorMessage.value = "Incorrect value in questions per page setting"
+      return false;
+    }
   }
   return true;
 }

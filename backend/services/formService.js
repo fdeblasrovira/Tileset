@@ -28,6 +28,7 @@ exports.handleCreateForm = async function (formData, userId) {
       const generalInfoToInsert = {
         formName: formData.generalInfo.formName,
         description: formData.generalInfo.description,
+        questionsPerPage: formData.generalInfo.questionsPerPage,
         FormId: form.id
       }
 
