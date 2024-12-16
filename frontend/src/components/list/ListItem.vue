@@ -22,6 +22,10 @@ function changeModalDisplay(display) {
   showModal.value = display;
 }
 
+async function routeToView() {
+  await router.push({ path: `/view/${props.data.formId}`})
+}
+
 async function routeToEdit() {
   // Reset tab data so the first page the user sees is the generalInfo tab
   tabData.currentTab = 1;
@@ -93,6 +97,7 @@ function deleteForm() {
       class="flex flex-row justify-center items-center h-full overflow-hidden flex-wrap"
     >
       <BaseButton
+        @click="routeToView"
         text="View"
         color="bg-tileset-grey-4"
         hover="hover:bg-tileset-grey-5"
