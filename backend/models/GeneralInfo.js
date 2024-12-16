@@ -15,7 +15,7 @@ exports.model = {
         imageUrl: {
             type: DataTypes.STRING(512),
         },
-        questionPerPage: {
+        questionsPerPage: {
             type: DataTypes.TINYINT.UNSIGNED,
             defaultValue: 1,
             allowNull: false,
