@@ -19,7 +19,7 @@ exports.handleCreateForm = async function (req, res) {
   }
 };
 
-// Controller for getting one form
+// Controller for getting one form for edit
 exports.handleGetForm = async function (req, res) {
   try {
     // Check if there's form data
@@ -29,6 +29,24 @@ exports.handleGetForm = async function (req, res) {
     const version = req.query.version;
     const { userId } = req;
     const result = await formService.handleGetForm(formId, userId, version);
+    if (result.error) return res.status(500).json({ code: 500, message: result.message });
+
+    res.status(200).json({ code: 200, form: result.form });
+  }
+  catch (e) {
+    console.error(e.message)
+    res.status(500).json({ code: 500, message: 'Server error: form creation error' });
+  }
+};
+
+// Controller for getting one form for view
+exports.handleGetFormView = async function (req, res) {
+  try {
+    // Check if there's form data
+    const formId = req.query.id;
+    if (!formId) return res.status(400).json({ code: 400, message: 'Bad request: no form id provided' });
+
+    const result = await formService.handleGetForm(formId);
     if (result.error) return res.status(500).json({ code: 500, message: result.message });
 
     res.status(200).json({ code: 200, form: result.form });

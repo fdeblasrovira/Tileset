@@ -197,7 +197,7 @@ exports.handleCreateForm = async function (formData, userId) {
 }
 
 // Get form
-exports.handleGetForm = async function (formId, userId, version) {
+exports.handleGetForm = async function (formId, userId = "", version = "") {
   // If there's no UserId, a guest is trying to view the form
   if (!userId) return await getFormGuest(formId);
 
@@ -216,15 +216,6 @@ async function getFormGuest(formId) {
       include: [
         {
           association: 'GeneralInfos',
-          attributes: {
-            exclude: ['createdAt', 'updatedAt', 'deletedAt']
-          },
-          through: {
-            attributes: [] // Excludes data from the junction table
-          }
-        },
-        {
-          association: 'Attributes',
           attributes: {
             exclude: ['createdAt', 'updatedAt', 'deletedAt']
           },
@@ -256,28 +247,10 @@ async function getFormGuest(formId) {
               association: 'Choices',
               attributes: {
                 exclude: ['createdAt', 'updatedAt', 'deletedAt']
-              },
-              include: ["AttributeValue"]
+              }
             },
           ],
-        },
-        {
-          association: 'Results',
-          attributes: {
-            exclude: ['createdAt', 'updatedAt', 'deletedAt']
-          },
-          through: {
-            attributes: [] // Excludes data from the junction table
-          },
-          include: [
-            {
-              association: 'AttributeValues',
-              attributes: {
-                exclude: ['createdAt', 'updatedAt', 'deletedAt']
-              },
-            }
-          ],
-        },
+        }
       ],
       where: {
         id: formId,

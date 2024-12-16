@@ -27,8 +27,11 @@ exports.registerRoutes = function (app) {
   // Create Form
   app.post('/create_form', authenticated, formController.handleCreateForm);
 
-  // Get Form
+  // Get Form for edit
   app.get('/get_form', authenticated, formController.handleGetForm);
+
+  // Get Form for view
+  app.get('/get_form_view', formController.handleGetFormView);
 
   // Get Form List
   app.get('/get_form_list', authenticated, formController.handleGetFormList);

@@ -1,15 +1,21 @@
 <script setup>
 // import { watch, ref } from "vue";
-// import urlList from "../config/urlList"
+import urlList from "../config/urlList"
 // import router from "../router/index";
 import { useRoute } from 'vue-router';
-// import utils from "@/utils/fetch";
+import utils from "@/utils/fetch";
+import { useLoadingStore } from '@/stores/loading'
 
-
+const loadingData = useLoadingStore();
 const route = useRoute(); // Access the current route
-const id = route.params.id; // 'qwerty' will be stored in params.id
-console.log("id")
-console.log(id)
+
+// Show loading animation
+loadingData.loading = true;
+
+const response = await utils.getData(urlList.BACKEND_GET_FORM_VIEW + "?id=" + route.params.id, false)
+console.log(response)
+
+loadingData.loading = false;
 
 </script>
 

@@ -8,6 +8,7 @@ const urlList = {
 
     "BACKEND_CREATE_FORM": "http://localhost:3000/create_form",
     "BACKEND_GET_FORM": "http://localhost:3000/get_form",
+    "BACKEND_GET_FORM_VIEW": "http://localhost:3000/get_form_view",
     "BACKEND_GET_FORM_LIST": "http://localhost:3000/get_form_list",
 }
 export default urlList;
