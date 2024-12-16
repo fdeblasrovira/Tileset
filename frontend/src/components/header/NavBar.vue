@@ -38,7 +38,7 @@ async function logout() {
       class="mx-1 container flex flex-wrap justify-between items-center mx-auto w-full min-w-full grow-0"
     >
       <a href="/" class="flex items-center">
-        <img src="logo.webp" class="mr-3 h-6 sm:h-9" alt="Tileset Logo" />
+        <img src="../../assets/logo.webp" class="mr-3 h-6 sm:h-9" alt="Tileset Logo" />
       </a>
       <div class="flex md:order-2">
         <button
