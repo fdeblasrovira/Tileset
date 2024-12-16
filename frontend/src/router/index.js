@@ -4,6 +4,7 @@ import CreateView from "../views/CreateView.vue";
 import EditView from "../views/EditView.vue";
 import LoginView from "../views/LoginView.vue";
 import RegisterView from "../views/RegisterView.vue";
+import FormView from "../views/FormView.vue";
 import auth from "@/auth/auth";
 
 
@@ -35,11 +36,16 @@ const router = createRouter({
       name: "Register",
       component: RegisterView,
     },
+    {
+      path: "/view/:id",
+      name: "View",
+      component: FormView,
+    },
   ],
 });
 
 // Handle user authentication
-router.beforeEach(async (to, from) => {
+router.beforeEach(async (to) => {
   // login and register screens are only for not authenticated users
   if (to.path == '/login' || to.path == '/register') {
     // If we just logged out, no need to chech auth status

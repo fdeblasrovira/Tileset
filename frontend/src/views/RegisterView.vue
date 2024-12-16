@@ -76,7 +76,7 @@ async function register() {
     <div class="flex justify-center">
       <div
         class="relative w-full my-[2rem] flex grow flex-col sm:max-w-[90%] xl:max-w-[1024px] bg-tileset-full-white shadow-2xl p-6 sm:rounded-lg">
-        <img src="logo.webp" class="w-64" alt="Tileset Logo" />
+        <img src="../assets/logo.webp" class="w-64" alt="Tileset Logo" />
         <br>
         <br>
         <Input @keyup.enter="register" v-model="authFormData.fullName" label="Full name" name="fullName" type="text"
