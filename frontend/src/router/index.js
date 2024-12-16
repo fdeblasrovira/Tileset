@@ -55,6 +55,8 @@ router.beforeEach(async (to) => {
     if (await auth.isValidAuth()) return { name: 'Home' }
     return;
   }
+  // If it's view path, everyone is allowed
+  else if(to.name == 'View') return
   else {
     // For other screens check if the user authentication is valid
     if (await auth.isValidAuth()) return;
