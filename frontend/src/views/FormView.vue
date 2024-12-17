@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, reactive, onBeforeMount } from "vue";
 import urlList from "../config/urlList"
 // import router from "../router/index";
 import { useRoute } from 'vue-router';
@@ -16,9 +16,13 @@ import FullButton from "../components/buttons/FullButton.vue";
 const loadingData = useLoadingStore();
 const route = useRoute(); // Access the current route
 
-const form = ref({});
+const initComplete = ref(false)
+const form = reactive({});
 const numberQuestionPages = ref(0);
 const totalPages = ref(0);
+const currentPage = ref(1);
+let questionsPerPage;
+let totalQuestions;
 
 async function getForm() {
   try {
@@ -38,9 +42,6 @@ async function getForm() {
     response.form.Questions = mergedQuestions;
 
     form.value = response.form;
-    console.log(form.value)
-
-    loadingData.loading = false;
   }
   catch (e) {
     console.log(e)
@@ -53,21 +54,23 @@ async function getForm() {
 
 // Calculate how many pages there is in this form
 function setupPagination() {
-  const questionsPerPage = form.value.GeneralInfos[0].questionsPerPage;
-  const totalQuestions = form.value.Questions.length;
+  questionsPerPage = form.value.GeneralInfos[0].questionsPerPage;
+  totalQuestions = form.value.Questions.length;
 
   if (totalQuestions % questionsPerPage == 0) numberQuestionPages.value = totalQuestions / questionsPerPage
-  else numberQuestionPages.value =Math.floor ((totalQuestions / questionsPerPage) + 1)
+  else numberQuestionPages.value = Math.floor((totalQuestions / questionsPerPage) + 1)
 
   // We add the Form introduction as the first page
   totalPages.value = numberQuestionPages.value + 1
   console.log(totalPages.value)
+  initComplete.value = true;
 }
 
-(async () => {
+async function beforeMount(){
   await getForm();
   setupPagination();
-})();
+}
+onBeforeMount(beforeMount)
 
 
 
@@ -85,51 +88,56 @@ function setupPagination() {
         <img src="../assets/logo.webp" class="w-64" alt="Tileset Logo" />
         <br>
         <br>
-        <template v-for="(question, index) in form.Questions" :key="question.type + question.id">
-          <!-- <hr v-if="index != 0" class="mx-16 my-8 border-1 border-tileset-green"> -->
-          {{introPage}}
-          <div class="border rounded-md border-tileset-grey-3 space-y-6 px-4 py-5 sm:p-6 my-3">
-            <template v-if="question.type == 'input'">
-              <Input :label="(index + 1) + '- ' + question.label" :name="question.id" type="text" />
-            </template>
-            <template v-if="question.type == 'textarea'">
-              <Textarea :label="(index + 1) + '- ' + question.label" :name="question.id" :maxCharacters="2048" />
-            </template>
-            <template v-if="question.type == 'date'">
-              <Date :label="(index + 1) + '- ' + question.label" :format="question.format" />
-            </template>
-            <template v-if="question.type == 'radio'">
-              <div class="block text-sm font-medium ">
-                <label class="block text-base font-medium">{{
-                  (index + 1) + '- ' + question.label
-                }}</label>
-                <Radio v-for="(option, optionsIndex) in question.Choices" :label="option.label"
-                  :name="`radio_${question.id}`" :id="`radio_${question.id}_${optionsIndex}`" :key="optionsIndex" />
-              </div>
-            </template>
-            <template v-if="question.type == 'checkbox'">
-              <div class="block text-sm font-medium mt-3">
-                <label class="block text-base font-medium">{{
-                  (index + 1) + '- ' + question.label
-                }}</label>
-                <Checkbox v-for="(option, optionsIndex) in question.Choices" :label="option.text"
-                  :name="`radio_${question.id}`" :id="`radio_${question.id}_${optionsIndex}`" :key="optionsIndex" />
-              </div>
-            </template>
-            <template v-if="question.type == 'select'">
-              <div class="block text-sm font-medium mt-3">
-                <label class="block text-base font-medium">{{
-                  (index + 1) + '- ' + question.label
-                }}</label>
-                <Select :id="question.id">
-                  <option v-for="(option, optionsIndex) in question.Choices" :value="optionsIndex" :key="optionsIndex">
-                    {{ option.text }}
-                  </option>
-                </Select>
-              </div>
-            </template>
-          </div>
-        </template>
+        <div v-if="initComplete">
+          <template 
+            v-for="(question, index) in form.Questions.slice(questionsPerPage * (currentPage - 2), questionsPerPage * (currentPage - 1))"
+            :key="question.type + question.id">
+            <!-- <hr v-if="index != 0" class="mx-16 my-8 border-1 border-tileset-green"> -->
+            {{ introPage }}
+            <div class="border rounded-md border-tileset-grey-3 space-y-6 px-4 py-5 sm:p-6 my-3">
+              <template v-if="question.type == 'input'">
+                <Input :label="(index + 1) + '- ' + question.label" :name="question.id" type="text" />
+              </template>
+              <template v-if="question.type == 'textarea'">
+                <Textarea :label="(index + 1) + '- ' + question.label" :name="question.id" :maxCharacters="2048" />
+              </template>
+              <template v-if="question.type == 'date'">
+                <Date :label="(index + 1) + '- ' + question.label" :format="question.format" />
+              </template>
+              <template v-if="question.type == 'radio'">
+                <div class="block text-sm font-medium ">
+                  <label class="block text-base font-medium">{{
+                    (index + 1) + '- ' + question.label
+                    }}</label>
+                  <Radio v-for="(option, optionsIndex) in question.Choices" :label="option.label"
+                    :name="`radio_${question.id}`" :id="`radio_${question.id}_${optionsIndex}`" :key="optionsIndex" />
+                </div>
+              </template>
+              <template v-if="question.type == 'checkbox'">
+                <div class="block text-sm font-medium mt-3">
+                  <label class="block text-base font-medium">{{
+                    (index + 1) + '- ' + question.label
+                    }}</label>
+                  <Checkbox v-for="(option, optionsIndex) in question.Choices" :label="option.text"
+                    :name="`radio_${question.id}`" :id="`radio_${question.id}_${optionsIndex}`" :key="optionsIndex" />
+                </div>
+              </template>
+              <template v-if="question.type == 'select'">
+                <div class="block text-sm font-medium mt-3">
+                  <label class="block text-base font-medium">{{
+                    (index + 1) + '- ' + question.label
+                    }}</label>
+                  <Select :id="question.id">
+                    <option v-for="(option, optionsIndex) in question.Choices" :value="optionsIndex"
+                      :key="optionsIndex">
+                      {{ option.text }}
+                    </option>
+                  </Select>
+                </div>
+              </template>
+            </div>
+          </template>
+        </div>
       </div>
     </div>
   </div>
