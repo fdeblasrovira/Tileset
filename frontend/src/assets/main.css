@@ -958,6 +958,10 @@ select{
   margin: 1rem;
 }
 
+.m-6{
+  margin: 1.5rem;
+}
+
 .m-auto{
   margin: auto;
 }
@@ -970,6 +974,11 @@ select{
 .mx-1{
   margin-left: 0.25rem;
   margin-right: 0.25rem;
+}
+
+.mx-16{
+  margin-left: 4rem;
+  margin-right: 4rem;
 }
 
 .mx-2{
@@ -1027,9 +1036,9 @@ select{
   margin-bottom: auto;
 }
 
-.mx-16{
-  margin-left: 4rem;
-  margin-right: 4rem;
+.mx-8{
+  margin-left: 2rem;
+  margin-right: 2rem;
 }
 
 .-mr-1{
@@ -2425,11 +2434,6 @@ select{
 
 .blur-sm{
   --tw-blur: blur(4px);
-  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
-}
-
-.blur-\[1px\]{
-  --tw-blur: blur(1px);
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 

@@ -11,20 +11,22 @@ import Date from "../components/inputs/Date.vue";
 import Radio from "../components/inputs/Radio.vue";
 import Checkbox from "../components/inputs/Checkbox.vue";
 import Select from "../components/inputs/Select.vue";
+import FormViewPagination from "../components/list/formView/FormViewPagination.vue";
 import FullButton from "../components/buttons/FullButton.vue";
 
 const loadingData = useLoadingStore();
 const route = useRoute(); // Access the current route
 
-const initComplete = ref(false)
-const form = reactive({});
+const form = ref({});
 const numberQuestionPages = ref(0);
 const totalPages = ref(0);
 const currentPage = ref(1);
+const currentQuestions = ref([])
+
 let questionsPerPage;
 let totalQuestions;
 
-async function getForm() {
+async function initializeForm() {
   try {
     // Show loading animation
     loadingData.loading = true;
@@ -42,6 +44,25 @@ async function getForm() {
     response.form.Questions = mergedQuestions;
 
     form.value = response.form;
+    console.log(form.value)
+
+    // set pagination
+    questionsPerPage = form.value.GeneralInfos[0].questionsPerPage;
+    totalQuestions = form.value.Questions.length;
+
+    if (totalQuestions % questionsPerPage == 0) numberQuestionPages.value = totalQuestions / questionsPerPage
+    else numberQuestionPages.value = Math.floor((totalQuestions / questionsPerPage) + 1)
+
+    // We add the Form introduction as the first page
+    totalPages.value = numberQuestionPages.value + 1
+    console.log(totalPages.value)
+
+    currentQuestions.value = form.value.Questions.slice(questionsPerPage * (currentPage.value - 2), questionsPerPage * (currentPage.value - 1))
+    console.log("currentQuestions.value")
+    console.log(currentQuestions.value)
+    console.log("form.value.Questions")
+    console.log(form.value.Questions)
+
   }
   catch (e) {
     console.log(e)
@@ -49,34 +70,8 @@ async function getForm() {
   finally {
     loadingData.loading = false;
   }
-
 }
-
-// Calculate how many pages there is in this form
-function setupPagination() {
-  questionsPerPage = form.value.GeneralInfos[0].questionsPerPage;
-  totalQuestions = form.value.Questions.length;
-
-  if (totalQuestions % questionsPerPage == 0) numberQuestionPages.value = totalQuestions / questionsPerPage
-  else numberQuestionPages.value = Math.floor((totalQuestions / questionsPerPage) + 1)
-
-  // We add the Form introduction as the first page
-  totalPages.value = numberQuestionPages.value + 1
-  console.log(totalPages.value)
-  initComplete.value = true;
-}
-
-async function beforeMount(){
-  await getForm();
-  setupPagination();
-}
-onBeforeMount(beforeMount)
-
-
-
-
-
-
+initializeForm()
 
 </script>
 
@@ -88,12 +83,8 @@ onBeforeMount(beforeMount)
         <img src="../assets/logo.webp" class="w-64" alt="Tileset Logo" />
         <br>
         <br>
-        <div v-if="initComplete">
-          <template 
-            v-for="(question, index) in form.Questions.slice(questionsPerPage * (currentPage - 2), questionsPerPage * (currentPage - 1))"
-            :key="question.type + question.id">
-            <!-- <hr v-if="index != 0" class="mx-16 my-8 border-1 border-tileset-green"> -->
-            {{ introPage }}
+        <div v-if="form && currentQuestions">
+          <template v-for="(question, index) in currentQuestions" :key="question.type + question.id">
             <div class="border rounded-md border-tileset-grey-3 space-y-6 px-4 py-5 sm:p-6 my-3">
               <template v-if="question.type == 'input'">
                 <Input :label="(index + 1) + '- ' + question.label" :name="question.id" type="text" />
@@ -108,7 +99,7 @@ onBeforeMount(beforeMount)
                 <div class="block text-sm font-medium ">
                   <label class="block text-base font-medium">{{
                     (index + 1) + '- ' + question.label
-                    }}</label>
+                  }}</label>
                   <Radio v-for="(option, optionsIndex) in question.Choices" :label="option.label"
                     :name="`radio_${question.id}`" :id="`radio_${question.id}_${optionsIndex}`" :key="optionsIndex" />
                 </div>
@@ -117,7 +108,7 @@ onBeforeMount(beforeMount)
                 <div class="block text-sm font-medium mt-3">
                   <label class="block text-base font-medium">{{
                     (index + 1) + '- ' + question.label
-                    }}</label>
+                  }}</label>
                   <Checkbox v-for="(option, optionsIndex) in question.Choices" :label="option.text"
                     :name="`radio_${question.id}`" :id="`radio_${question.id}_${optionsIndex}`" :key="optionsIndex" />
                 </div>
@@ -126,7 +117,7 @@ onBeforeMount(beforeMount)
                 <div class="block text-sm font-medium mt-3">
                   <label class="block text-base font-medium">{{
                     (index + 1) + '- ' + question.label
-                    }}</label>
+                  }}</label>
                   <Select :id="question.id">
                     <option v-for="(option, optionsIndex) in question.Choices" :value="optionsIndex"
                       :key="optionsIndex">
@@ -138,6 +129,7 @@ onBeforeMount(beforeMount)
             </div>
           </template>
         </div>
+        <FormViewPagination />  
       </div>
     </div>
   </div>
