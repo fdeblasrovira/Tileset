@@ -73,6 +73,20 @@ async function initializeForm() {
 }
 initializeForm()
 
+function changePagination(operation){
+  console.log(operation)
+  console.log(currentPage.value)
+  console.log(totalPages.value)
+  if (operation == "next"){
+    if (currentPage.value >= totalPages.value) return;
+    currentPage.value++;
+  }
+  else if(operation == "previous"){
+    if (currentPage.value <= 1) return;
+    currentPage.value--;
+  }
+}
+
 </script>
 
 <template>
@@ -129,7 +143,7 @@ initializeForm()
             </div>
           </template>
         </div>
-        <FormViewPagination />  
+        <FormViewPagination @change="changePagination" />  
       </div>
     </div>
   </div>
