@@ -44,9 +44,10 @@ exports.handleGetFormView = async function (req, res) {
   try {
     // Check if there's form data
     const formId = req.query.id;
+    const { userId } = req;
     if (!formId) return res.status(400).json({ code: 400, message: 'Bad request: no form id provided' });
 
-    const result = await formService.handleGetForm(formId);
+    const result = await formService.handleGetForm(formId, userId);
     if (result.error) return res.status(500).json({ code: 500, message: result.message });
 
     res.status(200).json({ code: 200, form: result.form });

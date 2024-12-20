@@ -5,6 +5,7 @@
 cursor: not-allowed;
 - Add validation on user registration form
 - Do the edit screen
+- If the form is private, make sure only the user can see it.
 
 On list image error fetch, show tileset logo
 

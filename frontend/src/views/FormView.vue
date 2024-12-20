@@ -36,6 +36,7 @@ function initializeForm() {
     loadingData.loading = true;
 
     utils.getData(urlList.BACKEND_GET_FORM_VIEW + "?id=" + route.params.id, false).then(function (response) {
+      console.log(response)
       // Merge Input and Choice questions into one array
       let mergedQuestions = response.form.InputQuestions.concat(response.form.ChoiceQuestions).sort(function (a, b) {
         return a.order - b.order;
@@ -124,7 +125,7 @@ function changePagination(operation) {
                   <label class="block text-base font-medium">{{
                     (question.order + 1) + '- ' + question.label
                   }}</label>
-                  <Checkbox v-for="(option, optionsIndex) in question.Choices" :label="option.text"
+                  <Checkbox v-for="(option, optionsIndex) in question.Choices" :label="option.label"
                     :name="`radio_${question.id}`" :id="`radio_${question.id}_${optionsIndex}`" :key="optionsIndex" />
                 </div>
               </template>
@@ -136,7 +137,7 @@ function changePagination(operation) {
                   <Select :id="question.id">
                     <option v-for="(option, optionsIndex) in question.Choices" :value="optionsIndex"
                       :key="optionsIndex">
-                      {{ option.text }}
+                      {{ option.label }}
                     </option>
                   </Select>
                 </div>
